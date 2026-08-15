@@ -1,0 +1,60 @@
+{
+  "billboard": {
+    "kicker": "Vault Edition · No. 01",
+    "title": "The Black Book",
+    "copy": "The Club's private volume. Names withheld, lessons kept. Read once, remembered forever.",
+    "image": "../assets/img/black-book.png",
+    "ctas": [
+      { "label": "Reserve", "solid": true },
+      { "label": "Director's Note", "solid": false }
+    ]
+  },
+  "shelves": [
+    {
+      "title": "Vault Editions",
+      "note": "Numbered · Members",
+      "cards": [
+        { "k": "Vault Edition 01", "t": "The Black Book", "s": "Print · Numbered", "lock": "Edition", "image": "../assets/img/black-book.png" },
+        { "k": "Vault Edition 02", "t": "SWIM 001 — Extended", "s": "44 unpublished frames", "lock": "Members", "wash": "art-pool" },
+        { "k": "Vault Edition 03", "t": "Untitled", "s": "In production", "lock": "Q4", "wash": "art-noir" }
+      ]
+    },
+    {
+      "title": "Extended Cuts",
+      "note": "Film · Motion",
+      "cards": [
+        { "k": "Short Film", "t": "Poolside Luxe — The Cut", "s": "Golden hour master", "lock": "▶ 07:14", "wash": "art-golden", "wide": true },
+        { "k": "Motion Study", "t": "Water Signs — Loop", "s": "Silent · 4K", "lock": "▶ 03:42", "wash": "art-siren", "wide": true },
+        { "k": "Short Film", "t": "The Dusk Set", "s": "Color grade in progress", "lock": "Soon", "wash": "art-dusk", "wide": true }
+      ]
+    },
+    {
+      "title": "Director's Notes",
+      "note": "Audio · Letters",
+      "cards": [
+        { "k": "Letter 01", "t": "On Taste", "s": "Read by the Editor", "lock": "▶ Audio", "wash": "art-ivory" },
+        { "k": "Letter 02", "t": "On Silence", "s": "Read by the Editor", "lock": "▶ Audio", "wash": "art-chrome" },
+        { "k": "Letter 03", "t": "On Her", "s": "Unreleased", "lock": "Sealed", "wash": "art-red" }
+      ]
+    },
+    {
+      "title": "Alternate Galleries",
+      "note": "Frames that didn't run",
+      "cards": [
+        { "k": "SWIM 001", "t": "The B-Sides", "s": "Contact 02 · full", "lock": "24 FR", "wash": "art-pool" },
+        { "k": "SWIM 001", "t": "Black & White Only", "s": "Monochrome pass", "lock": "12 FR", "wash": "art-noir" },
+        { "k": "After Hours", "t": "When Cameras Stop", "s": "Crew frames", "lock": "BTS", "wash": "art-golden" },
+        { "k": "Issue 002", "t": "First Look", "s": "Embargoed", "lock": "Soon", "wash": "art-dusk" }
+      ]
+    },
+    {
+      "title": "Premium Archive",
+      "note": "Deep storage",
+      "cards": [
+        { "k": "Future Plans", "t": "PLAYER'S CLUB™ Resort", "s": "\"Exclusive never looked this wet.\"", "lock": "Concept", "wash": "art-siren", "logo": "../assets/img/resort-white.png", "wide": true },
+        { "k": "The Masthead", "t": "Origins of the Magazine", "s": "Founding documents", "lock": "Paper", "wash": "art-ivory", "logo": "../assets/img/magazine-white.png", "wide": true },
+        { "k": "Late Night", "t": "After Dark", "s": "Separate key required", "lock": "21+", "wash": "art-red", "logo": "../assets/img/afterdark.png", "wide": true }
+      ]
+    }
+  ]
+}

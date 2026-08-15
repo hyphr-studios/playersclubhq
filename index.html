@@ -37,19 +37,6 @@
   .cover__sub .lux{font-family:var(--serif);font-style:italic;font-size:clamp(18px,3vw,28px);color:var(--gold)}
   .cover-link .btn{margin-top:30px}
 
-  .dept{position:relative;display:block;border-top:1px solid var(--hair);overflow:hidden}
-  .dept:last-of-type{border-bottom:1px solid var(--hair)}
-  .dept__in{display:grid;grid-template-columns:110px 1fr auto;align-items:center;gap:20px;padding:38px var(--pad);position:relative;z-index:2;transition:padding-left .35s}
-  .dept:hover .dept__in{padding-left:calc(var(--pad) + 14px)}
-  .dept__no{font-size:10px;letter-spacing:.3em;color:var(--faint)}
-  .dept__name{font-family:var(--serif);font-size:clamp(34px,7vw,64px);line-height:1;letter-spacing:-.01em}
-  .dept__desc{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);text-align:right}
-  .dept__wash{position:absolute;inset:0;opacity:0;transition:opacity .5s}
-  .dept:hover .dept__wash{opacity:1}
-  @media (max-width:860px){
-    .dept__in{grid-template-columns:56px 1fr}
-    .dept__desc{grid-column:2;text-align:left}
-  }
 </style>
 </head>
 <body>
@@ -98,7 +85,6 @@
       <span class="plate__frame">PC · ISSUE 001 · FR.001</span>
       <div class="numeral chrome-text" aria-hidden="true">001</div>
       <figcaption class="plate__body">
-        <span class="eyebrow eyebrow--gold">The Current Issue</span>
         <h1 class="cover__title chrome-text">SWIM</h1>
         <div class="cover__sub">
           <span class="lux">Poolside Luxe</span>
@@ -118,84 +104,12 @@
     </div>
   </div>
 
-  <!-- DEPARTMENTS -->
-  <section class="sect" id="departments" style="padding-left:0;padding-right:0">
-    <div class="sect__head rv" style="padding:0 var(--pad)">
-      <h2>The Building</h2>
-      <span class="idx">Four Floors</span>
-    </div>
-
-    <a class="dept rv" href="issues/">
-      <div class="dept__wash art-pool"></div>
-      <div class="dept__in">
-        <span class="dept__no">01</span>
-        <span class="dept__name">Issues</span>
-        <span class="dept__desc">The editions · collect them</span>
-      </div>
-    </a>
-    <a class="dept rv" href="archive/">
-      <div class="dept__wash art-ivory"></div>
-      <div class="dept__in">
-        <span class="dept__no">02</span>
-        <span class="dept__name">Archive</span>
-        <span class="dept__desc">The record · what the Club keeps</span>
-      </div>
-    </a>
-    <a class="dept rv" href="studio/">
-      <div class="dept__wash art-golden"></div>
-      <div class="dept__in">
-        <span class="dept__no">03</span>
-        <span class="dept__name">Studio</span>
-        <span class="dept__desc">The creative department</span>
-      </div>
-    </a>
-    <a class="dept rv" href="vault/">
-      <div class="dept__wash art-red"></div>
-      <div class="dept__in">
-        <span class="dept__no">04</span>
-        <span class="dept__name">The Vault</span>
-        <span class="dept__desc">Members only</span>
-      </div>
-    </a>
-  </section>
-
-  <!-- WORD FROM THE EDITOR -->
-  <section class="sect" style="display:flex;justify-content:center;text-align:center">
-    <blockquote class="pull rv">
-      &ldquo;Access is earned, not asked for.&rdquo;
-      <span class="sig">— S</span>
-    </blockquote>
-  </section>
 </main>
 
-<footer class="footer">
-  <div class="footer__grid">
-    <div class="footer__brand">
-      <img src="assets/img/wordmark-white.png" alt="PLAYER'S CLUB™">
-      <p>PLAYER'S CLUB™ is an editorial publication. Photo stories, short films, archive material and member editions — published from the Club, presented by VMG.</p>
-    </div>
-    <div class="footer__col">
-      <h4>The Club</h4>
-      <a href="issues/">Issues</a>
-      <a href="archive/">Archive</a>
-      <a href="studio/">Studio</a>
-      <a href="vault/">The Vault</a>
-    </div>
-    <div class="footer__col">
-      <h4>The House</h4>
-      <a href="mailto:club@playersclubhq.com">Casting &amp; Features</a>
-      <a href="mailto:club@playersclubhq.com">Advertising</a>
-      <a href="mailto:club@playersclubhq.com">Press</a>
-    </div>
-    <div class="footer__vmg">
-      <h4 style="font-size:9.5px;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--faint)">Presented by</h4>
-      <img src="assets/img/vmg-logo.png" alt="VMG — Vaughn Management Group">
-    </div>
-  </div>
-  <div class="footer__legal">
-    <span>© <span data-year>2026</span> VMG · PLAYER'S CLUB™ · All rights reserved</span>
-    <span>Play responsibly</span>
-  </div>
+<footer class="foot">
+  <img class="foot__mark" src="assets/img/wordmark-white.png" alt="PLAYER'S CLUB™">
+  <small>© <span data-year>2026</span> · An editorial publication presented by VMG</small>
+  <img class="foot__vmg" src="assets/img/vmg-logo.png" alt="VMG — Vaughn Management Group">
 </footer>
 
 <script src="assets/js/club.js"></script>

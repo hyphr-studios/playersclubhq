@@ -1,0 +1,23 @@
+{
+  "editions": [
+    {
+      "num": "001",
+      "season": "Summer — First Edition",
+      "title": "SWIM",
+      "sub": "Poolside Luxe",
+      "state": "Now Showing",
+      "href": "swim-001/",
+      "wash": "art-pool",
+      "open": true
+    },
+    {
+      "num": "002",
+      "season": "Untitled",
+      "title": "In Production",
+      "sub": "The Club doesn't announce. It arrives.",
+      "state": "Embargoed",
+      "wash": "art-noir",
+      "open": false
+    }
+  ]
+}

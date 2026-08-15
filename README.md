@@ -15,6 +15,19 @@ An editorial publication presented by **VMG**. Static site — no build step, no
 | The Vault (members) | `vault/` |
 | Studio (creative dept.) | `studio/` |
 
+## Editing content — no HTML required
+
+The surfaces that change over time are powered by JSON files in `content/`:
+
+- `content/issues.json` — the Issues shelf. Add an edition object and it appears;
+  flip `"open": true` and give it an `href` when it publishes.
+- `content/vault.json` — the entire Vault floor: billboard + every shelf and card.
+  Reorder shelves, add cards, change locks/labels by editing JSON only.
+
+The static HTML in those pages is just a fallback for the rare case the JSON
+fails to load — keep it roughly in sync when convenient, or ignore it.
+Editorial pages (the SWIM 001 issue, Stanley, Inez) are crafted pages and stay HTML.
+
 ## Dropping in real photography
 
 Every visual plate on the site has a photo slot. Drop a real image at the matching
