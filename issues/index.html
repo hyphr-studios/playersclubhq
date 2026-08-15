@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Issues — PLAYER'S CLUB™</title>
+<meta name="description" content="The editions of PLAYER'S CLUB™. Issue No. 001 — SWIM · Poolside Luxe. Collect them.">
+<meta property="og:title" content="Issues — PLAYER'S CLUB™">
+<meta property="og:description" content="The editions. Collect them.">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" type="image/png" href="../assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/club.css">
+<style>
+  .page-head{padding:150px var(--pad) 40px}
+  .page-head h1{font-family:var(--serif);font-weight:400;font-size:clamp(48px,10vw,110px);line-height:.95;letter-spacing:-.015em}
+  .page-head p{margin-top:18px;color:var(--dim);font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+
+  .edition{display:block;position:relative;border-top:1px solid var(--hair);overflow:hidden}
+  .edition:last-of-type{border-bottom:1px solid var(--hair)}
+  .edition__in{display:grid;grid-template-columns:minmax(90px,180px) 1fr auto;gap:clamp(16px,4vw,44px);align-items:center;padding:clamp(30px,6vh,60px) var(--pad);position:relative;z-index:2}
+  .edition__num{font-family:var(--serif);font-size:clamp(46px,9vw,110px);line-height:.85}
+  .edition__body .season{font-size:9.5px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:10px}
+  .edition__body h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,7vw,72px);line-height:.95}
+  .edition__body .lux{font-family:var(--serif);font-style:italic;font-size:clamp(16px,2.6vw,24px);color:var(--dim);margin-top:8px;display:block}
+  .edition__side{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+  .edition__side .state{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+  .edition__wash{position:absolute;inset:0;opacity:.35;transition:opacity .5s}
+  .edition:hover .edition__wash{opacity:.85}
+  .edition--embargo .edition__num,.edition--embargo h2{color:var(--faint)}
+  .edition--embargo .edition__wash{opacity:.12}
+  .edition--embargo:hover .edition__wash{opacity:.2}
+  @media (max-width:860px){
+    .edition__in{grid-template-columns:1fr;gap:14px}
+    .edition__side{align-items:flex-start;text-align:left}
+  }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Primary">
+  <a class="nav__mark" href="../index.html">
+    <img src="../assets/img/wordmark-white.png" alt="PLAYER'S CLUB™">
+    <span class="nav__pub">by VMG</span>
+  </a>
+  <div class="nav__links">
+    <a href="./" aria-current="page">Issues</a>
+    <a href="../archive/">Archive</a>
+    <a href="../studio/">Studio</a>
+    <a href="../vault/">The Vault</a>
+  </div>
+  <button class="nav__burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+</nav>
+<div class="menu">
+  <a href="./"><small>01</small> Issues</a>
+  <a href="../archive/"><small>02</small> Archive</a>
+  <a href="../studio/"><small>03</small> Studio</a>
+  <a href="../vault/"><small>04</small> The Vault</a>
+</div>
+
+<header class="page-head">
+  <span class="eyebrow eyebrow--gold rv in">The Editions</span>
+  <h1 class="rv in">Issues</h1>
+  <p class="rv in rv-d1">Numbered. Kept. Collected.</p>
+</header>
+
+<main>
+  <a class="edition rv" href="swim-001/">
+    <div class="edition__wash art-pool"></div>
+    <div class="edition__in">
+      <span class="edition__num chrome-text">001</span>
+      <div class="edition__body">
+        <span class="season">Summer — First Edition</span>
+        <h2>SWIM</h2>
+        <span class="lux">Poolside Luxe</span>
+      </div>
+      <div class="edition__side">
+        <span class="state">Now Showing</span>
+        <span class="btn">Open <span class="arr">→</span></span>
+      </div>
+    </div>
+  </a>
+
+  <div class="edition edition--embargo rv" aria-disabled="true">
+    <div class="edition__wash art-noir"></div>
+    <div class="edition__in">
+      <span class="edition__num">002</span>
+      <div class="edition__body">
+        <span class="season" style="color:var(--faint)">Untitled</span>
+        <h2>In Production</h2>
+        <span class="lux">The Club doesn't announce. It arrives.</span>
+      </div>
+      <div class="edition__side">
+        <span class="stamp">Embargoed</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="sect" style="display:flex;justify-content:center;text-align:center">
+    <blockquote class="pull rv">
+      &ldquo;Years from now, you'll wish you kept the first one.&rdquo;
+      <span class="sig">The Index — PLAYER'S CLUB™</span>
+    </blockquote>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <img src="../assets/img/wordmark-white.png" alt="PLAYER'S CLUB™">
+      <p>PLAYER'S CLUB™ is an editorial publication. Photo stories, short films, archive material and member editions — published from the Club, presented by VMG.</p>
+    </div>
+    <div class="footer__col">
+      <h4>The Club</h4>
+      <a href="./">Issues</a>
+      <a href="../archive/">Archive</a>
+      <a href="../studio/">Studio</a>
+      <a href="../vault/">The Vault</a>
+    </div>
+    <div class="footer__col">
+      <h4>The House</h4>
+      <a href="mailto:club@playersclubhq.com">Casting &amp; Features</a>
+      <a href="mailto:club@playersclubhq.com">Advertising</a>
+      <a href="mailto:club@playersclubhq.com">Press</a>
+    </div>
+    <div class="footer__vmg">
+      <h4 style="font-size:9.5px;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--faint)">Presented by</h4>
+      <img src="../assets/img/vmg-logo.png" alt="VMG — Vaughn Management Group">
+    </div>
+  </div>
+  <div class="footer__legal">
+    <span>© <span data-year>2026</span> VMG · PLAYER'S CLUB™ · All rights reserved</span>
+    <span>Play responsibly</span>
+  </div>
+</footer>
+
+<script src="../assets/js/club.js"></script>
+</body>
+</html>

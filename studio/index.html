@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio — PLAYER'S CLUB™</title>
+<meta name="description" content="The creative department of PLAYER'S CLUB™. Moodboards, lighting references, production and process. Shoot with us — but only if you bring heat.">
+<meta property="og:title" content="Studio — PLAYER'S CLUB™">
+<meta property="og:description" content="The creative department. Bring heat.">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" type="image/png" href="../assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/club.css">
+<style>
+  .studio-head{position:relative;min-height:92svh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+  .studio-head__art{position:absolute;inset:0}
+  .studio-head__body{position:relative;z-index:2;padding:0 var(--pad) clamp(36px,7vh,72px)}
+  .studio-head__body h1{font-family:var(--serif);font-weight:400;font-size:clamp(52px,11vw,130px);line-height:.92;letter-spacing:-.015em}
+  .studio-head__meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:20px}
+
+  /* moodboard wall */
+  .wall{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:120px;gap:10px}
+  .wall .plate{min-height:0}
+  .w-a{grid-column:span 3;grid-row:span 3}
+  .w-b{grid-column:span 3;grid-row:span 2}
+  .w-c{grid-column:span 2;grid-row:span 2}
+  .w-d{grid-column:span 2;grid-row:span 1}
+  .w-e{grid-column:span 1;grid-row:span 2}
+  .wall .lab{
+    position:absolute;bottom:12px;left:14px;z-index:2;
+    font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:rgba(244,242,237,.6)
+  }
+  @media (max-width:760px){
+    .wall{grid-template-columns:repeat(2,1fr);grid-auto-rows:130px}
+    .w-a,.w-b,.w-c{grid-column:span 2}
+    .w-d,.w-e{grid-column:span 1}
+  }
+
+  /* kit list */
+  .kit{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--hair-soft);border:1px solid var(--hair-soft)}
+  .kit>div{background:var(--black);padding:28px 24px}
+  .kit .k{font-size:8.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:14px}
+  .kit ul{list-style:none}
+  .kit li{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);padding:7px 0;border-bottom:1px solid var(--hair-soft)}
+  .kit li:last-child{border-bottom:0}
+
+  /* process filmstrip */
+  .steps{display:flex;gap:10px;overflow-x:auto;padding-bottom:16px;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .steps::-webkit-scrollbar{display:none}
+  .step{flex:0 0 min(76vw,320px);scroll-snap-align:start;border:1px solid var(--hair-soft);padding:28px 24px;position:relative;background:var(--coal)}
+  .step .no{font-family:var(--serif);font-size:44px;line-height:1;color:var(--faint)}
+  .step .t{font-family:var(--serif);font-size:24px;margin:14px 0 10px}
+  .step p{font-size:11.5px;color:var(--dim);line-height:1.8}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Primary">
+  <a class="nav__mark" href="../index.html">
+    <img src="../assets/img/wordmark-white.png" alt="PLAYER'S CLUB™">
+    <span class="nav__pub">by VMG</span>
+  </a>
+  <div class="nav__links">
+    <a href="../issues/">Issues</a>
+    <a href="../archive/">Archive</a>
+    <a href="./" aria-current="page">Studio</a>
+    <a href="../vault/">The Vault</a>
+  </div>
+  <button class="nav__burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+</nav>
+<div class="menu">
+  <a href="../issues/"><small>01</small> Issues</a>
+  <a href="../archive/"><small>02</small> Archive</a>
+  <a href="./"><small>03</small> Studio</a>
+  <a href="../vault/"><small>04</small> The Vault</a>
+</div>
+
+<header class="studio-head">
+  <div class="studio-head__art art-golden"></div>
+  <div class="studio-head__body">
+    <span class="eyebrow eyebrow--gold rv in">The Creative Department</span>
+    <h1 class="rv in">Studio</h1>
+    <div class="studio-head__meta rv in rv-d1">
+      <span class="eyebrow">Direction · Light · Styling · Motion</span>
+      <span class="eyebrow" style="color:var(--faint)">Some clients we can't name.</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- MOODBOARD WALL -->
+  <section class="sect">
+    <div class="sect__head rv">
+      <h2>The Wall</h2>
+      <span class="idx">Current references · pinned</span>
+    </div>
+    <div class="wall rv">
+      <figure class="plate art-pool w-a"><img class="plate__photo" src="../assets/photos/studio/ref-01.jpg" alt=""><span class="lab">Chlorine Glow · 001</span></figure>
+      <figure class="plate art-noir w-c"><img class="plate__photo" src="../assets/photos/studio/ref-02.jpg" alt=""><span class="lab">Hard Key · Silhouette</span></figure>
+      <figure class="plate art-golden w-e"><img class="plate__photo" src="../assets/photos/studio/ref-03.jpg" alt=""><span class="lab">3200K</span></figure>
+      <figure class="plate art-chrome w-d"><img class="plate__photo" src="../assets/photos/studio/ref-04.jpg" alt=""><span class="lab">Wet Chrome</span></figure>
+      <figure class="plate art-dusk w-b"><img class="plate__photo" src="../assets/photos/studio/ref-05.jpg" alt=""><span class="lab">Dusk Set · Halation</span></figure>
+      <figure class="plate art-siren w-c"><img class="plate__photo" src="../assets/photos/studio/ref-06.jpg" alt=""><span class="lab">Underwater 02</span></figure>
+      <figure class="plate art-red w-d"><img class="plate__photo" src="../assets/photos/studio/ref-07.jpg" alt=""><span class="lab">After Dark Test</span></figure>
+      <figure class="plate art-ivory w-e"><img class="plate__photo" src="../assets/photos/studio/ref-08.jpg" alt=""><span class="lab">Paper · Texture</span></figure>
+    </div>
+  </section>
+
+  <!-- LIGHT LIBRARY -->
+  <section class="sect" style="border-top:1px solid var(--hair)">
+    <div class="sect__head rv">
+      <h2>Light Library</h2>
+      <span class="idx">Expandable · setups</span>
+    </div>
+    <details class="gal rv">
+      <summary><span class="no">L-01</span><span class="t">Golden Hour, Manufactured</span><span class="x">+</span></summary>
+      <p class="gal__note">Tungsten bounce through diffusion, warmth pushed in the grade. Used on SIREN SERIES and the closing spread of SWIM 001.</p>
+      <div class="gal__grid">
+        <figure class="plate art-golden"><img class="plate__photo" src="../assets/photos/studio/l1-a.jpg" alt=""><span class="plate__frame">L-01/A</span></figure>
+        <figure class="plate art-golden plate--wide"><img class="plate__photo" src="../assets/photos/studio/l1-b.jpg" alt=""><span class="plate__frame">L-01/B</span></figure>
+        <figure class="plate art-ivory"><img class="plate__photo" src="../assets/photos/studio/l1-c.jpg" alt=""><span class="plate__frame">L-01/C</span></figure>
+      </div>
+    </details>
+    <details class="gal rv">
+      <summary><span class="no">L-02</span><span class="t">Pool Light, After Midnight</span><span class="x">+</span></summary>
+      <p class="gal__note">Practical pool light only, camera pushed two stops. The water does the art direction. WATER SIGNS master setup.</p>
+      <div class="gal__grid">
+        <figure class="plate art-pool plate--wide"><img class="plate__photo" src="../assets/photos/studio/l2-a.jpg" alt=""><span class="plate__frame">L-02/A</span></figure>
+        <figure class="plate art-siren"><img class="plate__photo" src="../assets/photos/studio/l2-b.jpg" alt=""><span class="plate__frame">L-02/B</span></figure>
+        <figure class="plate art-pool"><img class="plate__photo" src="../assets/photos/studio/l2-c.jpg" alt=""><span class="plate__frame">L-02/C</span></figure>
+      </div>
+    </details>
+    <details class="gal rv">
+      <summary><span class="no">L-03</span><span class="t">One Beam, Black Room</span><span class="x">+</span></summary>
+      <p class="gal__note">Single hard source, negative fill everywhere. The house look since day one — if the frame doesn't work in this light, it doesn't run.</p>
+      <div class="gal__grid">
+        <figure class="plate art-noir"><img class="plate__photo" src="../assets/photos/studio/l3-a.jpg" alt=""><span class="plate__frame">L-03/A</span></figure>
+        <figure class="plate art-noir plate--wide"><img class="plate__photo" src="../assets/photos/studio/l3-b.jpg" alt=""><span class="plate__frame">L-03/B</span></figure>
+        <figure class="plate art-chrome"><img class="plate__photo" src="../assets/photos/studio/l3-c.jpg" alt=""><span class="plate__frame">L-03/C</span></figure>
+      </div>
+    </details>
+  </section>
+
+  <!-- THE KIT -->
+  <section class="sect">
+    <div class="sect__head rv">
+      <h2>The Kit</h2>
+      <span class="idx">What's on the truck</span>
+    </div>
+    <div class="kit rv">
+      <div>
+        <span class="k">Camera</span>
+        <ul><li>Digital Cinema · 6K</li><li>35mm Film · Backup Body</li><li>50mm Anamorphic</li><li>85mm Prime · Portrait</li></ul>
+      </div>
+      <div>
+        <span class="k">Light</span>
+        <ul><li>Daylight HMI · Hard Key</li><li>Tungsten Kit · 3200K</li><li>Full Negative Fill</li><li>Practical Pool Rig</li></ul>
+      </div>
+      <div>
+        <span class="k">Sound &amp; Motion</span>
+        <ul><li>Field Recorder · Room Tone</li><li>Gimbal · Underwater Housing</li><li>Playback · The Poolside Playlist</li></ul>
+      </div>
+      <div>
+        <span class="k">The Table</span>
+        <ul><li>Steamer · Lint · Pins</li><li>Silver Jewelry Tray</li><li>Añejo · For Wrap Only</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="sect" style="border-top:1px solid var(--hair)">
+    <div class="sect__head rv">
+      <h2>The Process</h2>
+      <span class="idx">Concept → Frame</span>
+    </div>
+    <div class="steps rv">
+      <div class="step"><span class="no">01</span><span class="t">The Board</span><p>Every shoot starts as a wall of references. Light first, wardrobe second, location last. If the board doesn't move you, the camera won't.</p></div>
+      <div class="step"><span class="no">02</span><span class="t">The Direction</span><p>One page, no more. What the story is, what it isn't, and the single frame we refuse to leave without.</p></div>
+      <div class="step"><span class="no">03</span><span class="t">The Session</span><p>Closed set. Playlist on. We shoot past the plan until the plan looks obvious and the accident looks intentional.</p></div>
+      <div class="step"><span class="no">04</span><span class="t">The Edit</span><p>Contact sheets marked by hand. Frames earn their place in the issue — the rest go to the Archive, or the Vault.</p></div>
+      <div class="step"><span class="no">05</span><span class="t">The Sign-off</span><p>Nothing runs without the signature. When in doubt: would Stanley approve it?</p></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="sect" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:30px">
+    <blockquote class="pull rv">
+      &ldquo;Shoot with us. Collaborate. Curate.<br>But only if you bring heat.&rdquo;
+      <span class="sig">The Studio · PLAYER'S CLUB™</span>
+    </blockquote>
+    <a class="btn rv" href="mailto:club@playersclubhq.com?subject=STUDIO%20—%20Bring%20Heat">Contact the Studio <span class="arr">→</span></a>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <img src="../assets/img/wordmark-white.png" alt="PLAYER'S CLUB™">
+      <p>PLAYER'S CLUB™ is an editorial publication. Photo stories, short films, archive material and member editions — published from the Club, presented by VMG.</p>
+    </div>
+    <div class="footer__col">
+      <h4>The Club</h4>
+      <a href="../issues/">Issues</a>
+      <a href="../archive/">Archive</a>
+      <a href="./">Studio</a>
+      <a href="../vault/">The Vault</a>
+    </div>
+    <div class="footer__col">
+      <h4>The House</h4>
+      <a href="mailto:club@playersclubhq.com">Casting &amp; Features</a>
+      <a href="mailto:club@playersclubhq.com">Advertising</a>
+      <a href="mailto:club@playersclubhq.com">Press</a>
+    </div>
+    <div class="footer__vmg">
+      <h4 style="font-size:9.5px;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--faint)">Presented by</h4>
+      <img src="../assets/img/vmg-logo.png" alt="VMG — Vaughn Management Group">
+    </div>
+  </div>
+  <div class="footer__legal">
+    <span>© <span data-year>2026</span> VMG · PLAYER'S CLUB™ · All rights reserved</span>
+    <span>Play responsibly</span>
+  </div>
+</footer>
+
+<script src="../assets/js/club.js"></script>
+</body>
+</html>
