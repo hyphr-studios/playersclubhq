@@ -394,3 +394,21 @@ details.gal[open] summary .x{transform:rotate(45deg)}
 .motionband .cap{position:absolute;bottom:12px;left:14px;font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:rgba(244,242,237,.72);z-index:2}
 .motionband figure::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 120px rgba(10,10,10,.55);pointer-events:none}
 @media (max-width:700px){.motionband{grid-template-columns:1fr}}
+
+/* ── the viewer ── */
+.lbx{position:fixed;inset:0;z-index:200;background:rgba(6,6,6,.96);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s}
+.lbx.open{opacity:1;visibility:visible}
+.lbx img{max-width:92vw;max-height:86vh;object-fit:contain;box-shadow:0 30px 90px rgba(0,0,0,.65)}
+.lbx__meta{position:absolute;bottom:24px;left:0;right:0;text-align:center;font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim)}
+.lbx__btn{position:absolute;top:50%;transform:translateY(-50%);width:54px;height:54px;border:1px solid var(--hair);border-radius:50%;background:rgba(10,10,10,.5);color:var(--white);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .3s;z-index:2}
+.lbx__btn:hover{background:rgba(34,34,34,.85)}
+.lbx__prev{left:16px}.lbx__next{right:16px}
+.lbx__close{position:absolute;top:14px;right:18px;font-size:28px;line-height:1;color:var(--dim);cursor:pointer;background:none;border:0;padding:10px;z-index:2}
+.lbx__close:hover{color:var(--white)}
+[data-photos]{cursor:pointer}
+@media (max-width:700px){.lbx__btn{width:44px;height:44px;font-size:13px}.lbx img{max-width:97vw;max-height:80vh}}
+
+/* ── live stills (ken burns) ── */
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.075)}}
+.kb{animation:kb 26s ease-in-out infinite alternate;transform-origin:50% 35%;will-change:transform}
+@media (prefers-reduced-motion:reduce){.kb{animation:none}}

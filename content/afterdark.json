@@ -11,8 +11,10 @@
     "footage": ["The Raw Tapes", "Unlisted · Uncut"]
   },
   "sets": [
-    { "no": "AD-01", "t": "Do Not Disturb", "s": "Hotel frames · one lamp", "wash": "art-red", "tag": "Raw", "hot": true },
-    { "no": "AD-02", "t": "Heat Check", "s": "22 frames · loud", "wash": "art-dusk", "tag": "New", "hot": true },
+    { "no": "AD-01", "t": "Do Not Disturb", "s": "Nai · off the record", "image": "../../assets/photos/swim-001/sets/afterdark/ad-01.jpg", "tag": "Raw", "hot": true,
+      "photos": ["../../assets/photos/swim-001/sets/afterdark/ad-01.jpg"] },
+    { "no": "AD-02", "t": "Heat Check", "s": "The whole cast · loud", "image": "../../assets/photos/swim-001/sets/afterdark/ad-02.jpg", "tag": "New", "hot": true,
+      "photos": ["../../assets/photos/swim-001/sets/afterdark/ad-02.jpg"] },
     { "no": "AD-03", "t": "Silk", "s": "Slow · close · warm", "wash": "art-golden", "tag": "Raw" },
     { "no": "AD-04", "t": "Last Call", "s": "2 a.m. · champagne frames", "wash": "art-noir", "tag": "Members" }
   ],

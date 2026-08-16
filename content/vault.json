@@ -2,18 +2,35 @@
   "featured": {
     "kicker": "Set 01 · Uncut",
     "title": "Karma — Uncut",
-    "copy": "The cover took one frame. She gave us forty-four.",
+    "copy": "The cover took one frame. She gave us the whole roll.",
     "image": "../assets/photos/swim-001/karma-02.jpg",
     "wash": "art-pool",
-    "cta": "Open the Set"
+    "cta": "Open the Set",
+    "photos": [
+      "../assets/photos/swim-001/sets/karma/karma-01.jpg",
+      "../assets/photos/swim-001/sets/karma/karma-02.jpg",
+      "../assets/photos/swim-001/sets/karma/karma-03.jpg",
+      "../assets/photos/swim-001/sets/karma/karma-04.jpg",
+      "../assets/photos/swim-001/sets/karma/karma-05.jpg",
+      "../assets/photos/swim-001/sets/karma/karma-06.jpg",
+      "../assets/photos/swim-001/sets/karma/karma-07.jpg",
+      "../assets/photos/swim-001/sets/karma/karma-08.jpg"
+    ]
   },
   "sets": [
-    { "no": "Set 01", "t": "Karma — Uncut", "s": "44 frames · never ran", "image": "../assets/photos/swim-001/cover.jpg", "tag": "Members" },
-    { "no": "Set 02", "t": "Cherri — B-Sides", "s": "The red set · full sheet", "image": "../assets/photos/swim-001/cherri-01.jpg", "tag": "Members" },
-    { "no": "Set 03", "t": "Kay Kay — Extended", "s": "Las Vegas · unedited", "image": "../assets/photos/swim-001/kaykay-01.jpg", "tag": "New", "hot": true },
-    { "no": "Set 04", "t": "Naiomi", "s": "The frames that broke the internet", "image": "../assets/photos/swim-001/naiomi-01.jpg", "tag": "Members" },
-    { "no": "Set 05", "t": "After Hours", "s": "BTS · when cameras stop", "image": "../assets/photos/swim-001/cast-01.jpg", "tag": "BTS" },
-    { "no": "Set 06", "t": "After Dark", "s": "The back room · enter", "wash": "art-red", "tag": "21+", "href": "after-dark/" }
+    { "no": "Set 01", "t": "Karma — Uncut", "s": "8 frames · two never featured", "image": "../assets/photos/swim-001/sets/karma/karma-02.jpg", "tag": "Members",
+      "photos": ["../assets/photos/swim-001/sets/karma/karma-01.jpg","../assets/photos/swim-001/sets/karma/karma-02.jpg","../assets/photos/swim-001/sets/karma/karma-03.jpg","../assets/photos/swim-001/sets/karma/karma-04.jpg","../assets/photos/swim-001/sets/karma/karma-05.jpg","../assets/photos/swim-001/sets/karma/karma-06.jpg","../assets/photos/swim-001/sets/karma/karma-07.jpg","../assets/photos/swim-001/sets/karma/karma-08.jpg"] },
+    { "no": "Set 02", "t": "Cherri — B-Sides", "s": "The red set · full sheet", "image": "../assets/photos/swim-001/sets/cherri/cherri-02.jpg", "tag": "Members",
+      "photos": ["../assets/photos/swim-001/sets/cherri/cherri-01.jpg","../assets/photos/swim-001/sets/cherri/cherri-02.jpg","../assets/photos/swim-001/sets/cherri/cherri-03.jpg","../assets/photos/swim-001/sets/cherri/cherri-04.jpg"] },
+    { "no": "Set 03", "t": "Kay Kay — Extended", "s": "Las Vegas · unedited", "image": "../assets/photos/swim-001/sets/kaykay/kaykay-02.jpg", "tag": "New", "hot": true,
+      "photos": ["../assets/photos/swim-001/sets/kaykay/kaykay-01.jpg","../assets/photos/swim-001/sets/kaykay/kaykay-02.jpg"] },
+    { "no": "Set 04", "t": "Naiomi", "s": "The frames that broke the internet", "image": "../assets/photos/swim-001/sets/naiomi/naiomi-03.jpg", "tag": "Members",
+      "photos": ["../assets/photos/swim-001/sets/naiomi/naiomi-01.jpg","../assets/photos/swim-001/sets/naiomi/naiomi-02.jpg","../assets/photos/swim-001/sets/naiomi/naiomi-03.jpg"] },
+    { "no": "Set 05", "t": "Ivorie — The Host", "s": "Booked to host · went rogue", "image": "../assets/photos/swim-001/sets/ivorie/ivorie-02.jpg", "tag": "Members",
+      "photos": ["../assets/photos/swim-001/sets/ivorie/ivorie-01.jpg","../assets/photos/swim-001/sets/ivorie/ivorie-02.jpg","../assets/photos/swim-001/sets/ivorie/ivorie-03.jpg","../assets/photos/swim-001/sets/ivorie/ivorie-04.jpg"] },
+    { "no": "Set 06", "t": "After Hours", "s": "Cherri & Karma · when cameras stop", "image": "../assets/photos/swim-001/sets/afterhours/duo-01.jpg", "tag": "BTS",
+      "photos": ["../assets/photos/swim-001/sets/afterhours/duo-01.jpg"] },
+    { "no": "Set 07", "t": "After Dark", "s": "The back room · enter", "wash": "art-red", "tag": "21+", "href": "after-dark/" }
   ],
   "labels": {
     "sets": ["The Sets", "Never published · Never public"],

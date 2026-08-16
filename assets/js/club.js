@@ -146,6 +146,9 @@
         return "vset__tag" + (c.hot ? " vset__tag--hot" : "") + (c.locked || c.tag === "21+" ? " vset__tag--red" : "");
       };
       var setCard = function (c, wide) {
+        var pattr = c.photos && c.photos.length
+          ? ' data-photos="' + esc(c.photos.join(",")) + '" data-set-title="' + esc(c.t) + '"'
+          : "";
         var art = c.video
           ? '<div class="vset__art"><img src="' + esc(c.poster || "") + '" alt="" loading="lazy"><span class="cinema__play cinema__play--sm">▶</span></div>'
           : c.image
@@ -159,14 +162,17 @@
           '<div class="vset__body"><span class="vset__t">' + esc(c.t) + '</span><span class="vset__s">' + esc(c.s) + "</span></div>";
         return c.href
           ? '<a class="' + cls + '" href="' + esc(c.href) + '"' + vattr + ">" + inner + "</a>"
-          : '<article class="' + cls + '"' + vattr + ">" + inner + "</article>";
+          : '<article class="' + cls + '"' + vattr + pattr + ">" + inner + "</article>";
       };
       var html = "";
       var ft = data.featured;
       if (ft) {
-        html += '<header class="billboard">' +
+        html += '<header class="billboard"' +
+          (ft.photos && ft.photos.length
+            ? ' data-photos="' + esc(ft.photos.join(",")) + '" data-set-title="' + esc(ft.title) + '"'
+            : "") + ">" +
           (ft.image
-            ? '<div class="billboard__art"><img src="' + esc(ft.image) + '" alt=""></div>'
+            ? '<div class="billboard__art"><img class="kb" src="' + esc(ft.image) + '" alt=""></div>'
             : '<div class="billboard__art ' + esc(ft.wash || "art-noir") + '"></div>') +
           '<div class="billboard__fade"></div>' +
           '<div class="billboard__body">' +
@@ -207,6 +213,50 @@
       vaultMount.innerHTML = html;
     }).catch(function () {});
   }
+
+  /* the viewer — click a set, walk the frames */
+  var lbx = null, lbxList = [], lbxTitle = "", lbxIdx = 0;
+  var lbxShow = function (i) {
+    lbxIdx = (i + lbxList.length) % lbxList.length;
+    lbx.querySelector("img").src = lbxList[lbxIdx];
+    lbx.querySelector(".lbx__meta").textContent = lbxTitle + " · " + (lbxIdx + 1) + " / " + lbxList.length;
+    var pre = new Image();
+    pre.src = lbxList[(lbxIdx + 1) % lbxList.length];
+  };
+  var lbxClose = function () { if (lbx) { lbx.classList.remove("open"); document.body.style.overflow = ""; } };
+  var lbxOpen = function (list, title) {
+    if (!lbx) {
+      lbx = document.createElement("div");
+      lbx.className = "lbx";
+      lbx.innerHTML = '<button class="lbx__close" aria-label="Close">×</button>' +
+        '<button class="lbx__btn lbx__prev" aria-label="Previous">←</button>' +
+        '<img alt="">' +
+        '<button class="lbx__btn lbx__next" aria-label="Next">→</button>' +
+        '<div class="lbx__meta"></div>';
+      document.body.appendChild(lbx);
+      lbx.addEventListener("click", function (e) {
+        if (e.target.closest(".lbx__prev")) { lbxShow(lbxIdx - 1); return; }
+        if (e.target.closest(".lbx__next") || e.target.tagName === "IMG") { lbxShow(lbxIdx + 1); return; }
+        if (e.target.closest(".lbx__close") || e.target === lbx) lbxClose();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (!lbx.classList.contains("open")) return;
+        if (e.key === "Escape") lbxClose();
+        if (e.key === "ArrowLeft") lbxShow(lbxIdx - 1);
+        if (e.key === "ArrowRight") lbxShow(lbxIdx + 1);
+      });
+    }
+    lbxList = list; lbxTitle = title;
+    lbx.classList.add("open");
+    document.body.style.overflow = "hidden";
+    lbxShow(0);
+  };
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-photos]");
+    if (!el || el.getAttribute("data-video")) return;
+    e.preventDefault();
+    lbxOpen(el.getAttribute("data-photos").split(","), el.getAttribute("data-set-title") || "");
+  });
 
   /* screening room — click a poster, get the film */
   document.addEventListener("click", function (e) {
