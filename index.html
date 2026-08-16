@@ -31,6 +31,9 @@
 
   .cover-link{display:block;position:relative}
   .cover{min-height:86vh}
+  .cover::before{content:"";position:absolute;inset:0;z-index:1;background:
+    linear-gradient(180deg,rgba(10,10,10,.3) 0%,transparent 30%,transparent 50%,rgba(10,10,10,.78) 100%)}
+  .cover .numeral{z-index:2}
   .cover .numeral{position:absolute;right:clamp(8px,4vw,60px);top:clamp(16px,6vh,60px);opacity:.92}
   .cover__title{font-family:var(--serif);font-size:clamp(64px,15vw,190px);line-height:.85;letter-spacing:-.02em}
   .cover__sub{display:flex;flex-wrap:wrap;gap:14px 30px;align-items:baseline;margin-top:20px}

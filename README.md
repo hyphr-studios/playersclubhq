@@ -31,20 +31,37 @@ The static HTML in those pages is just a fallback for the rare case the JSON
 fails to load — keep it roughly in sync when convenient, or ignore it.
 Editorial pages (the SWIM 001 issue, Stanley, Inez) are crafted pages and stay HTML.
 
-## Dropping in real photography
+## Photography — the naming map
 
-Every visual plate on the site has a photo slot. Drop a real image at the matching
-path under `assets/photos/` and it automatically replaces the designed art plate —
-no code changes. Missing photos fall back to the plate design, so the site always
-looks finished.
+Photos live in `assets/photos/`. A file with the right name in the right folder
+appears on the site automatically; replacing a file (same name) upgrades it in
+place. Current SWIM 001 images were extracted from the issue PDF at 1080px —
+drop full-res originals (1600–2400px long edge, JPG) over them any time.
 
-Examples:
-- `assets/photos/swim-001/cover.jpg` — SWIM 001 cover (home + issue page)
-- `assets/photos/swim-001/water-signs.jpg`, `bodies-in-motion.jpg`, `motion-02..04.jpg`, `drip.jpg`, `wet-mafia.jpg`, `dusk.jpg`, `siren.jpg`
-- `assets/photos/archive/swim-cs-01..04.jpg` — contact sheets · `sf-01..04.jpg` — Stanley effects · `iv-01..03.jpg` — Inez fragments
-- `assets/photos/studio/ref-01..08.jpg`, `l1-a..c.jpg`, `l2-a..c.jpg`, `l3-a..c.jpg`
+**SWIM 001** — `assets/photos/swim-001/`
+| File | Where it shows |
+|---|---|
+| `cover.jpg` | Home cover + issue page hero (clean shot, no text — Karma full-bleed) |
+| `issue-cover.jpg` | The designed magazine front cover — Issues shelf + social preview |
+| `karma-02.jpg` | Cover Girl section + Vault featured billboard |
+| `cherri-01.jpg` | Cherri feature + Vault Set 02 |
+| `kaykay-01.jpg` / `kaykay-02.jpg` | Kay Kay feature + Vault Set 03 |
+| `naiomi-01.jpg` | The Cast strip + Vault Set 04 |
+| `ivorie-01.jpg` | The Cast strip |
+| `cast-01.jpg` | The Cast strip + Vault After Hours |
+| `resort.jpg` | Resort teaser plate |
 
-Use JPGs around 1600–2400px on the long edge.
+**Archive** — `assets/photos/archive/`: `swim-cs-01..04.jpg` (production record),
+`sf-01..04.jpg` (Stanley effects), `iv-01..03.jpg` (Inez fragments).
+
+**Studio** — `assets/photos/studio/`: `ref-01..08.jpg` (the wall),
+`l1-a..c.jpg`, `l2-a..c.jpg`, `l3-a..c.jpg` (light library).
+
+**Future issues**: copy the swim-001 pattern — `assets/photos/<issue-slug>/`
+with `cover.jpg`, `issue-cover.jpg`, then model-name files.
+
+The full-issue reader on the SWIM page is an Issuu embed:
+`https://issuu.com/playersclub/docs/swim_001`.
 
 ## The Vault key
 

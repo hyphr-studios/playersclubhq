@@ -116,7 +116,9 @@
       if (!data.editions || !data.editions.length) return;
       issuesMount.innerHTML = data.editions.map(function (e) {
         var inner =
-          '<div class="edition__wash ' + esc(e.wash || "art-noir") + '"></div>' +
+          '<div class="edition__wash ' + esc(e.wash || "art-noir") + '"' +
+          (e.image ? " style=\"background-image:url('" + esc(e.image) + "');background-size:cover;background-position:center 58%\"" : "") +
+          "></div>" +
           '<div class="edition__in">' +
           '<span class="edition__num' + (e.open ? " chrome-text" : "") + '">' + esc(e.num) + "</span>" +
           '<div class="edition__body">' +

@@ -1,23 +1,23 @@
 {
   "featured": {
     "kicker": "Set 01 · Uncut",
-    "title": "Water Signs",
-    "copy": "44 frames. Never ran. On purpose.",
-    "image": "",
+    "title": "Karma — Uncut",
+    "copy": "The cover took one frame. She gave us forty-four.",
+    "image": "../assets/photos/swim-001/karma-02.jpg",
     "wash": "art-pool",
     "cta": "Open the Set"
   },
   "sets": [
-    { "no": "Set 01", "t": "Water Signs — Uncut", "s": "44 frames · never ran", "wash": "art-pool", "tag": "Members" },
-    { "no": "Set 02", "t": "Bodies in Motion — B-Sides", "s": "Contact 02 · full sheet", "wash": "art-noir", "tag": "Members" },
-    { "no": "Set 03", "t": "Sunsets & Side Eyes — Extended", "s": "The dusk set, unedited", "wash": "art-dusk", "tag": "New", "hot": true },
-    { "no": "Set 04", "t": "Siren — The Wet Frames", "s": "Close · jewelry · water", "wash": "art-siren", "tag": "Members" },
-    { "no": "Set 05", "t": "After Hours", "s": "BTS · when cameras stop", "wash": "art-golden", "tag": "BTS" },
+    { "no": "Set 01", "t": "Karma — Uncut", "s": "44 frames · never ran", "image": "../assets/photos/swim-001/cover.jpg", "tag": "Members" },
+    { "no": "Set 02", "t": "Cherri — B-Sides", "s": "The red set · full sheet", "image": "../assets/photos/swim-001/cherri-01.jpg", "tag": "Members" },
+    { "no": "Set 03", "t": "Kay Kay — Extended", "s": "Las Vegas · unedited", "image": "../assets/photos/swim-001/kaykay-01.jpg", "tag": "New", "hot": true },
+    { "no": "Set 04", "t": "Naiomi", "s": "The frames that broke the internet", "image": "../assets/photos/swim-001/naiomi-01.jpg", "tag": "Members" },
+    { "no": "Set 05", "t": "After Hours", "s": "BTS · when cameras stop", "image": "../assets/photos/swim-001/cast-01.jpg", "tag": "BTS" },
     { "no": "Set 06", "t": "After Dark", "s": "The back room · enter", "wash": "art-red", "tag": "21+", "href": "after-dark/" }
   ],
   "footage": [
     { "t": "Poolside Luxe — The Cut", "s": "07:14 · golden hour master", "wash": "art-golden", "tag": "▶" },
-    { "t": "Water Signs — Loop", "s": "03:42 · silent", "wash": "art-siren", "tag": "▶" },
+    { "t": "Karma — Motion", "s": "03:42 · silent", "wash": "art-siren", "tag": "▶" },
     { "t": "Wrap Tape — SWIM 001", "s": "Unlisted · crew only", "wash": "art-noir", "tag": "▶" }
   ],
   "book": {
