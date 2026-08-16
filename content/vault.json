@@ -15,10 +15,21 @@
     { "no": "Set 05", "t": "After Hours", "s": "BTS · when cameras stop", "image": "../assets/photos/swim-001/cast-01.jpg", "tag": "BTS" },
     { "no": "Set 06", "t": "After Dark", "s": "The back room · enter", "wash": "art-red", "tag": "21+", "href": "after-dark/" }
   ],
+  "labels": {
+    "sets": ["The Sets", "Never published · Never public"],
+    "footage": ["The Screening Room", "Silent · 24fps · Members only"]
+  },
+  "cinema": {
+    "kicker": "The Deep Tape",
+    "title": "SWIM 001 — The Cut",
+    "s": "3:32 · What the issue didn't show",
+    "video": "../assets/video/swim-001/the-cut.mp4",
+    "poster": "../assets/video/swim-001/the-cut-poster.jpg"
+  },
   "footage": [
-    { "t": "Poolside Luxe — The Cut", "s": "07:14 · golden hour master", "wash": "art-golden", "tag": "▶" },
-    { "t": "Karma — Motion", "s": "03:42 · silent", "wash": "art-siren", "tag": "▶" },
-    { "t": "Wrap Tape — SWIM 001", "s": "Unlisted · crew only", "wash": "art-noir", "tag": "▶" }
+    { "t": "Deck Tape 01", "s": "On set · between frames", "tag": "1:31", "video": "../assets/video/swim-001/reel-01.mp4", "poster": "../assets/video/swim-001/reel-01-poster.jpg" },
+    { "t": "Deck Tape 02", "s": "The cast at work", "tag": "2:19", "video": "../assets/video/swim-001/reel-02.mp4", "poster": "../assets/video/swim-001/reel-02-poster.jpg" },
+    { "t": "Deck Tape 03", "s": "Golden hour · unlisted", "tag": "2:30", "video": "../assets/video/swim-001/reel-03.mp4", "poster": "../assets/video/swim-001/reel-03-poster.jpg" }
   ],
   "book": {
     "kicker": "Vault Edition 01",

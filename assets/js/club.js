@@ -48,6 +48,7 @@
   var gate = document.getElementById("gate");
   if (gate) {
     var KEY = (gate.getAttribute("data-key") || "FONTAINE").toUpperCase();
+    var USER = (gate.getAttribute("data-user") || "STANLEY").toUpperCase();
     var vault = document.getElementById("vault-inner");
     var unlock = function () {
       gate.style.transition = "opacity .8s ease, visibility .8s";
@@ -64,11 +65,12 @@
       gate.querySelector("form").addEventListener("submit", function (e) {
         e.preventDefault();
         var keyInput = gate.querySelector("input[name=key]") || gate.querySelector("input");
-        var emailInput = gate.querySelector("input[name=email]");
-        var v = keyInput.value.trim().toUpperCase();
-        if (v === KEY) {
+        var userInput = gate.querySelector("input[name=user]");
+        var vKey = keyInput.value.trim().toUpperCase();
+        var vUser = userInput ? userInput.value.trim().toUpperCase() : USER;
+        if (vKey === KEY && vUser === USER) {
           sessionStorage.setItem("pc-vault", "open");
-          if (emailInput && emailInput.value) sessionStorage.setItem("pc-member", emailInput.value.trim().toLowerCase());
+          sessionStorage.setItem("pc-member", vUser);
           unlock();
         } else {
           gate.classList.remove("deny");
@@ -144,17 +146,20 @@
         return "vset__tag" + (c.hot ? " vset__tag--hot" : "") + (c.locked || c.tag === "21+" ? " vset__tag--red" : "");
       };
       var setCard = function (c, wide) {
-        var art = c.image
-          ? '<div class="vset__art"><img src="' + esc(c.image) + '" alt="" loading="lazy"></div>'
-          : '<div class="vset__art ' + esc(c.wash || "art-noir") + '"></div>';
-        var cls = "vset" + (wide ? " vset--wide" : "") + (c.locked ? " vset--locked" : "") + (c.href ? " vset--door" : "");
+        var art = c.video
+          ? '<div class="vset__art"><img src="' + esc(c.poster || "") + '" alt="" loading="lazy"><span class="cinema__play cinema__play--sm">▶</span></div>'
+          : c.image
+            ? '<div class="vset__art"><img src="' + esc(c.image) + '" alt="" loading="lazy"></div>'
+            : '<div class="vset__art ' + esc(c.wash || "art-noir") + '"></div>';
+        var cls = "vset" + (wide ? " vset--wide" : "") + (c.locked ? " vset--locked" : "") + (c.href ? " vset--door" : "") + (c.video ? " vset--film" : "");
+        var vattr = c.video ? ' data-video="' + esc(c.video) + '"' : "";
         var inner = art +
           (c.no ? '<span class="vset__no">' + esc(c.no) + "</span>" : "") +
           (c.tag ? '<span class="' + tagClass(c) + '">' + esc(c.tag) + "</span>" : "") +
           '<div class="vset__body"><span class="vset__t">' + esc(c.t) + '</span><span class="vset__s">' + esc(c.s) + "</span></div>";
         return c.href
-          ? '<a class="' + cls + '" href="' + esc(c.href) + '">' + inner + "</a>"
-          : '<article class="' + cls + '">' + inner + "</article>";
+          ? '<a class="' + cls + '" href="' + esc(c.href) + '"' + vattr + ">" + inner + "</a>"
+          : '<article class="' + cls + '"' + vattr + ">" + inner + "</article>";
       };
       var html = "";
       var ft = data.featured;
@@ -180,8 +185,15 @@
           '<div class="vgrid">' + data.sets.map(function (c) { return setCard(c, false); }).join("") + "</div>";
       }
       if (data.footage && data.footage.length) {
-        html += '<div class="vhead"><h3>' + esc(fl[0]) + "</h3><span>" + esc(fl[1]) + "</span></div>" +
-          '<div class="vgrid vgrid--wide">' + data.footage.map(function (c) { return setCard(c, true); }).join("") + "</div>";
+        html += '<div class="vhead"><h3>' + esc(fl[0]) + "</h3><span>" + esc(fl[1]) + "</span></div>";
+        var cn = data.cinema;
+        if (cn) {
+          html += '<section class="cinema" data-video="' + esc(cn.video) + '">' +
+            '<div class="cinema__art"><img src="' + esc(cn.poster || "") + '" alt="" loading="lazy"><span class="cinema__play">▶</span></div>' +
+            '<div class="cinema__meta"><span class="eyebrow eyebrow--gold">' + esc(cn.kicker) + "</span>" +
+            "<h2>" + esc(cn.title) + '</h2><span class="cinema__s">' + esc(cn.s) + "</span></div></section>";
+        }
+        html += '<div class="vgrid vgrid--wide">' + data.footage.map(function (c) { return setCard(c, true); }).join("") + "</div>";
       }
       var bk = data.book;
       if (bk) {
@@ -195,6 +207,22 @@
       vaultMount.innerHTML = html;
     }).catch(function () {});
   }
+
+  /* screening room — click a poster, get the film */
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-video]");
+    if (!el || el.querySelector("video")) return;
+    var art = el.querySelector(".cinema__art") || el.querySelector(".vset__art");
+    if (!art) return;
+    e.preventDefault();
+    var v = document.createElement("video");
+    v.src = el.getAttribute("data-video");
+    v.controls = true;
+    v.autoplay = true;
+    v.playsInline = true;
+    art.innerHTML = "";
+    art.appendChild(v);
+  });
 
   /* year */
   document.querySelectorAll("[data-year]").forEach(function (el) {

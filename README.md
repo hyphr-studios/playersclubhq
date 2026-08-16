@@ -63,6 +63,26 @@ with `cover.jpg`, `issue-cover.jpg`, then model-name files.
 The full-issue reader on the SWIM page is an Issuu embed:
 `https://issuu.com/playersclub/docs/swim_001`.
 
+## Video — the naming map
+
+Muted, compressed MP4s live in `assets/video/swim-001/` (same replace-by-name
+rule as photos; keep files under ~90MB for GitHub):
+
+| File | Where it shows |
+|---|---|
+| `the-cut.mp4` + `the-cut-poster.jpg` | Vault Screening Room feature (the deep tape) |
+| `reel-01..03.mp4` + `-poster.jpg` | Vault Deck Tapes (click to play) |
+| `loop-a.mp4`, `loop-b.mp4` | Studio — Motion (silent autoplay loops) |
+| `loop-c.mp4`, `loop-d.mp4` | SWIM 001 page — Motion band |
+
+Compress a new video: `ffmpeg -i IN.MOV -an -vf "scale=1280:-2,fps=24" -c:v libx264 -crf 28 -movflags +faststart OUT.mp4` (`-an` strips audio; use `scale=1920:-2 -crf 27` for a feature).
+
+## The Vault login
+
+Free house account while the Vault is open: user `STANLEY`, password `FONTAINE`
+(shown on the gate). Credentials live in `data-user` / `data-key` on the gate in
+`vault/index.html`. Session-based; After Dark behind it still asks 21+.
+
 ## The Vault key
 
 The gate password is set in `vault/index.html` on the `#gate` element:
