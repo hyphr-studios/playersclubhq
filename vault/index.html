@@ -18,16 +18,16 @@
 <div class="grain" aria-hidden="true"></div>
 
 <!-- GATE -->
-<div class="gate" id="gate" data-key="FONTAINE">
+<div class="gate" id="gate" data-user="STANLEY" data-key="FONTAINE">
   <img src="../assets/img/acemark-white.png" alt="">
   <h1 class="serif">The Vault</h1>
   <p>Members Only</p>
   <form autocomplete="off">
-    <input type="email" name="email" placeholder="Email" aria-label="Email" autocorrect="off" spellcheck="false" required>
-    <input type="password" name="key" placeholder="House Key" aria-label="House key" autocapitalize="characters" autocorrect="off" spellcheck="false" required>
+    <input type="text" name="user" placeholder="User" aria-label="User" autocapitalize="characters" autocorrect="off" spellcheck="false" required>
+    <input type="password" name="key" placeholder="Password" aria-label="Password" autocapitalize="characters" autocorrect="off" spellcheck="false" required>
     <button type="submit">Sign In</button>
   </form>
-  <span class="gate__hint">Access is earned, not asked for.</span>
+  <span class="gate__hint">The house account is open — for now.<br>Sign in as the Editor: <b style="color:rgba(244,242,237,.85);font-weight:500">STANLEY · FONTAINE</b></span>
   <a href="../index.html" class="gate__hint" style="text-decoration:underline;text-underline-offset:4px">← Back to the lobby</a>
 </div>
 
@@ -80,11 +80,22 @@
   </div>
 
   <!-- FOOTAGE -->
-  <div class="vhead"><h3>Footage</h3><span>Reels · Loops · Tapes</span></div>
+  <div class="vhead"><h3>The Screening Room</h3><span>Silent · 24fps · Members only</span></div>
+  <section class="cinema" data-video="../assets/video/swim-001/the-cut.mp4">
+    <div class="cinema__art">
+      <img src="../assets/video/swim-001/the-cut-poster.jpg" alt="" loading="lazy">
+      <span class="cinema__play">▶</span>
+    </div>
+    <div class="cinema__meta">
+      <span class="eyebrow eyebrow--gold">The Deep Tape</span>
+      <h2>SWIM 001 — The Cut</h2>
+      <span class="cinema__s">3:32 · What the issue didn't show</span>
+    </div>
+  </section>
   <div class="vgrid vgrid--wide">
-    <article class="vset vset--wide"><div class="vset__art art-golden"></div><span class="vset__tag">▶</span><div class="vset__body"><span class="vset__t">Poolside Luxe — The Cut</span><span class="vset__s">07:14 · golden hour master</span></div></article>
-    <article class="vset vset--wide"><div class="vset__art art-siren"></div><span class="vset__tag">▶</span><div class="vset__body"><span class="vset__t">Water Signs — Loop</span><span class="vset__s">03:42 · silent</span></div></article>
-    <article class="vset vset--wide"><div class="vset__art art-noir"></div><span class="vset__tag">▶</span><div class="vset__body"><span class="vset__t">Wrap Tape — SWIM 001</span><span class="vset__s">Unlisted · crew only</span></div></article>
+    <article class="vset vset--wide vset--film" data-video="../assets/video/swim-001/reel-01.mp4"><div class="vset__art"><img src="../assets/video/swim-001/reel-01-poster.jpg" alt="" loading="lazy"><span class="cinema__play cinema__play--sm">▶</span></div><span class="vset__tag">1:31</span><div class="vset__body"><span class="vset__t">Deck Tape 01</span><span class="vset__s">On set · between frames</span></div></article>
+    <article class="vset vset--wide vset--film" data-video="../assets/video/swim-001/reel-02.mp4"><div class="vset__art"><img src="../assets/video/swim-001/reel-02-poster.jpg" alt="" loading="lazy"><span class="cinema__play cinema__play--sm">▶</span></div><span class="vset__tag">2:19</span><div class="vset__body"><span class="vset__t">Deck Tape 02</span><span class="vset__s">The cast at work</span></div></article>
+    <article class="vset vset--wide vset--film" data-video="../assets/video/swim-001/reel-03.mp4"><div class="vset__art"><img src="../assets/video/swim-001/reel-03-poster.jpg" alt="" loading="lazy"><span class="cinema__play cinema__play--sm">▶</span></div><span class="vset__tag">2:30</span><div class="vset__body"><span class="vset__t">Deck Tape 03</span><span class="vset__s">Golden hour · unlisted</span></div></article>
   </div>
 
   <!-- THE BLACK BOOK -->
