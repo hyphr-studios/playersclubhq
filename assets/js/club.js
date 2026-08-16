@@ -113,42 +113,51 @@
   var vaultMount = document.querySelector("[data-content='vault']");
   if (vaultMount) {
     fetch(vaultMount.getAttribute("data-src")).then(function (r) { return r.json(); }).then(function (data) {
-      var b = data.billboard;
+      var tagClass = function (c) {
+        return "vset__tag" + (c.hot ? " vset__tag--hot" : "") + (c.locked || c.tag === "21+" ? " vset__tag--red" : "");
+      };
+      var setCard = function (c, wide) {
+        var art = c.image
+          ? '<div class="vset__art"><img src="' + esc(c.image) + '" alt="" loading="lazy"></div>'
+          : '<div class="vset__art ' + esc(c.wash || "art-noir") + '"></div>';
+        return '<article class="vset' + (wide ? " vset--wide" : "") + (c.locked ? " vset--locked" : "") + '">' + art +
+          (c.no ? '<span class="vset__no">' + esc(c.no) + "</span>" : "") +
+          (c.tag ? '<span class="' + tagClass(c) + '">' + esc(c.tag) + "</span>" : "") +
+          '<div class="vset__body"><span class="vset__t">' + esc(c.t) + '</span><span class="vset__s">' + esc(c.s) + "</span></div></article>";
+      };
       var html = "";
-      if (b) {
-        html +=
-          '<header class="billboard">' +
-          '<div class="billboard__art"><img src="' + esc(b.image) + '" alt="' + esc(b.title) + '"></div>' +
+      var ft = data.featured;
+      if (ft) {
+        html += '<header class="billboard">' +
+          (ft.image
+            ? '<div class="billboard__art"><img src="' + esc(ft.image) + '" alt=""></div>'
+            : '<div class="billboard__art ' + esc(ft.wash || "art-noir") + '"></div>') +
           '<div class="billboard__fade"></div>' +
           '<div class="billboard__body">' +
-          '<span class="eyebrow eyebrow--gold rv in">' + esc(b.kicker) + "</span>" +
-          '<h1 class="rv in">' + esc(b.title) + "</h1>" +
-          '<p class="rv in rv-d1">' + esc(b.copy) + "</p>" +
-          '<div class="billboard__cta rv in rv-d2">' +
-          (b.ctas || []).map(function (c) {
-            return '<span class="btn' + (c.solid ? " btn--solid" : "") + '">' + esc(c.label) +
-              (c.solid ? ' <span class="arr">→</span>' : "") + "</span>";
-          }).join("") +
-          "</div></div></header>";
+          '<span class="eyebrow eyebrow--gold rv in">' + esc(ft.kicker) + "</span>" +
+          '<h1 class="rv in">' + esc(ft.title) + "</h1>" +
+          '<p class="rv in rv-d1">' + esc(ft.copy) + "</p>" +
+          '<div class="billboard__cta rv in rv-d2"><span class="btn btn--solid">' + esc(ft.cta || "Open") +
+          ' <span class="arr">→</span></span></div></div></header>';
       }
-      html += "<main>" + (data.shelves || []).map(function (sh, i) {
-        return '<section class="shelf"' + (i === (data.shelves.length - 1) ? ' style="padding-bottom:clamp(50px,8vh,90px)"' : "") + ">" +
-          '<div class="shelf__head"><h3>' + esc(sh.title) + "</h3><span>" + esc(sh.note) + "</span></div>" +
-          '<div class="shelf__row">' +
-          (sh.cards || []).map(function (c) {
-            var art = c.image
-              ? '<div class="card__art"><img src="' + esc(c.image) + '" alt="" loading="lazy"></div>'
-              : '<div class="card__art ' + esc(c.wash || "art-noir") + '"' +
-                (c.logo ? ' style="display:flex;align-items:center;justify-content:center"' : "") + ">" +
-                (c.logo ? '<img src="' + esc(c.logo) + '" alt="" style="width:58%;opacity:.9;position:relative;z-index:2" loading="lazy">' : "") +
-                "</div>";
-            return '<article class="card' + (c.wide ? " card--wide" : "") + '">' + art +
-              (c.lock ? '<span class="card__lock">' + esc(c.lock) + "</span>" : "") +
-              '<div class="card__body"><span class="k">' + esc(c.k) + '</span><span class="t">' + esc(c.t) +
-              '</span><span class="s">' + esc(c.s) + "</span></div></article>";
-          }).join("") +
-          "</div></section>";
-      }).join("") + "</main>";
+      html += "<main>";
+      if (data.sets && data.sets.length) {
+        html += '<div class="vhead"><h3>The Sets</h3><span>Never published · Never public</span></div>' +
+          '<div class="vgrid">' + data.sets.map(function (c) { return setCard(c, false); }).join("") + "</div>";
+      }
+      if (data.footage && data.footage.length) {
+        html += '<div class="vhead"><h3>Footage</h3><span>Reels · Loops · Tapes</span></div>' +
+          '<div class="vgrid vgrid--wide">' + data.footage.map(function (c) { return setCard(c, true); }).join("") + "</div>";
+      }
+      var bk = data.book;
+      if (bk) {
+        html += '<section class="vband">' +
+          '<div><span class="eyebrow eyebrow--gold">' + esc(bk.kicker) + "</span>" +
+          '<h2 class="vband__title chrome-text">' + esc(bk.title) + "</h2>" +
+          '<span class="vband__s">' + esc(bk.s) + "</span></div>" +
+          '<img src="' + esc(bk.image) + '" alt="' + esc(bk.title) + '"></section>';
+      }
+      html += "</main>";
       vaultMount.innerHTML = html;
     }).catch(function () {});
   }

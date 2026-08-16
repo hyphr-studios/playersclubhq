@@ -271,36 +271,40 @@ a.ledger__row:hover{padding-left:14px}
 .billboard__body p{color:var(--dim);font-size:13.5px;line-height:1.8;max-width:480px}
 .billboard__cta{display:flex;gap:14px;margin-top:28px;flex-wrap:wrap}
 
-.shelf{padding:clamp(28px,5vh,52px) 0 0}
-.shelf__head{display:flex;align-items:baseline;gap:18px;padding:0 var(--pad);margin-bottom:18px}
-.shelf__head h3{font-size:11px;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--white)}
-.shelf__head span{font-size:9px;letter-spacing:.3em;color:var(--faint);text-transform:uppercase}
-.shelf__row{
-  display:flex;gap:14px;overflow-x:auto;padding:6px var(--pad) 22px;
-  scroll-snap-type:x mandatory;scrollbar-width:none;
-}
-.shelf__row::-webkit-scrollbar{display:none}
-.card{
-  position:relative;flex:0 0 auto;scroll-snap-align:start;overflow:hidden;background:var(--coal);
-  width:min(72vw,300px);aspect-ratio:2/3;
-  transition:transform .35s cubic-bezier(.2,.6,.2,1);
-}
-.card--wide{width:min(84vw,460px);aspect-ratio:16/10}
-.card:hover{transform:translateY(-6px)}
-.card__art{position:absolute;inset:0}
-.card__art img{width:100%;height:100%;object-fit:cover}
-.card::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 90px rgba(0,0,0,.7);pointer-events:none}
-.card__body{
-  position:absolute;left:0;right:0;bottom:0;z-index:2;padding:18px;
-  background:linear-gradient(180deg,transparent,rgba(10,10,10,.88) 70%);
-}
-.card__body .k{font-size:8.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:7px}
-.card__body .t{font-family:var(--serif);font-size:20px;line-height:1.12}
-.card__body .s{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:8px}
-.card__lock{
-  position:absolute;top:14px;right:14px;z-index:2;font-size:8.5px;letter-spacing:.28em;
-  text-transform:uppercase;color:rgba(244,242,237,.55);border:1px solid rgba(244,242,237,.2);padding:5px 9px;
-}
+/* the collection — private sets, not a feed */
+.vhead{display:flex;align-items:baseline;gap:18px;padding:clamp(44px,8vh,80px) var(--pad) 20px}
+.vhead h3{font-size:11px;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--white)}
+.vhead span{font-size:9px;letter-spacing:.3em;color:var(--faint);text-transform:uppercase}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,44vw),1fr));gap:12px;padding:0 var(--pad)}
+.vgrid--wide{grid-template-columns:repeat(auto-fill,minmax(min(360px,86vw),1fr))}
+.vset{position:relative;display:block;aspect-ratio:2/3;overflow:hidden;background:var(--coal)}
+.vset--wide{aspect-ratio:16/9}
+.vset__art{position:absolute;inset:0;transition:transform .7s cubic-bezier(.2,.6,.2,1),filter .7s}
+.vset__art img{width:100%;height:100%;object-fit:cover}
+.vset::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 110px rgba(0,0,0,.75)}
+.vset:hover .vset__art{transform:scale(1.06);filter:brightness(1.18) saturate(1.05)}
+.vset:hover{outline:1px solid rgba(209,185,122,.5);outline-offset:-1px}
+.vset__no{position:absolute;top:16px;left:18px;z-index:2;font-size:9px;letter-spacing:.3em;
+  text-transform:uppercase;color:rgba(244,242,237,.5);font-variant-numeric:tabular-nums}
+.vset__tag{position:absolute;top:13px;right:14px;z-index:2;font-size:8.5px;letter-spacing:.28em;
+  text-transform:uppercase;color:rgba(244,242,237,.6);border:1px solid rgba(244,242,237,.22);padding:5px 9px}
+.vset__tag--hot{color:var(--gold);border-color:rgba(209,185,122,.5)}
+.vset__tag--red{color:var(--red);border-color:rgba(224,32,27,.5)}
+.vset__body{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:20px;
+  background:linear-gradient(180deg,transparent,rgba(10,10,10,.9) 75%)}
+.vset__t{font-family:var(--serif);font-size:clamp(19px,2.6vw,25px);line-height:1.12;display:block}
+.vset__s{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-top:9px;display:block}
+.vset--locked .vset__art{filter:brightness(.55) saturate(.6)}
+.vset--locked:hover .vset__art{transform:none;filter:brightness(.6) saturate(.6)}
+.vset--locked:hover{outline-color:rgba(224,32,27,.45)}
+
+/* the black book band */
+.vband{display:grid;grid-template-columns:1fr min(300px,36vw);gap:clamp(28px,6vw,72px);align-items:center;
+  padding:clamp(64px,11vh,120px) var(--pad);border-top:1px solid var(--hair);margin-top:clamp(50px,9vh,90px)}
+.vband__title{font-family:var(--serif);font-weight:400;font-size:clamp(38px,6.5vw,76px);line-height:.95;margin:12px 0 16px}
+.vband__s{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim)}
+.vband img{width:100%;height:auto;box-shadow:0 34px 90px rgba(0,0,0,.65)}
+@media (max-width:700px){.vband{grid-template-columns:1fr}.vband img{max-width:240px}}
 
 /* ---------- expandable galleries (studio) ---------- */
 details.gal{border-top:1px solid var(--hair-soft)}

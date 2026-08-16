@@ -51,7 +51,7 @@ it is not security. Anything truly private should not be committed to this repo.
 
 ## Contact email
 
-All contact links point to `club@playersclubhq.com`. Search-and-replace when the
+All contact links point to `info@playersclubhq.com`. Search-and-replace when the
 real inbox exists.
 
 ## Deploy (GitHub Pages)
