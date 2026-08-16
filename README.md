@@ -51,8 +51,14 @@ drop full-res originals (1600–2400px long edge, JPG) over them any time.
 | `cast-01.jpg` | The Cast strip + Vault After Hours |
 | `resort.jpg` | Resort teaser plate |
 
+**Vault set galleries** — `assets/photos/swim-001/sets/<model>/<model>-NN.jpg`
+(karma 8 · cherri 4 · kaykay 2 · naiomi 3 · ivorie 4 · afterhours duo ·
+afterdark ad-01/02). Cards + the fullscreen viewer read these; add a frame by
+dropping the next number and listing it in `content/vault.json` (`photos`).
+
 **Archive** — `assets/photos/archive/`: `swim-cs-01..04.jpg` (production record),
-`sf-01..04.jpg` (Stanley effects), `iv-01..03.jpg` (Inez fragments).
+`outtakes/out-01..04.jpg` (SWIM outtakes drawer), `sf-01..04.jpg` (Stanley
+effects), `iv-01..03.jpg` (Inez fragments).
 
 **Studio** — `assets/photos/studio/`: `ref-01..08.jpg` (the wall),
 `l1-a..c.jpg`, `l2-a..c.jpg`, `l3-a..c.jpg` (light library).
