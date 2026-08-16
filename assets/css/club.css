@@ -239,17 +239,19 @@ a.ledger__row:hover{padding-left:14px}
 .gate img{height:64px;width:auto;opacity:.9;margin-bottom:6px}
 .gate h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,6vw,44px);letter-spacing:.02em}
 .gate p{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
-.gate form{display:flex;gap:0;margin-top:8px}
+.gate form{display:flex;flex-direction:column;gap:0;margin-top:8px;width:min(300px,78vw)}
 .gate input{
-  background:transparent;border:1px solid var(--hair);border-right:0;color:var(--white);
+  background:transparent;border:1px solid var(--hair);color:var(--white);
   font-family:var(--sans);font-size:13px;letter-spacing:.35em;text-transform:uppercase;
-  padding:15px 20px;width:min(240px,60vw);outline:none;text-align:center;
+  padding:15px 20px;width:100%;outline:none;text-align:center;
 }
+.gate input+input{border-top:0}
+.gate input[type=email]{text-transform:none;letter-spacing:.08em}
 .gate input:focus{border-color:var(--silver)}
 .gate button{
-  background:var(--white);color:var(--black);border:1px solid var(--white);
+  background:var(--white);color:var(--black);border:1px solid var(--white);border-top:0;
   font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;
-  padding:15px 22px;cursor:pointer;transition:background .25s,border-color .25s;
+  padding:15px 22px;cursor:pointer;transition:background .25s,border-color .25s;width:100%;
 }
 .gate button:hover{background:var(--gold);border-color:var(--gold)}
 .gate .gate__hint{font-size:9px;letter-spacing:.26em;color:var(--faint);text-transform:uppercase}
@@ -258,8 +260,10 @@ a.ledger__row:hover{padding-left:14px}
 
 /* after dark — red room */
 .gate--ad{background:
-  radial-gradient(85% 60% at 50% 100%,rgba(120,10,8,.4) 0%,transparent 62%),
+  radial-gradient(95% 65% at 50% 100%,rgba(150,12,9,.5) 0%,transparent 65%),
   var(--black)}
+.redroom{position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(120% 80% at 50% 112%,rgba(150,12,9,.15) 0%,transparent 58%)}
 .gate--ad img{height:auto;width:min(320px,72vw)}
 .gate--ad .gate__cta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;justify-content:center}
 .vset--door:hover{outline-color:rgba(224,32,27,.55)}

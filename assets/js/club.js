@@ -63,15 +63,18 @@
       document.body.style.overflow = "hidden";
       gate.querySelector("form").addEventListener("submit", function (e) {
         e.preventDefault();
-        var v = gate.querySelector("input").value.trim().toUpperCase();
+        var keyInput = gate.querySelector("input[name=key]") || gate.querySelector("input");
+        var emailInput = gate.querySelector("input[name=email]");
+        var v = keyInput.value.trim().toUpperCase();
         if (v === KEY) {
           sessionStorage.setItem("pc-vault", "open");
+          if (emailInput && emailInput.value) sessionStorage.setItem("pc-member", emailInput.value.trim().toLowerCase());
           unlock();
         } else {
           gate.classList.remove("deny");
           void gate.offsetWidth;
           gate.classList.add("deny");
-          gate.querySelector("input").value = "";
+          keyInput.value = "";
         }
       });
     }

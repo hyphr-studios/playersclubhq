@@ -11,13 +11,14 @@
     "footage": ["The Raw Tapes", "Unlisted · Uncut"]
   },
   "sets": [
-    { "no": "AD-01", "t": "Heat Check", "s": "22 frames · loud", "wash": "art-red", "tag": "Raw", "hot": true },
-    { "no": "AD-02", "t": "Late Shift", "s": "After wrap · off the record", "wash": "art-dusk", "tag": "New", "hot": true },
-    { "no": "AD-03", "t": "Room Service", "s": "One light · one room", "wash": "art-golden", "tag": "Raw" },
-    { "no": "AD-04", "t": "Last Call", "s": "Champagne frames · 2 a.m.", "wash": "art-noir", "tag": "Members" }
+    { "no": "AD-01", "t": "Do Not Disturb", "s": "Hotel frames · one lamp", "wash": "art-red", "tag": "Raw", "hot": true },
+    { "no": "AD-02", "t": "Heat Check", "s": "22 frames · loud", "wash": "art-dusk", "tag": "New", "hot": true },
+    { "no": "AD-03", "t": "Silk", "s": "Slow · close · warm", "wash": "art-golden", "tag": "Raw" },
+    { "no": "AD-04", "t": "Last Call", "s": "2 a.m. · champagne frames", "wash": "art-noir", "tag": "Members" }
   ],
   "footage": [
     { "t": "The Shake Tape", "s": "Unlisted · loop", "wash": "art-red", "tag": "▶" },
-    { "t": "Off The Clock", "s": "04:20 · handheld", "wash": "art-dusk", "tag": "▶" }
+    { "t": "Body Heat", "s": "03:03 · handheld · close", "wash": "art-dusk", "tag": "▶" },
+    { "t": "Off The Clock", "s": "04:20 · after wrap", "wash": "art-golden", "tag": "▶" }
   ]
 }
