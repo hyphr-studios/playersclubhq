@@ -23,6 +23,9 @@ The surfaces that change over time are powered by JSON files in `content/`:
   flip `"open": true` and give it an `href` when it publishes.
 - `content/vault.json` — the entire Vault floor: billboard + every shelf and card.
   Reorder shelves, add cards, change locks/labels by editing JSON only.
+- `content/afterdark.json` — After Dark, the Vault's 21+ back room
+  (`vault/after-dark/`). One membership: the Vault key opens the floor, a 21+
+  confirm opens the back room. Same JSON format as the Vault.
 
 The static HTML in those pages is just a fallback for the rare case the JSON
 fails to load — keep it roughly in sync when convenient, or ignore it.

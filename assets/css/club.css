@@ -256,6 +256,15 @@ a.ledger__row:hover{padding-left:14px}
 .gate.deny form{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}
 
+/* after dark — red room */
+.gate--ad{background:
+  radial-gradient(85% 60% at 50% 100%,rgba(120,10,8,.4) 0%,transparent 62%),
+  var(--black)}
+.gate--ad img{height:auto;width:min(320px,72vw)}
+.gate--ad .gate__cta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+.vset--door:hover{outline-color:rgba(224,32,27,.55)}
+.vset--door:hover .vset__art{filter:brightness(1.25) saturate(1.15)}
+
 .billboard{
   position:relative;min-height:76vh;display:flex;align-items:flex-end;overflow:hidden;
 }

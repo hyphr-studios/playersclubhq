@@ -1,0 +1,23 @@
+{
+  "featured": {
+    "kicker": "The Back Room",
+    "title": "Late Shift",
+    "copy": "When the issue wraps, the cameras don't.",
+    "wash": "art-red",
+    "cta": "Watch"
+  },
+  "labels": {
+    "sets": ["The Heat", "Loud · Raw · Late"],
+    "footage": ["The Raw Tapes", "Unlisted · Uncut"]
+  },
+  "sets": [
+    { "no": "AD-01", "t": "Heat Check", "s": "22 frames · loud", "wash": "art-red", "tag": "Raw", "hot": true },
+    { "no": "AD-02", "t": "Late Shift", "s": "After wrap · off the record", "wash": "art-dusk", "tag": "New", "hot": true },
+    { "no": "AD-03", "t": "Room Service", "s": "One light · one room", "wash": "art-golden", "tag": "Raw" },
+    { "no": "AD-04", "t": "Last Call", "s": "Champagne frames · 2 a.m.", "wash": "art-noir", "tag": "Members" }
+  ],
+  "footage": [
+    { "t": "The Shake Tape", "s": "Unlisted · loop", "wash": "art-red", "tag": "▶" },
+    { "t": "Off The Clock", "s": "04:20 · handheld", "wash": "art-dusk", "tag": "▶" }
+  ]
+}

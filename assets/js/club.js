@@ -77,6 +77,28 @@
     }
   }
 
+  /* after dark — the back room. Vault membership required, then 21+ confirm */
+  var adgate = document.getElementById("adgate");
+  if (adgate) {
+    var adInner = document.getElementById("ad-inner");
+    if (sessionStorage.getItem("pc-vault") !== "open") {
+      location.replace("../");
+    } else if (sessionStorage.getItem("pc-ad") === "open") {
+      adgate.remove();
+      if (adInner) adInner.removeAttribute("hidden");
+    } else {
+      document.body.style.overflow = "hidden";
+      adgate.querySelector("[data-ad-yes]").addEventListener("click", function () {
+        sessionStorage.setItem("pc-ad", "open");
+        adgate.style.transition = "opacity .8s ease, visibility .8s";
+        adgate.style.opacity = "0";
+        adgate.style.visibility = "hidden";
+        if (adInner) adInner.removeAttribute("hidden");
+        document.body.style.overflow = "";
+      });
+    }
+  }
+
   /* editable content — JSON overrides the static markup when it loads.
      Edit content/issues.json and content/vault.json; never touch the HTML. */
   var esc = function (s) {
@@ -120,10 +142,14 @@
         var art = c.image
           ? '<div class="vset__art"><img src="' + esc(c.image) + '" alt="" loading="lazy"></div>'
           : '<div class="vset__art ' + esc(c.wash || "art-noir") + '"></div>';
-        return '<article class="vset' + (wide ? " vset--wide" : "") + (c.locked ? " vset--locked" : "") + '">' + art +
+        var cls = "vset" + (wide ? " vset--wide" : "") + (c.locked ? " vset--locked" : "") + (c.href ? " vset--door" : "");
+        var inner = art +
           (c.no ? '<span class="vset__no">' + esc(c.no) + "</span>" : "") +
           (c.tag ? '<span class="' + tagClass(c) + '">' + esc(c.tag) + "</span>" : "") +
-          '<div class="vset__body"><span class="vset__t">' + esc(c.t) + '</span><span class="vset__s">' + esc(c.s) + "</span></div></article>";
+          '<div class="vset__body"><span class="vset__t">' + esc(c.t) + '</span><span class="vset__s">' + esc(c.s) + "</span></div>";
+        return c.href
+          ? '<a class="' + cls + '" href="' + esc(c.href) + '">' + inner + "</a>"
+          : '<article class="' + cls + '">' + inner + "</article>";
       };
       var html = "";
       var ft = data.featured;
@@ -141,12 +167,15 @@
           ' <span class="arr">→</span></span></div></div></header>';
       }
       html += "<main>";
+      var L = data.labels || {};
+      var sl = L.sets || ["The Sets", "Never published · Never public"];
+      var fl = L.footage || ["Footage", "Reels · Loops · Tapes"];
       if (data.sets && data.sets.length) {
-        html += '<div class="vhead"><h3>The Sets</h3><span>Never published · Never public</span></div>' +
+        html += '<div class="vhead"><h3>' + esc(sl[0]) + "</h3><span>" + esc(sl[1]) + "</span></div>" +
           '<div class="vgrid">' + data.sets.map(function (c) { return setCard(c, false); }).join("") + "</div>";
       }
       if (data.footage && data.footage.length) {
-        html += '<div class="vhead"><h3>Footage</h3><span>Reels · Loops · Tapes</span></div>' +
+        html += '<div class="vhead"><h3>' + esc(fl[0]) + "</h3><span>" + esc(fl[1]) + "</span></div>" +
           '<div class="vgrid vgrid--wide">' + data.footage.map(function (c) { return setCard(c, true); }).join("") + "</div>";
       }
       var bk = data.book;

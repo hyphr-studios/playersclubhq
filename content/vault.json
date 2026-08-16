@@ -13,7 +13,7 @@
     { "no": "Set 03", "t": "Sunsets & Side Eyes — Extended", "s": "The dusk set, unedited", "wash": "art-dusk", "tag": "New", "hot": true },
     { "no": "Set 04", "t": "Siren — The Wet Frames", "s": "Close · jewelry · water", "wash": "art-siren", "tag": "Members" },
     { "no": "Set 05", "t": "After Hours", "s": "BTS · when cameras stop", "wash": "art-golden", "tag": "BTS" },
-    { "no": "Set 06", "t": "After Dark", "s": "Separate key required", "wash": "art-red", "tag": "21+", "locked": true }
+    { "no": "Set 06", "t": "After Dark", "s": "The back room · enter", "wash": "art-red", "tag": "21+", "href": "after-dark/" }
   ],
   "footage": [
     { "t": "Poolside Luxe — The Cut", "s": "07:14 · golden hour master", "wash": "art-golden", "tag": "▶" },
