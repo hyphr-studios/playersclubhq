@@ -234,8 +234,10 @@ a.ledger__row:hover{padding-left:14px}
 .gate{
   position:fixed;inset:0;z-index:800;background:var(--black);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
-  text-align:center;padding:var(--pad);
+  text-align:center;padding:var(--pad);overflow-y:auto;
 }
+.gate>*{max-width:100%}
+.gate .gate__hint{max-width:min(340px,86vw);line-height:1.9;word-break:break-word}
 .gate img{height:64px;width:auto;opacity:.9;margin-bottom:6px}
 .gate h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,6vw,44px);letter-spacing:.02em}
 .gate p{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
@@ -418,3 +420,9 @@ details.gal[open] summary .x{transform:rotate(45deg)}
 .plate__blur{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(30px) brightness(.5) saturate(.8);transform:scale(1.14)}
 .plate--full .plate__body{z-index:2}
 @media (max-width:700px){.plate__blur{filter:blur(14px) brightness(.5) saturate(.8)}}
+
+/* tap-to-play badge for ambient loops on phones */
+.tap-to-play::before{content:"▶";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:54px;height:54px;border:1px solid rgba(244,242,237,.8);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--white);
+  background:rgba(10,10,10,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);z-index:3}

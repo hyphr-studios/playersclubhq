@@ -147,7 +147,8 @@
       };
       var setCard = function (c, wide) {
         var pattr = c.photos && c.photos.length
-          ? ' data-photos="' + esc(c.photos.join(",")) + '" data-set-title="' + esc(c.t) + '"'
+          ? ' data-photos="' + esc(c.photos.join(",")) + '" data-set-title="' + esc(c.t) + '"' +
+            (c.captions ? ' data-captions="' + esc(c.captions.join("|")) + '"' : "")
           : "";
         var art = c.video
           ? '<div class="vset__art"><img src="' + esc(c.poster || "") + '" alt="" loading="lazy"><span class="cinema__play cinema__play--sm">▶</span></div>'
@@ -215,16 +216,18 @@
   }
 
   /* the viewer — click a set, walk the frames */
-  var lbx = null, lbxList = [], lbxTitle = "", lbxIdx = 0;
+  var lbx = null, lbxList = [], lbxTitle = "", lbxIdx = 0, lbxCaps = [];
   var lbxShow = function (i) {
     lbxIdx = (i + lbxList.length) % lbxList.length;
     lbx.querySelector("img").src = lbxList[lbxIdx];
-    lbx.querySelector(".lbx__meta").textContent = lbxTitle + " · " + (lbxIdx + 1) + " / " + lbxList.length;
+    var name = lbxCaps[lbxIdx] || lbxTitle;
+    lbx.querySelector(".lbx__meta").textContent =
+      name + (lbxList.length > 1 ? " · " + (lbxIdx + 1) + " / " + lbxList.length : "");
     var pre = new Image();
     pre.src = lbxList[(lbxIdx + 1) % lbxList.length];
   };
   var lbxClose = function () { if (lbx) { lbx.classList.remove("open"); document.body.style.overflow = ""; } };
-  var lbxOpen = function (list, title) {
+  var lbxOpen = function (list, title, caps) {
     if (!lbx) {
       lbx = document.createElement("div");
       lbx.className = "lbx";
@@ -246,7 +249,7 @@
         if (e.key === "ArrowRight") lbxShow(lbxIdx + 1);
       });
     }
-    lbxList = list; lbxTitle = title;
+    lbxList = list; lbxTitle = title; lbxCaps = caps || [];
     lbx.classList.add("open");
     document.body.style.overflow = "hidden";
     lbxShow(0);
@@ -255,7 +258,12 @@
     var el = e.target.closest("[data-photos]");
     if (!el || el.getAttribute("data-video")) return;
     e.preventDefault();
-    lbxOpen(el.getAttribute("data-photos").split(","), el.getAttribute("data-set-title") || "");
+    var caps = el.getAttribute("data-captions");
+    lbxOpen(
+      el.getAttribute("data-photos").split(","),
+      el.getAttribute("data-set-title") || "",
+      caps ? caps.split("|") : []
+    );
   });
 
   /* screening room — click a poster, get the film */
@@ -274,14 +282,37 @@
     art.appendChild(v);
   });
 
-  /* ambient loops sleep offscreen — easy on phones */
-  var vio = new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) {
-      var v = en.target;
-      if (en.isIntersecting) { v.play().catch(function () {}); } else { v.pause(); }
-    });
-  }, { threshold: 0.12 });
-  document.querySelectorAll("video[autoplay]").forEach(function (v) { vio.observe(v); });
+  /* ambient loops: desktop plays them in view, phones wait for a tap.
+     Nothing downloads until it is actually wanted. */
+  var ambient = document.querySelectorAll("video[data-ambient],video[autoplay]");
+  if (ambient.length) {
+    var wide = window.matchMedia("(min-width: 768px)").matches;
+    var saver = (navigator.connection || {}).saveData;
+    if (wide && !saver) {
+      var vio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          var v = en.target;
+          if (en.isIntersecting) {
+            if (v.preload === "none") { v.preload = "auto"; v.load(); }
+            v.play().catch(function () {});
+          } else { v.pause(); }
+        });
+      }, { threshold: 0.25 });
+      ambient.forEach(function (v) { vio.observe(v); });
+    } else {
+      ambient.forEach(function (v) {
+        v.removeAttribute("autoplay");
+        v.parentNode.classList.add("tap-to-play");
+        v.parentNode.addEventListener("click", function () {
+          if (v.paused) {
+            v.preload = "auto";
+            v.play().catch(function () {});
+            v.parentNode.classList.remove("tap-to-play");
+          }
+        });
+      });
+    }
+  }
 
   /* year */
   document.querySelectorAll("[data-year]").forEach(function (el) {
