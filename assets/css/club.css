@@ -412,3 +412,9 @@ details.gal[open] summary .x{transform:rotate(45deg)}
 @keyframes kb{from{transform:scale(1)}to{transform:scale(1.075)}}
 .kb{animation:kb 26s ease-in-out infinite alternate;transform-origin:50% 35%;will-change:transform}
 @media (prefers-reduced-motion:reduce){.kb{animation:none}}
+
+/* ── full-frame plates: whole picture, blur fill ── */
+.plate--full .plate__photo{object-fit:contain;z-index:1}
+.plate__blur{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(30px) brightness(.5) saturate(.8);transform:scale(1.14)}
+.plate--full .plate__body{z-index:2}
+@media (max-width:700px){.plate__blur{filter:blur(14px) brightness(.5) saturate(.8)}}

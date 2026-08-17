@@ -274,6 +274,15 @@
     art.appendChild(v);
   });
 
+  /* ambient loops sleep offscreen — easy on phones */
+  var vio = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      var v = en.target;
+      if (en.isIntersecting) { v.play().catch(function () {}); } else { v.pause(); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll("video[autoplay]").forEach(function (v) { vio.observe(v); });
+
   /* year */
   document.querySelectorAll("[data-year]").forEach(function (el) {
     el.textContent = new Date().getFullYear();

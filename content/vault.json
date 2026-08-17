@@ -46,7 +46,9 @@
   "footage": [
     { "t": "Deck Tape 01", "s": "On set · between frames", "tag": "1:31", "video": "../assets/video/swim-001/reel-01.mp4", "poster": "../assets/video/swim-001/reel-01-poster.jpg" },
     { "t": "Deck Tape 02", "s": "The cast at work", "tag": "2:19", "video": "../assets/video/swim-001/reel-02.mp4", "poster": "../assets/video/swim-001/reel-02-poster.jpg" },
-    { "t": "Deck Tape 03", "s": "Golden hour · unlisted", "tag": "2:30", "video": "../assets/video/swim-001/reel-03.mp4", "poster": "../assets/video/swim-001/reel-03-poster.jpg" }
+    { "t": "Deck Tape 03", "s": "Golden hour · unlisted", "tag": "2:30", "video": "../assets/video/swim-001/reel-03.mp4", "poster": "../assets/video/swim-001/reel-03-poster.jpg" },
+    { "t": "Karma — Motion I", "s": "Her tape · silent", "tag": "0:40", "video": "../assets/video/swim-001/karma-reel-01.mp4", "poster": "../assets/video/swim-001/karma-reel-01-poster.jpg" },
+    { "t": "Karma — Motion II", "s": "Her tape · silent", "tag": "0:35", "video": "../assets/video/swim-001/karma-reel-02.mp4", "poster": "../assets/video/swim-001/karma-reel-02-poster.jpg" }
   ],
   "book": {
     "kicker": "Vault Edition 01",
