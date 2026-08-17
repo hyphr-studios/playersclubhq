@@ -18,23 +18,100 @@
     ]
   },
   "sets": [
-    { "no": "Set 01", "t": "Karma — Uncut", "s": "8 frames · two never featured", "image": "../assets/photos/swim-001/sets/karma/karma-02.jpg", "tag": "Members",
-      "photos": ["../assets/photos/swim-001/sets/karma/karma-01.jpg","../assets/photos/swim-001/sets/karma/karma-02.jpg","../assets/photos/swim-001/sets/karma/karma-03.jpg","../assets/photos/swim-001/sets/karma/karma-04.jpg","../assets/photos/swim-001/sets/karma/karma-05.jpg","../assets/photos/swim-001/sets/karma/karma-06.jpg","../assets/photos/swim-001/sets/karma/karma-07.jpg","../assets/photos/swim-001/sets/karma/karma-08.jpg"] },
-    { "no": "Set 02", "t": "Cherri — B-Sides", "s": "The red set · full sheet", "image": "../assets/photos/swim-001/sets/cherri/cherri-02.jpg", "tag": "Members",
-      "photos": ["../assets/photos/swim-001/sets/cherri/cherri-01.jpg","../assets/photos/swim-001/sets/cherri/cherri-02.jpg","../assets/photos/swim-001/sets/cherri/cherri-03.jpg","../assets/photos/swim-001/sets/cherri/cherri-04.jpg"] },
-    { "no": "Set 03", "t": "Kay Kay — Extended", "s": "Las Vegas · unedited", "image": "../assets/photos/swim-001/sets/kaykay/kaykay-02.jpg", "tag": "New", "hot": true,
-      "photos": ["../assets/photos/swim-001/sets/kaykay/kaykay-01.jpg","../assets/photos/swim-001/sets/kaykay/kaykay-02.jpg"] },
-    { "no": "Set 04", "t": "Naiomi", "s": "The frames that broke the internet", "image": "../assets/photos/swim-001/sets/naiomi/naiomi-03.jpg", "tag": "Members",
-      "photos": ["../assets/photos/swim-001/sets/naiomi/naiomi-01.jpg","../assets/photos/swim-001/sets/naiomi/naiomi-02.jpg","../assets/photos/swim-001/sets/naiomi/naiomi-03.jpg"] },
-    { "no": "Set 05", "t": "Ivorie — The Host", "s": "Booked to host · went rogue", "image": "../assets/photos/swim-001/sets/ivorie/ivorie-02.jpg", "tag": "Members",
-      "photos": ["../assets/photos/swim-001/sets/ivorie/ivorie-01.jpg","../assets/photos/swim-001/sets/ivorie/ivorie-02.jpg","../assets/photos/swim-001/sets/ivorie/ivorie-03.jpg","../assets/photos/swim-001/sets/ivorie/ivorie-04.jpg"] },
-    { "no": "Set 06", "t": "After Hours", "s": "Cherri & Karma · when cameras stop", "image": "../assets/photos/swim-001/sets/afterhours/duo-01.jpg", "tag": "BTS",
-      "photos": ["../assets/photos/swim-001/sets/afterhours/duo-01.jpg"] },
-    { "no": "Set 07", "t": "After Dark", "s": "The back room · enter", "wash": "art-red", "tag": "21+", "href": "after-dark/" }
+    {
+      "no": "Set 01",
+      "t": "Karma — Uncut",
+      "s": "8 frames · two never featured",
+      "image": "../assets/photos/swim-001/sets/karma/karma-02.jpg",
+      "tag": "Members",
+      "photos": [
+        "../assets/photos/swim-001/sets/karma/karma-01.jpg",
+        "../assets/photos/swim-001/sets/karma/karma-02.jpg",
+        "../assets/photos/swim-001/sets/karma/karma-03.jpg",
+        "../assets/photos/swim-001/sets/karma/karma-04.jpg",
+        "../assets/photos/swim-001/sets/karma/karma-05.jpg",
+        "../assets/photos/swim-001/sets/karma/karma-06.jpg",
+        "../assets/photos/swim-001/sets/karma/karma-07.jpg",
+        "../assets/photos/swim-001/sets/karma/karma-08.jpg"
+      ]
+    },
+    {
+      "no": "Set 02",
+      "t": "Cherri — B-Sides",
+      "s": "The red set · full sheet",
+      "image": "../assets/photos/swim-001/sets/cherri/cherri-02.jpg",
+      "tag": "Members",
+      "photos": [
+        "../assets/photos/swim-001/sets/cherri/cherri-01.jpg",
+        "../assets/photos/swim-001/sets/cherri/cherri-02.jpg",
+        "../assets/photos/swim-001/sets/cherri/cherri-03.jpg",
+        "../assets/photos/swim-001/sets/cherri/cherri-04.jpg"
+      ]
+    },
+    {
+      "no": "Set 03",
+      "t": "Kay Kay — Extended",
+      "s": "Las Vegas · unedited",
+      "image": "../assets/photos/swim-001/sets/kaykay/kaykay-02.jpg",
+      "tag": "New",
+      "hot": true,
+      "photos": [
+        "../assets/photos/swim-001/sets/kaykay/kaykay-01.jpg",
+        "../assets/photos/swim-001/sets/kaykay/kaykay-02.jpg"
+      ]
+    },
+    {
+      "no": "Set 04",
+      "t": "Naiomi",
+      "s": "The frames that broke the internet",
+      "image": "../assets/photos/swim-001/sets/naiomi/naiomi-03.jpg",
+      "tag": "Members",
+      "photos": [
+        "../assets/photos/swim-001/sets/naiomi/naiomi-01.jpg",
+        "../assets/photos/swim-001/sets/naiomi/naiomi-02.jpg",
+        "../assets/photos/swim-001/sets/naiomi/naiomi-03.jpg"
+      ]
+    },
+    {
+      "no": "Set 05",
+      "t": "Ivorie — The Host",
+      "s": "Booked to host · went rogue",
+      "image": "../assets/photos/swim-001/sets/ivorie/ivorie-02.jpg",
+      "tag": "Members",
+      "photos": [
+        "../assets/photos/swim-001/sets/ivorie/ivorie-02.jpg",
+        "../assets/photos/swim-001/sets/ivorie/ivorie-03.jpg",
+        "../assets/photos/swim-001/sets/ivorie/ivorie-04.jpg"
+      ]
+    },
+    {
+      "no": "Set 06",
+      "t": "After Hours",
+      "s": "Cherri & Karma · when cameras stop",
+      "image": "../assets/photos/swim-001/sets/afterhours/duo-01.jpg",
+      "tag": "BTS",
+      "photos": [
+        "../assets/photos/swim-001/sets/afterhours/duo-01.jpg"
+      ]
+    },
+    {
+      "no": "Set 07",
+      "t": "After Dark",
+      "s": "The back room · enter",
+      "tag": "21+",
+      "href": "after-dark/",
+      "image": "../assets/photos/swim-001/sets/afterdark/ad-group-night.jpg"
+    }
   ],
   "labels": {
-    "sets": ["The Sets", "Never published · Never public"],
-    "footage": ["The Screening Room", "Silent · Members only"]
+    "sets": [
+      "The Sets",
+      "Never published · Never public"
+    ],
+    "footage": [
+      "The Screening Room",
+      "Silent · Members only"
+    ]
   },
   "cinema": {
     "kicker": "The Deep Tape",
@@ -44,11 +121,41 @@
     "poster": "../assets/video/swim-001/the-cut-poster.jpg"
   },
   "footage": [
-    { "t": "Deck Tape 01", "s": "On set · between frames", "tag": "1:31", "video": "../assets/video/swim-001/reel-01.mp4", "poster": "../assets/video/swim-001/reel-01-poster.jpg" },
-    { "t": "Deck Tape 02", "s": "The cast at work", "tag": "2:19", "video": "../assets/video/swim-001/reel-02.mp4", "poster": "../assets/video/swim-001/reel-02-poster.jpg" },
-    { "t": "Deck Tape 03", "s": "Golden hour · unlisted", "tag": "2:30", "video": "../assets/video/swim-001/reel-03.mp4", "poster": "../assets/video/swim-001/reel-03-poster.jpg" },
-    { "t": "Karma — Motion I", "s": "Her tape · silent", "tag": "0:40", "video": "../assets/video/swim-001/karma-reel-01.mp4", "poster": "../assets/video/swim-001/karma-reel-01-poster.jpg" },
-    { "t": "Karma — Motion II", "s": "Her tape · silent", "tag": "0:35", "video": "../assets/video/swim-001/karma-reel-02.mp4", "poster": "../assets/video/swim-001/karma-reel-02-poster.jpg" }
+    {
+      "t": "Deck Tape 01",
+      "s": "On set · between frames",
+      "tag": "1:31",
+      "video": "../assets/video/swim-001/reel-01.mp4",
+      "poster": "../assets/video/swim-001/reel-01-poster.jpg"
+    },
+    {
+      "t": "Deck Tape 02",
+      "s": "The cast at work",
+      "tag": "2:19",
+      "video": "../assets/video/swim-001/reel-02.mp4",
+      "poster": "../assets/video/swim-001/reel-02-poster.jpg"
+    },
+    {
+      "t": "Deck Tape 03",
+      "s": "Golden hour · unlisted",
+      "tag": "2:30",
+      "video": "../assets/video/swim-001/reel-03.mp4",
+      "poster": "../assets/video/swim-001/reel-03-poster.jpg"
+    },
+    {
+      "t": "Karma — Motion I",
+      "s": "Her tape · silent",
+      "tag": "0:40",
+      "video": "../assets/video/swim-001/karma-reel-01.mp4",
+      "poster": "../assets/video/swim-001/karma-reel-01-poster.jpg"
+    },
+    {
+      "t": "Karma — Motion II",
+      "s": "Her tape · silent",
+      "tag": "0:35",
+      "video": "../assets/video/swim-001/karma-reel-02.mp4",
+      "poster": "../assets/video/swim-001/karma-reel-02-poster.jpg"
+    }
   ],
   "book": {
     "kicker": "Vault Edition 01",
