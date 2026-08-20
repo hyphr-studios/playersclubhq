@@ -96,11 +96,11 @@
     },
     {
       "no": "Set 07",
-      "t": "After Dark",
+      "t": "",
       "s": "The back room · enter",
       "tag": "21+",
       "href": "after-dark/",
-      "image": "../assets/photos/swim-001/sets/afterdark/ad-group-night.jpg"
+      "mark": "../assets/img/afterdark.png"
     }
   ],
   "labels": {

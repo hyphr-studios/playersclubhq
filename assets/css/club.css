@@ -76,7 +76,7 @@ a{color:inherit;text-decoration:none}
   padding:18px var(--pad);
   mix-blend-mode:difference;
 }
-.nav__mark{display:flex;align-items:center;gap:12px}
+.nav__mark{display:flex;align-items:center;gap:12px;padding:14px 0;margin:-14px 0}
 .nav__mark img{height:14px;width:auto;opacity:.95}
 .nav__mark .nav__pub{font-size:9px;letter-spacing:.38em;color:#fff;opacity:.55;text-transform:uppercase;font-weight:500}
 .nav__links{display:flex;gap:34px}
@@ -426,3 +426,45 @@ details.gal[open] summary .x{transform:rotate(45deg)}
   width:54px;height:54px;border:1px solid rgba(244,242,237,.8);border-radius:50%;
   display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--white);
   background:rgba(10,10,10,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);z-index:3}
+
+/* ── the after dark door — the mark, not a photograph ── */
+.vset--mark .vset__art{
+  background:
+    radial-gradient(130% 86% at 50% 116%, rgba(224,32,27,.52) 0%, rgba(224,32,27,.14) 44%, transparent 72%),
+    linear-gradient(180deg,#0B0B0B 0%,#141013 58%,#1A0E11 100%);
+  display:flex;align-items:center;justify-content:center;padding:0 12%;
+}
+.vset--mark .vset__art img{
+  width:100%;height:auto;max-height:44%;object-fit:contain;
+  filter:drop-shadow(0 0 22px rgba(224,32,27,.34));
+  transition:filter .7s ease,transform .7s cubic-bezier(.2,.6,.2,1);
+}
+.vset--mark:hover .vset__art{transform:none;filter:none}
+.vset--mark:hover .vset__art img{
+  filter:drop-shadow(0 0 34px rgba(224,32,27,.62)) drop-shadow(0 0 8px rgba(224,32,27,.4));
+  transform:scale(1.03);
+}
+.vset--mark::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:2px;z-index:2;
+  background:linear-gradient(90deg,transparent,rgba(224,32,27,.85),transparent);
+  opacity:.5;transition:opacity .6s;
+}
+.vset--mark:hover::after{opacity:1}
+
+/* ── touch targets: nothing under 44px on a phone ── */
+@media (max-width:760px){
+  .nav__links a{padding:12px 0;margin:-12px 0}
+  .nav__burger{padding:12px;margin:-12px}
+  .layout-list a{min-height:48px}
+}
+
+/* ── two real sets, presented as features rather than leftovers ── */
+.vgrid--duo{
+  grid-template-columns:repeat(2,1fr);
+  max-width:1040px;margin:0 auto;gap:14px;
+}
+.vgrid--duo .vset{aspect-ratio:4/5}
+@media (max-width:720px){
+  .vgrid--duo{grid-template-columns:1fr;max-width:none}
+  .vgrid--duo .vset{aspect-ratio:3/4}
+}

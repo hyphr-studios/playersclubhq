@@ -152,15 +152,19 @@
           : "";
         var art = c.video
           ? '<div class="vset__art"><img src="' + esc(c.poster || "") + '" alt="" loading="lazy"><span class="cinema__play cinema__play--sm">▶</span></div>'
-          : c.image
-            ? '<div class="vset__art"><img src="' + esc(c.image) + '" alt="" loading="lazy"></div>'
-            : '<div class="vset__art ' + esc(c.wash || "art-noir") + '"></div>';
-        var cls = "vset" + (wide ? " vset--wide" : "") + (c.locked ? " vset--locked" : "") + (c.href ? " vset--door" : "") + (c.video ? " vset--film" : "");
+          : c.mark
+            ? '<div class="vset__art"><img src="' + esc(c.mark) + '" alt="" loading="lazy"></div>'
+            : c.image
+              ? '<div class="vset__art"><img src="' + esc(c.image) + '" alt="" loading="lazy"></div>'
+              : '<div class="vset__art ' + esc(c.wash || "art-noir") + '"></div>';
+        var cls = "vset" + (wide ? " vset--wide" : "") + (c.locked ? " vset--locked" : "") + (c.href ? " vset--door" : "") + (c.video ? " vset--film" : "") + (c.mark ? " vset--mark" : "");
         var vattr = c.video ? ' data-video="' + esc(c.video) + '"' : "";
         var inner = art +
           (c.no ? '<span class="vset__no">' + esc(c.no) + "</span>" : "") +
           (c.tag ? '<span class="' + tagClass(c) + '">' + esc(c.tag) + "</span>" : "") +
-          '<div class="vset__body"><span class="vset__t">' + esc(c.t) + '</span><span class="vset__s">' + esc(c.s) + "</span></div>";
+          '<div class="vset__body">' +
+          (c.t ? '<span class="vset__t">' + esc(c.t) + "</span>" : "") +
+          '<span class="vset__s">' + esc(c.s) + "</span></div>";
         return c.href
           ? '<a class="' + cls + '" href="' + esc(c.href) + '"' + vattr + ">" + inner + "</a>"
           : '<article class="' + cls + '"' + vattr + pattr + ">" + inner + "</article>";
@@ -189,7 +193,8 @@
       var fl = L.footage || ["Footage", "Reels · Loops · Tapes"];
       if (data.sets && data.sets.length) {
         html += '<div class="vhead"><h3>' + esc(sl[0]) + "</h3><span>" + esc(sl[1]) + "</span></div>" +
-          '<div class="vgrid">' + data.sets.map(function (c) { return setCard(c, false); }).join("") + "</div>";
+          '<div class="vgrid' + (data.sets.length <= 2 ? " vgrid--duo" : "") + '">' +
+          data.sets.map(function (c) { return setCard(c, false); }).join("") + "</div>";
       }
       if (data.footage && data.footage.length) {
         html += '<div class="vhead"><h3>' + esc(fl[0]) + "</h3><span>" + esc(fl[1]) + "</span></div>";
