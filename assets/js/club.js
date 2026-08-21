@@ -2,6 +2,31 @@
 (function () {
   "use strict";
 
+  /* ─────────────────────────────────────────────────────────────
+     WHERE THE FILMS LIVE.
+     "" (empty)  = served from this site, out of assets/video/
+     a URL       = served from there instead, by filename.
+     Changing this one line moves every film on the site.
+     ───────────────────────────────────────────────────────────── */
+  var VIDEO_BASE = "";
+
+  var filmURL = function (p) {
+    if (!p || !VIDEO_BASE) return p;
+    return VIDEO_BASE.replace(/\/+$/, "") + "/" + p.split("/").pop();
+  };
+
+  /* point every film at the configured home */
+  var routeFilms = function (root) {
+    (root || document).querySelectorAll("[data-video]").forEach(function (el) {
+      el.setAttribute("data-video", filmURL(el.getAttribute("data-video")));
+    });
+    (root || document).querySelectorAll("video[src]").forEach(function (v) {
+      v.setAttribute("src", filmURL(v.getAttribute("src")));
+    });
+  };
+
+  routeFilms(document);
+
   /* menu */
   var burger = document.querySelector(".nav__burger");
   var menu = document.querySelector(".menu");
@@ -151,7 +176,9 @@
             (c.captions ? ' data-captions="' + esc(c.captions.join("|")) + '"' : "")
           : "";
         var art = c.video
-          ? '<div class="vset__art"><img src="' + esc(c.poster || "") + '" alt="" loading="lazy"><span class="cinema__play cinema__play--sm">▶</span></div>'
+          ? '<div class="vset__art"><img class="vfill" src="' + esc(c.poster || "") + '" alt="" aria-hidden="true" loading="lazy">' +
+            '<img class="vmain" src="' + esc(c.poster || "") + '" alt="" loading="lazy">' +
+            '<span class="cinema__play cinema__play--sm">▶</span></div>'
           : c.mark
             ? '<div class="vset__art"><img src="' + esc(c.mark) + '" alt="" loading="lazy"></div>'
             : c.image
@@ -182,7 +209,7 @@
           '<div class="billboard__fade"></div>' +
           '<div class="billboard__body">' +
           '<span class="eyebrow eyebrow--gold rv in">' + esc(ft.kicker) + "</span>" +
-          '<h1 class="rv in">' + esc(ft.title) + "</h1>" +
+          '<h2 class="rv in">' + esc(ft.title) + "</h2>" +
           '<p class="rv in rv-d1">' + esc(ft.copy) + "</p>" +
           '<div class="billboard__cta rv in rv-d2"><span class="btn btn--solid">' + esc(ft.cta || "Open") +
           ' <span class="arr">→</span></span></div></div></header>';
@@ -201,7 +228,9 @@
         var cn = data.cinema;
         if (cn) {
           html += '<section class="cinema" data-video="' + esc(cn.video) + '">' +
-            '<div class="cinema__art"><img src="' + esc(cn.poster || "") + '" alt="" loading="lazy"><span class="cinema__play">▶</span></div>' +
+            '<div class="cinema__art"><img class="vfill" src="' + esc(cn.poster || "") + '" alt="" aria-hidden="true" loading="lazy">' +
+            '<img class="vmain" src="' + esc(cn.poster || "") + '" alt="" loading="lazy">' +
+            '<span class="cinema__play">▶</span></div>' +
             '<div class="cinema__meta"><span class="eyebrow eyebrow--gold">' + esc(cn.kicker) + "</span>" +
             "<h2>" + esc(cn.title) + '</h2><span class="cinema__s">' + esc(cn.s) + "</span></div></section>";
         }
@@ -217,6 +246,7 @@
       }
       html += "</main>";
       vaultMount.innerHTML = html;
+      routeFilms(vaultMount);
     }).catch(function () {});
   }
 
@@ -283,7 +313,8 @@
     v.controls = true;
     v.autoplay = true;
     v.playsInline = true;
-    art.innerHTML = "";
+    /* the blurred fill stays; only the still frame and the play badge go */
+    art.querySelectorAll(".vmain,.cinema__play").forEach(function (n) { n.remove(); });
     art.appendChild(v);
   });
 
