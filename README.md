@@ -11,9 +11,7 @@ An editorial publication presented by **VMG**. Static site — no build step, no
 | SWIM 001 — Poolside Luxe | `issues/swim-001/` |
 | Archive (the record) | `archive/` |
 | Stanley Fontaine — SF-83 | `archive/stanley-fontaine/` |
-| Inez Valentine — IV-77 | `archive/inez-valentine/` |
 | The Vault (members) | `vault/` |
-| Studio (creative dept.) | `studio/` |
 
 ## Editing content — no HTML required
 
@@ -29,7 +27,7 @@ The surfaces that change over time are powered by JSON files in `content/`:
 
 The static HTML in those pages is just a fallback for the rare case the JSON
 fails to load — keep it roughly in sync when convenient, or ignore it.
-Editorial pages (the SWIM 001 issue, Stanley, Inez) are crafted pages and stay HTML.
+Editorial pages (the SWIM 001 issue, Stanley) are crafted pages and stay HTML.
 
 ## Photography — the naming map
 
@@ -57,11 +55,7 @@ afterdark ad-01/02). Cards + the fullscreen viewer read these; add a frame by
 dropping the next number and listing it in `content/vault.json` (`photos`).
 
 **Archive** — `assets/photos/archive/`: `swim-cs-01..04.jpg` (production record),
-`outtakes/out-01..04.jpg` (SWIM outtakes drawer), `sf-01..04.jpg` (Stanley
-effects), `iv-01..03.jpg` (Inez fragments).
-
-**Studio** — `assets/photos/studio/`: `ref-01..08.jpg` (the wall),
-`l1-a..c.jpg`, `l2-a..c.jpg`, `l3-a..c.jpg` (light library).
+`outtakes/out-01..04.jpg` (SWIM outtakes drawer).
 
 **Future issues**: copy the swim-001 pattern — `assets/photos/<issue-slug>/`
 with `cover.jpg`, `issue-cover.jpg`, then model-name files.
@@ -71,27 +65,24 @@ The full-issue reader on the SWIM page is an Issuu embed:
 
 ## Video — the naming map
 
-Muted, compressed MP4s live in `assets/video/swim-001/` (same replace-by-name
-rule as photos; keep files under ~90MB for GitHub):
+Films live in `assets/video/swim-001/`, silent, stored vertical (720×1280).
+Replacing a file by name upgrades it in place. Each film has a matching
+`-poster.jpg` shown before it plays.
 
 | File | Where it shows |
 |---|---|
-| `the-cut.mp4` + `the-cut-poster.jpg` | Vault Screening Room feature (the deep tape) |
-| `reel-01..03.mp4` + `-poster.jpg` | Vault Deck Tapes (click to play) |
-| `loop-a.mp4`, `loop-b.mp4` | Studio — Motion (silent autoplay loops) |
+| `the-cut.mp4` | Vault Screening Room — the feature |
+| `reel-01..03.mp4` | Vault Deck Tapes — tap to play |
+| `karma-reel-01..02.mp4` | Vault — Karma Motion I & II |
 | `loop-c.mp4`, `loop-d.mp4` | SWIM 001 page — Motion band |
+
+Settings and pitfalls are below under **Encoding a new film**.
 
 ## The Vault login
 
 Free house account while the Vault is open: user `STANLEY`, password `FONTAINE`
 (shown on the gate). Credentials live in `data-user` / `data-key` on the gate in
 `vault/index.html`. Session-based; After Dark behind it still asks 21+.
-
-## The Vault key
-
-The gate password is set in `vault/index.html` on the `#gate` element:
-`data-key="FONTAINE"`. Change it there. (Client-side only — it sets a mood,
-it is not security. Anything truly private should not be committed to this repo.)
 
 ## Contact email
 
