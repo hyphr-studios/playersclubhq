@@ -81,8 +81,6 @@ rule as photos; keep files under ~90MB for GitHub):
 | `loop-a.mp4`, `loop-b.mp4` | Studio — Motion (silent autoplay loops) |
 | `loop-c.mp4`, `loop-d.mp4` | SWIM 001 page — Motion band |
 
-Compress a new video: `ffmpeg -i IN.MOV -an -vf "scale=1280:-2,fps=24" -c:v libx264 -crf 28 -movflags +faststart OUT.mp4` (`-an` strips audio; use `scale=1920:-2 -crf 27` for a feature).
-
 ## The Vault login
 
 Free house account while the Vault is open: user `STANLEY`, password `FONTAINE`
@@ -113,3 +111,49 @@ real inbox exists.
 5. Back in Settings → Pages, enter the custom domain and enable **Enforce HTTPS**.
 
 © VMG · PLAYER'S CLUB™ · All rights reserved.
+
+
+## Encoding a new film (the settings that matter)
+
+Phone footage is shot vertical. Store it **vertical** — the blurred surround
+you see on the site is drawn by the page, not baked into the file. Baking it
+in wastes about half the file on blur.
+
+```bash
+ffmpeg -i INPUT.MOV \
+  -an -vf scale=720:1280 \
+  -c:v libx264 -preset fast -crf 26 -maxrate 1700k -bufsize 3400k \
+  -pix_fmt yuv420p -movflags +faststart \
+  assets/video/swim-001/OUT.mp4
+```
+
+Two things bite here, both silent:
+- **The output path must come last.** ffmpeg applies options to the file that
+  *follows* them; put the output earlier and it is written with default
+  settings — full resolution, enormous, no warning.
+- **Keep `-maxrate`.** Plain `-crf` on grainy 60fps handheld will happily
+  produce a file three times larger than the source needed.
+
+Then a poster frame:
+```bash
+ffmpeg -i assets/video/swim-001/OUT.mp4 -ss 4 -frames:v 1 -q:v 5 assets/video/swim-001/OUT-poster.jpg
+```
+
+## Moving films to a CDN later
+
+`assets/js/club.js` opens with:
+
+```js
+var VIDEO_BASE = "";
+```
+
+Empty means films are served from this repo. Point it at a CDN and every film
+on the site follows, by filename — no other edit.
+
+Worth doing when the repo approaches ~1GB or traffic grows. **Cloudflare R2** is
+the natural fit: the domain is already on Cloudflare, and R2 charges nothing for
+bandwidth. It needs a payment method on the account even for the free tier, so
+it is a five-minute job only you can start.
+
+Not GitHub Releases: those assets are served as `application/octet-stream`,
+which Safari can refuse to play. Pages serves proper `video/mp4`.
