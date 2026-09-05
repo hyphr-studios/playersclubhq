@@ -33,28 +33,39 @@
      that exception would kill this whole file. Fall back to a session
      cookie, then to memory, so the site degrades instead of dying. */
   var store = (function () {
-    var mem = {}, native = false;
-    try { var k = "__pc_t"; sessionStorage.setItem(k, "1"); sessionStorage.removeItem(k); native = true; } catch (e) {}
+    var mem = {}, native = false, ss = null;
+    try {
+      ss = window.sessionStorage;
+      var probe = "__pc_t";
+      ss.setItem(probe, "1"); ss.removeItem(probe);
+      native = true;
+    } catch (e) { native = false; ss = null; }
     var cookieGet = function (k) {
       try {
-        var m = document.cookie.match("(?:^|; )" + k + "=([^;]*)");
+        var m = document.cookie.match("(?:^|; )" + k.replace(/([.*+?^${}()|[\]\\])/g, "\\$1") + "=([^;]*)");
         return m ? decodeURIComponent(m[1]) : null;
       } catch (e) { return null; }
     };
     var cookieSet = function (k, v) {
-      try { document.cookie = k + "=" + encodeURIComponent(v) + "; path=/; SameSite=Lax"; return true; }
-      catch (e) { return false; }
+      try { document.cookie = k + "=" + encodeURIComponent(v) + "; path=/; SameSite=Lax"; } catch (e) {}
     };
     return {
       get: function (k) {
-        if (native) { try { return store.get(k); } catch (e) {} }
+        if (native) {
+          try {
+            var v = ss.getItem(k);
+            if (v !== null) return v;
+          } catch (e) {}
+        }
         var c = cookieGet(k);
-        return c !== null ? c : (k in mem ? mem[k] : null);
+        if (c !== null) return c;
+        return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null;
       },
       set: function (k, v) {
         mem[k] = v;
-        if (native) { try { store.set(k, v); return; } catch (e) {} }
-        cookieSet(k, v);
+        var stored = false;
+        if (native) { try { ss.setItem(k, v); stored = true; } catch (e) {} }
+        if (!stored) cookieSet(k, v);
       }
     };
   })();
