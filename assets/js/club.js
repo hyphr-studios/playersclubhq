@@ -27,6 +27,38 @@
 
   routeFilms(document);
 
+
+  /* Session flags. Some in-app browsers (Instagram, TikTok, locked-down
+     webviews, older Private Browsing) throw on sessionStorage — unguarded,
+     that exception would kill this whole file. Fall back to a session
+     cookie, then to memory, so the site degrades instead of dying. */
+  var store = (function () {
+    var mem = {}, native = false;
+    try { var k = "__pc_t"; sessionStorage.setItem(k, "1"); sessionStorage.removeItem(k); native = true; } catch (e) {}
+    var cookieGet = function (k) {
+      try {
+        var m = document.cookie.match("(?:^|; )" + k + "=([^;]*)");
+        return m ? decodeURIComponent(m[1]) : null;
+      } catch (e) { return null; }
+    };
+    var cookieSet = function (k, v) {
+      try { document.cookie = k + "=" + encodeURIComponent(v) + "; path=/; SameSite=Lax"; return true; }
+      catch (e) { return false; }
+    };
+    return {
+      get: function (k) {
+        if (native) { try { return store.get(k); } catch (e) {} }
+        var c = cookieGet(k);
+        return c !== null ? c : (k in mem ? mem[k] : null);
+      },
+      set: function (k, v) {
+        mem[k] = v;
+        if (native) { try { store.set(k, v); return; } catch (e) {} }
+        cookieSet(k, v);
+      }
+    };
+  })();
+
   /* menu */
   var burger = document.querySelector(".nav__burger");
   var menu = document.querySelector(".menu");
@@ -82,7 +114,7 @@
       if (vault) vault.removeAttribute("hidden");
       document.body.style.overflow = "";
     };
-    if (sessionStorage.getItem("pc-vault") === "open") {
+    if (store.get("pc-vault") === "open") {
       gate.remove();
       if (vault) vault.removeAttribute("hidden");
     } else {
@@ -94,8 +126,8 @@
         var vKey = keyInput.value.trim().toUpperCase();
         var vUser = userInput ? userInput.value.trim().toUpperCase() : USER;
         if (vKey === KEY && vUser === USER) {
-          sessionStorage.setItem("pc-vault", "open");
-          sessionStorage.setItem("pc-member", vUser);
+          store.set("pc-vault", "open");
+          store.set("pc-member", vUser);
           unlock();
         } else {
           gate.classList.remove("deny");
@@ -111,15 +143,15 @@
   var adgate = document.getElementById("adgate");
   if (adgate) {
     var adInner = document.getElementById("ad-inner");
-    if (sessionStorage.getItem("pc-vault") !== "open") {
+    if (store.get("pc-vault") !== "open") {
       location.replace("../");
-    } else if (sessionStorage.getItem("pc-ad") === "open") {
+    } else if (store.get("pc-ad") === "open") {
       adgate.remove();
       if (adInner) adInner.removeAttribute("hidden");
     } else {
       document.body.style.overflow = "hidden";
       adgate.querySelector("[data-ad-yes]").addEventListener("click", function () {
-        sessionStorage.setItem("pc-ad", "open");
+        store.set("pc-ad", "open");
         adgate.style.transition = "opacity .8s ease, visibility .8s";
         adgate.style.opacity = "0";
         adgate.style.visibility = "hidden";
