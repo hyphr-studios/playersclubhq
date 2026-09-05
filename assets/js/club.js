@@ -183,7 +183,7 @@
     var c = cls ? ' class="' + cls + '"' : "";
     if (sm === src) return "<img" + c + ' src="' + src + '" alt="" loading="lazy">';
     return "<img" + c + ' src="' + src + '" alt="" loading="lazy"' +
-           ' srcset="' + sm + ' 800w, ' + src + ' 1600w"' +
+           ' srcset="' + sm + ' 800w, ' + src.replace(/\.jpe?g$/i, "-md.jpg") + ' 1200w, ' + src + ' 1600w"' +
            ' sizes="' + (sizes || "(max-width:700px) 44vw, 340px") + '">';
   };
 
