@@ -131,6 +131,19 @@
 
   /* editable content — JSON overrides the static markup when it loads.
      Edit content/issues.json and content/vault.json; never touch the HTML. */
+
+  /* card thumbnails: serve the 800px variant, not the full frame.
+     Full frames are still used by the fullscreen viewer. */
+  var cardImg = function (src, cls, sizes) {
+    if (!src) return "";
+    var sm = src.replace(/\.jpe?g$/i, "-sm.jpg");
+    var c = cls ? ' class="' + cls + '"' : "";
+    if (sm === src) return "<img" + c + ' src="' + src + '" alt="" loading="lazy">';
+    return "<img" + c + ' src="' + src + '" alt="" loading="lazy"' +
+           ' srcset="' + sm + ' 800w, ' + src + ' 1600w"' +
+           ' sizes="' + (sizes || "(max-width:700px) 44vw, 340px") + '">';
+  };
+
   var esc = function (s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
@@ -182,7 +195,7 @@
           : c.mark
             ? '<div class="vset__art"><img src="' + esc(c.mark) + '" alt="" loading="lazy"></div>'
             : c.image
-              ? '<div class="vset__art"><img src="' + esc(c.image) + '" alt="" loading="lazy"></div>'
+              ? '<div class="vset__art">' + cardImg(esc(c.image)) + '</div>'
               : '<div class="vset__art ' + esc(c.wash || "art-noir") + '"></div>';
         var cls = "vset" + (wide ? " vset--wide" : "") + (c.locked ? " vset--locked" : "") + (c.href ? " vset--door" : "") + (c.video ? " vset--film" : "") + (c.mark ? " vset--mark" : "");
         var vattr = c.video ? ' data-video="' + esc(c.video) + '"' : "";
