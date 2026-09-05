@@ -232,7 +232,7 @@
             (c.captions ? ' data-captions="' + esc(c.captions.join("|")) + '"' : "")
           : "";
         var art = c.video
-          ? '<div class="vset__art"><img class="vfill" src="' + esc(c.poster || "") + '" alt="" aria-hidden="true" loading="lazy">' +
+          ? '<div class="vset__art"><img class="vfill" src="' + esc((c.poster || "").replace(/\.jpe?g$/i, "-blur.jpg")) + '" alt="" aria-hidden="true" loading="lazy">' +
             '<img class="vmain" src="' + esc(c.poster || "") + '" alt="" loading="lazy">' +
             '<span class="cinema__play cinema__play--sm">▶</span></div>'
           : c.mark
@@ -284,7 +284,7 @@
         var cn = data.cinema;
         if (cn) {
           html += '<section class="cinema" data-video="' + esc(cn.video) + '">' +
-            '<div class="cinema__art"><img class="vfill" src="' + esc(cn.poster || "") + '" alt="" aria-hidden="true" loading="lazy">' +
+            '<div class="cinema__art"><img class="vfill" src="' + esc((cn.poster || "").replace(/\.jpe?g$/i, "-blur.jpg")) + '" alt="" aria-hidden="true" loading="lazy">' +
             '<img class="vmain" src="' + esc(cn.poster || "") + '" alt="" loading="lazy">' +
             '<span class="cinema__play">▶</span></div>' +
             '<div class="cinema__meta"><span class="eyebrow eyebrow--gold">' + esc(cn.kicker) + "</span>" +
