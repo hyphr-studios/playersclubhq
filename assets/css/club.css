@@ -239,7 +239,7 @@ a.ledger__row:hover{padding-left:14px}
   text-align:center;padding:var(--pad);overflow-y:auto;
 }
 .gate>*{max-width:100%}
-.gate .gate__hint{max-width:min(340px,86vw);line-height:1.9;word-break:break-word}
+.gate .gate__hint{padding:12px 4px;max-width:min(340px,86vw);line-height:1.9;word-break:break-word}
 .gate img{height:64px;width:auto;opacity:.9;margin-bottom:6px}
 .gate h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,6vw,44px);letter-spacing:.02em}
 .gate p{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}

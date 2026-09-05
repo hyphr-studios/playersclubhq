@@ -260,7 +260,7 @@
             ? ' data-photos="' + esc(ft.photos.join(",")) + '" data-set-title="' + esc(ft.title) + '"'
             : "") + ">" +
           (ft.image
-            ? '<div class="billboard__art"><img class="kb" src="' + esc(ft.image) + '" alt=""></div>'
+            ? '<div class="billboard__art">' + cardImg(esc(ft.image), "kb", "(max-width:700px) 50vw, 100vw") + '</div>'
             : '<div class="billboard__art ' + esc(ft.wash || "art-noir") + '"></div>') +
           '<div class="billboard__fade"></div>' +
           '<div class="billboard__body">' +
