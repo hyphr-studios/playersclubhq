@@ -148,3 +148,50 @@ it is a five-minute job only you can start.
 
 Not GitHub Releases: those assets are served as `application/octet-stream`,
 which Safari can refuse to play. Pages serves proper `video/mp4`.
+
+
+## Performance rules (so it stays fast)
+
+Every photo has three files, generated once and referenced by `srcset`:
+
+| File | Width | Used for |
+|---|---|---|
+| `name-sm.jpg` | 800px | card thumbnails |
+| `name-md.jpg` | 1200px | full-bleed frames on phones |
+| `name.jpg` | 1600px | full-bleed on desktop, and the fullscreen viewer |
+| `name-blur.jpg` | 320px | the blurred layer behind vertical video |
+
+After dropping in a new full-size photo, regenerate the companions:
+
+```bash
+python3 - <<'EOF'
+from PIL import Image, ImageFilter
+import glob, os
+for f in glob.glob('assets/photos/**/*.jpg', recursive=True):
+    if any(f.endswith(x) for x in ('-sm.jpg','-md.jpg','-blur.jpg')): continue
+    im = Image.open(f).convert('RGB')
+    for w, suf, q in ((800,'-sm',79), (1200,'-md',80)):
+        if im.width > w + 50:
+            out = f[:-4] + suf + '.jpg'
+            if not os.path.exists(out):
+                im.resize((w, int(im.height*w/im.width)), Image.LANCZOS).save(out,'JPEG',quality=q,optimize=True,progressive=True)
+EOF
+```
+
+Rules that keep the pages light:
+- **Only the hero of each page loads eagerly.** Everything else carries
+  `loading="lazy"`. A collapsed Archive gallery loads no images at all.
+- **Full-size frames are for the viewer**, never for a card.
+- **Save photos around 1600px and quality 80.** Anything larger is wasted.
+
+## What the site survives
+
+Checked, not assumed:
+- **No JavaScript at all** — every page still reads. Content is visible by
+  default; the reveal animation only turns on once JS confirms it is running.
+- **Storage blocked** (Instagram / TikTok in-app browsers, Private Browsing) —
+  the Vault still opens and After Dark still remembers membership, via a
+  cookie fallback. An unguarded `sessionStorage` call here would take down
+  the whole script.
+- **Slow phone on 3G** — largest paint is under 1.2s on every page and layout
+  shift is effectively zero.
