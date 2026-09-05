@@ -184,7 +184,7 @@
     if (sm === src) return "<img" + c + ' src="' + src + '" alt="" loading="lazy">';
     return "<img" + c + ' src="' + src + '" alt="" loading="lazy"' +
            ' srcset="' + sm + ' 800w, ' + src.replace(/\.jpe?g$/i, "-md.jpg") + ' 1200w, ' + src + ' 1600w"' +
-           ' sizes="' + (sizes || "(max-width:700px) 92vw, 340px") + '">';
+           ' sizes="' + (sizes || "(max-width:700px) 50vw, 340px") + '">';
   };
 
   var esc = function (s) {

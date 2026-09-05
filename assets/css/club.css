@@ -509,3 +509,8 @@ details.gal[open] summary .x{transform:rotate(45deg)}
   transition:top .2s;
 }
 .skip:focus{top:12px}
+
+/* Card thumbnails deliberately target roughly 2.3x pixel density rather than a
+   phone's full 3x. At a 350px card the difference is not visible, and it keeps
+   each card near 120KB instead of 190KB — the Vault is browsed on phones.
+   The 1200px candidate stays in srcset so larger, denser displays can upgrade. */
