@@ -107,6 +107,8 @@
 
   <form class="ap rv" id="apForm" autocomplete="on">
     <label><span>Name <b class="req">required</b></span><input name="name" required autocomplete="name"></label>
+    <label><span>Email <b class="req">required</b></span><input name="email" type="email" required autocomplete="email" inputmode="email" autocapitalize="off"></label>
+    <label><span>Phone</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel"></label>
     <label><span>Age <b class="req">18+</b></span><input name="age" type="number" min="18" max="99" required inputmode="numeric"></label>
     <label><span>City</span><input name="city" required autocomplete="address-level2"></label>
     <label><span>Can you get to Las Vegas?</span>
@@ -122,17 +124,20 @@
     <label><span>Comfortable with</span>
       <select name="comfort"><option>Swimwear</option><option>Swimwear + lingerie</option><option>Fashion / clothed only</option><option>Tell me more first</option></select>
     </label>
+    <label class="wide"><span>Your three photos <b class="req">a link</b></span><input name="photos" type="url" inputmode="url" placeholder="Google Drive · Dropbox · iCloud link · or an IG post"></label>
     <label class="wide"><span>Anything we should know</span><textarea name="note" placeholder="Availability, what you'd bring, a look you've been wanting to shoot. Keep it short."></textarea></label>
   </form>
 
   <div class="pf-head__row rv" style="margin-top:30px">
     <a class="btn btn--solid" id="apSend" href="#">Send Application <span class="arr">→</span></a>
-    <span class="eyebrow" style="color:var(--faint)" id="apHint">Opens your mail app with everything filled in. Attach three photos and send.</span>
+    <span class="eyebrow" style="color:var(--faint)" id="apHint">Goes straight to the studio. No photo link? Email them after.</span>
   </div>
 
   <p class="pf-note rv">
     <strong>Three photos, please.</strong> One full length, one close, one however you want to be seen.
     Recent and unfiltered. Phone photos are fine. We're looking at presence, not retouching.
+    Drop them in a shared folder and paste the link above, or email them to
+    <strong>castings@playersclubhq.com</strong> with your name as the subject.
   </p>
   <p class="pf-note rv">
     Applications are read by the studio and nothing is published without a signed release.
@@ -160,12 +165,50 @@
       send = document.getElementById("apSend"),
       hint = document.getElementById("apHint");
 
+  /* where it goes: the studio's database. The public key can insert an
+     application and nothing else; reading them takes a House login. */
+  var DB = { url: "https://oghgufyayowoafbtrvjh.supabase.co", key: "sb_publishable_krmQVDhvrPTb2NjoHKrWPw_oIniiDPC" };
+  var CALL = "no-boys-allowed";
+  fetch("../content/castings.json").then(function (r) { return r.json(); }).then(function (d) { if (d.call) CALL = d.call; }).catch(function () {});
+
+  function file(g) {
+    return fetch(DB.url + "/rest/v1/applications", {
+      method: "POST",
+      headers: { "apikey": DB.key, "Authorization": "Bearer " + DB.key, "Content-Type": "application/json", "Prefer": "return=minimal" },
+      body: JSON.stringify({
+        call_id: CALL, name: g("name"), email: g("email").toLowerCase(), phone: g("phone") || null,
+        city: g("city") || null, instagram: g("social") || null, height: g("height") || null,
+        sizes: [g("size"), g("shoe") ? "shoe " + g("shoe") : ""].filter(Boolean).join(" · ") || null,
+        experience: g("exp") || null, photos_url: g("photos") || null,
+        note: ["Age " + g("age"), "Travel: " + g("travel"), "Comfortable with: " + g("comfort"), "", g("note")].join("\n").trim()
+      })
+    }).then(function (r) { if (!r.ok) throw new Error("db " + r.status); });
+  }
+
+  var sent = false;
   send.addEventListener("click", function (e) {
     e.preventDefault();
+    if (sent) return;
     if (!form.reportValidity()) return;
     var f = new FormData(form), g = function (k) { return (f.get(k) || "").toString().trim(); };
+    send.style.pointerEvents = "none"; hint.textContent = "Sending…";
+    file(g).then(function () {
+      sent = true;
+      send.innerHTML = "Received <span class=\"arr\">✓</span>";
+      hint.textContent = "You're in the studio's hands. " + (g("photos") ? "We have your photo link." : "Email your three photos to castings@playersclubhq.com with your name as the subject.");
+      try { window.scrollTo({ top: send.getBoundingClientRect().top + window.pageYOffset - 120, behavior: "smooth" }); } catch (x) {}
+    }).catch(function () {
+      send.style.pointerEvents = "";
+      hint.textContent = "Couldn't reach the studio. Opening your mail app instead.";
+      mail(g);
+    });
+  });
+
+  function mail(g) {
     var body = [
       "Name:        " + g("name"),
+      "Email:       " + g("email"),
+      "Phone:       " + g("phone"),
       "Age:         " + g("age"),
       "City:        " + g("city"),
       "Travel:      " + g("travel"),
@@ -175,6 +218,7 @@
       "Shoe:        " + g("shoe"),
       "Experience:  " + g("exp"),
       "Comfortable: " + g("comfort"),
+      "Photos:      " + (g("photos") || "attached"),
       "",
       "Notes:",
       g("note") || "—",
@@ -186,8 +230,7 @@
     window.location.href = "mailto:castings@playersclubhq.com"
       + "?subject=" + encodeURIComponent("Casting Application — " + g("name"))
       + "&body=" + encodeURIComponent(body);
-    hint.textContent = "Mail app opening. Don't forget the three photos.";
-  });
+  }
 })();
 </script>
 </body>

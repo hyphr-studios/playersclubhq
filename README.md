@@ -339,3 +339,28 @@ Rules the database enforces, not the page:
 
 Model and partner rows are seeded with `*.pending@playersclubhq.com` placeholders:
 put the real email on the row, then invite that email from Authentication → Users.
+
+### How the site is wired to it
+
+There is no server of ours in between, and no Vercel. GitHub Pages serves the
+files; the browser talks to Supabase directly over HTTPS with the publishable
+key, and row level security decides what comes back.
+
+- `portal/live.js` is the whole bridge. It loads supabase-js from the CDN,
+  signs people in (email + password, Supabase Auth), then turns rows into the
+  same ledger shapes the page always drew (`shapeModel`, `shapeHouse`). Those
+  two are pure functions, tested against the seed.
+- The gate shows email + password. "Have an access key instead?" still opens
+  a sealed ledger for anyone not moved over. Remove that link once everyone
+  has a login.
+- House actions call the SQL functions: `close_quarter()`, `mark_paid()`,
+  `review_application()`, `log_action()`. Approving an application (founder)
+  inserts her `profiles` row; creating her login is done in the dashboard.
+- The public casting form inserts straight into `applications` with the
+  publishable key; falls back to the mailto if the request fails.
+- `tools/patch-001.sql` runs after schema + seed: fixes lost rollover
+  (`payouts.rolled_into`), makes `model_units` obey RLS, adds `vault_totals()`,
+  `profiles.wants`, portraits, the crew key in `club_keys`, and marks the four
+  group frames `approved = false` so units match the ledgers (31).
+- Emails from Auth (reset links) only reach organisation members until custom
+  SMTP is set. Create users with a password + Auto Confirm instead.

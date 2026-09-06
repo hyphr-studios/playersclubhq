@@ -26,12 +26,28 @@
   <img src="../assets/img/acemark-white.png" alt="">
   <h1 class="serif">Model Portal</h1>
   <p>Approved Models Only</p>
-  <form autocomplete="off" id="pfForm">
+  <form autocomplete="on" id="pfLogin" hidden>
+    <input type="email" name="email" id="pfEmail" placeholder="Email" aria-label="Email" required
+           autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="email">
+    <input type="password" name="password" id="pfPass" placeholder="Password" aria-label="Password" required
+           autocomplete="current-password">
+    <button type="submit" id="pfLoginGo">Sign In</button>
+  </form>
+  <form autocomplete="off" id="pfSetPass" hidden>
+    <input type="password" id="pfNew" placeholder="New password" aria-label="New password" required minlength="8" autocomplete="new-password">
+    <input type="password" id="pfNew2" placeholder="Once more" aria-label="New password again" required minlength="8" autocomplete="new-password">
+    <button type="submit">Set Password</button>
+  </form>
+  <form autocomplete="off" id="pfForm" hidden>
     <input type="text" name="key" id="pfKey" placeholder="Access Key" aria-label="Access key"
            autocapitalize="characters" autocorrect="off" spellcheck="false" required>
     <button type="submit">Enter</button>
   </form>
-  <span class="hint" id="pfHint">Each model has her own key — there is no shared password.<br>Yours came with your call sheet. Lost it? Message the studio.</span>
+  <span class="hint" id="pfHint">Sign in with the email and password the studio gave you.</span>
+  <div class="pf-gate__alt" id="pfGateAlt">
+    <a href="#" class="hint" id="pfForgot">Forgot your password?</a>
+    <a href="#" class="hint" id="pfUseKey">Have an access key instead?</a>
+  </div>
   <a href="../casting/" class="hint" style="text-decoration:underline;text-underline-offset:4px">Not cast yet? See open calls →</a>
   <a href="../" class="hint" style="text-decoration:underline;text-underline-offset:4px">← Back to the lobby</a>
 </div>
@@ -175,6 +191,7 @@
     <h2>Close a Quarter</h2>
     <span class="idx">Enter the revenue · everything else follows</span>
   </div>
+  <div class="hs-projects hs-quarters" id="hQuarters" hidden aria-label="Quarters"></div>
   <div class="pf-calc">
     <label><span>Gross Vault Revenue</span><input type="number" id="hRev" value="0" min="0" step="100" inputmode="numeric"></label>
     <label><span>Total Approved Units</span><input type="number" id="hUnits" value="22" min="1" step="1" inputmode="numeric"></label>
@@ -184,6 +201,10 @@
     <div><span class="k">Model Pool (40%)</span><span class="v" id="hPool">—</span></div>
     <div><span class="k">Value Per Unit</span><span class="v" id="hUnit">—</span></div>
     <div><span class="k">Owed This Quarter</span><span class="v chrome-text" id="hOwed">—</span></div>
+  </div>
+  <div class="pf-head__row hs-close" id="hCloseRow" hidden>
+    <button class="btn btn--solid" id="hClose" type="button">Close the Quarter</button>
+    <span class="eyebrow" id="hCloseNote" style="color:var(--faint)"></span>
   </div>
 
   <div class="pf-sect__head" id="hsRosterSec" style="margin-top:clamp(38px,7vh,64px)">
@@ -210,6 +231,7 @@
     <h2>Applications</h2>
     <span class="idx">Founder and Partner</span>
   </div>
+  <div class="hs-apps" id="hsAppList" hidden></div>
   <p class="pf-note" id="hsApps">
     Applications arrive by email at <strong>castings@playersclubhq.com</strong>. To bring someone in:
     reply to her, then add her to the roster with <strong>tools/portal_keys.py new "Name"</strong> and send her the key it prints.
@@ -226,10 +248,10 @@
 
   <div class="pf-sect__head" id="hsAudit" style="margin-top:clamp(38px,7vh,64px)">
     <h2>Audit</h2>
-    <span class="idx">Who did what, on this device</span>
+    <span class="idx" id="hsAuditIdx">Who did what, on this device</span>
   </div>
   <div class="hs-log" id="hsLog"></div>
-  <p class="pf-note">
+  <p class="pf-note" id="hsAuditNote">
     Every action is stamped with whoever is signed in. The log lives on this device, so it is a record of
     what was done here, not a company-wide ledger. <a href="#" id="hsExport" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px">Copy the log</a> to keep it.
   </p>
@@ -361,6 +383,8 @@
 </div>
 
 <script src="../assets/js/club.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.115.0/dist/umd/supabase.min.js"></script>
+<script src="live.js"></script>
 <script>
 (function () {
   "use strict";
@@ -477,10 +501,11 @@
     gate.classList.remove("deny"); void gate.offsetWidth; gate.classList.add("deny");
     document.getElementById("pfKey").value = "";
     if (msg && hint) hint.innerHTML = esc(msg);
+    var ov = document.getElementById("pfGate"); if (ov) ov.style.opacity = ""; if (ov) ov.style.visibility = "";
   }
 
   function open(data, key) {
-    store.set("pc-portal", key);
+    if (key) store.set("pc-portal", key);
     gate.style.transition = "opacity .7s ease, visibility .7s";
     gate.style.opacity = "0"; gate.style.visibility = "hidden";
     inner.removeAttribute("hidden");
@@ -645,7 +670,7 @@
     var seed = d.profile || {};
     var localKey = "pc-profile-" + (d.name || "model");
     var saved = {};
-    try { saved = JSON.parse(localStorage.getItem(localKey) || "{}"); } catch (e) {}
+    if (!d.live) { try { saved = JSON.parse(localStorage.getItem(localKey) || "{}"); } catch (e) {} }
     Array.prototype.forEach.call(me.elements, function (el) {
       if (!el.name) return;
       el.value = saved[el.name] != null ? saved[el.name] : (seed[el.name] || "");
@@ -656,21 +681,33 @@
         document.getElementById("pfSaved").textContent = "Saved.";
         if (out.tagline) document.getElementById("pfTag").textContent = out.tagline;
         clearTimeout(syncT);
-        syncT = setTimeout(function () { pushProfile(d.name, out); }, 900);
+        syncT = setTimeout(function () { d.live ? saveLive(out) : pushProfile(d.name, out); }, 900);
       });
     });
     if (seed.tagline || saved.tagline) document.getElementById("pfTag").textContent = saved.tagline || seed.tagline;
+    function saveLive(out) {
+      var el = document.getElementById("pfSync");
+      window.PCLive.saveProfile(out).then(function () { if (el) el.textContent = "Shared with the Club."; })
+        .catch(function () { if (el) el.textContent = "Not saved. Check your connection."; });
+    }
     /* who else is in the Club */
-    if (crewKey) {
-      Promise.all([
+    var castSrc = null;
+    if (d.live) {
+      var castProfiles = {}; (d.cast || []).forEach(function (c) { castProfiles[c.name] = c.profile || {}; });
+      castSrc = Promise.resolve([{ cast: d.cast || [] }, castProfiles]);
+    } else if (crewKey) {
+      castSrc = Promise.all([
         fetch("cast.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (b) { return unseal(crewKey, b); }),
         pullProfiles()
-      ]).then(function (res) {
+      ]);
+    }
+    if (castSrc) {
+      castSrc.then(function (res) {
         var list = res[0].cast || [], shared = res[1] || {};
         document.getElementById("pfCast").innerHTML = list.map(function (m, i) {
           var mine = m.name === d.name;
           return '<figure data-cm="' + i + '"><div class="ring' + (mine ? " me" : "") + '">' +
-            '<img src="' + esc(m.portrait.replace(/\.jpe?g$/i, "-sm.jpg")) + '" alt="" loading="lazy" decoding="async"></div>' +
+            (m.portrait ? '<img src="' + esc(m.portrait.replace(/\.jpe?g$/i, "-sm.jpg")) + '" alt="" loading="lazy" decoding="async">' : "") + '</div>' +
             '<span class="n">' + esc(m.name) + "</span>" +
             '<span class="c">' + esc(mine ? "You · " + (m.latest || m.credit || "") : (m.latest || m.credit || "")) + "</span></figure>";
         }).join("");
@@ -689,7 +726,7 @@
           document.getElementById("cmName").textContent = m.name;
           document.getElementById("cmLine").textContent = prof.tagline || "";
           document.getElementById("cmMeta").textContent =
-            [m.handle, prof.city, "In the Club since " + m.since, m.frames + " frames"]
+            [m.handle, prof.city, "In the Club since " + m.since, m.frames != null ? m.frames + " frames" : ""]
               .filter(Boolean).join("  ·  ");
           document.getElementById("cmProj").innerHTML = (m.credits || m.projects || []).map(function (pj) {
             return '<div><span class="i">' + esc(pj.issue || pj.project) + '</span><span class="w">' + esc(pj.billing || pj.did || pj.role) + "</span></div>";
@@ -710,6 +747,20 @@
     }
 
     /* what the Vault actually earned — published by the studio, never guessed */
+    if (d.live) {
+      var qi = d.quarterInfo, qel = document.getElementById("pfQuarter");
+      if (!qi) {
+        qel.textContent = "Covering " + (d.quarter || "—") + " · revenue not yet reported";
+      } else {
+        qel.textContent = qi.label + " closed · " + (qi.perUnit != null ? money(qi.perUnit) + " per unit" : "");
+        document.getElementById("pfNote").innerHTML =
+          esc(qi.label) + ": the Vault took " + esc(money(qi.revenue)) + ". The model pool was " + esc(money(qi.pool)) +
+          ". Your " + esc(qi.units) + " units earned <strong>" + esc(money(qi.amount)) + "</strong>" +
+          (qi.payable > 0 ? (qi.paid ? ", paid." : ", payable " + esc(qi.paidOn || "") + ".") : ". Under the $100 threshold, so it rolls into next quarter.") +
+          " Next: " + esc(d.quarter) + ", paid " + esc(d.payoutDate) + ".";
+      }
+      return;
+    }
     fetch("../content/quarters.json").then(function (r) { return r.json(); }).then(function (q) {
       var cur = (q.quarters || []).filter(function (x) { return x.id === q.current; })[0];
       if (!cur) return;
@@ -733,7 +784,7 @@
      One house key gets you to the door. Past the door you say who you are and
      enter your own PIN, so nothing is ever done under someone else's name.
      PINs are stored as salted hashes; the studio never sees the number. */
-  var STAFF = null, WHO = null;
+  var STAFF = null, WHO = null, LIVE_D = null;
 
   function pinHash(name, pin) {
     return crypto.subtle.digest("SHA-256", new TextEncoder().encode(name.trim().toUpperCase() + ":" + pin.trim()))
@@ -744,8 +795,16 @@
       });
   }
 
-  function logIt(action, detail) {
+  function logIt(action, detail, localOnly) {
     var e = { at: Date.now(), who: WHO ? WHO.name : "—", action: action, detail: detail || "" };
+    if (LIVE_D) {
+      /* previews and clicks stay on screen; anything that matters is written by the database itself */
+      if (/^(Ran a quarter|Switched project)$/.test(action)) return;
+      e.action = action.toLowerCase();
+      LIVE_D.audit.unshift(e); paintLog(LIVE_D.audit);
+      if (!localOnly) window.PCLive.log(action.toLowerCase().replace(/\s+/g, "_"), detail || null, null);
+      return;
+    }
     var all = [];
     try { all = JSON.parse(localStorage.getItem(("pc-house-log-v" + (window.__auditV || 1))) || "[]"); } catch (x) {}
     all.unshift(e);
@@ -857,6 +916,7 @@
   /* ── house view: the control room ── */
   function renderHouse(d) {
     window.__auditV = d.auditVersion || 1;
+    if (d.live) LIVE_D = d;
     document.body.classList.add("is-house");
     document.getElementById("hsSummary").textContent =
       d.models + " models on the roster · " + d.totalUnits + " approved units in the Vault · " +
@@ -867,8 +927,18 @@
     document.getElementById("hUnits").value = d.totalUnits;
     document.getElementById("hCount").textContent = d.models + " models · " + d.totalUnits + " units";
 
-    openDoor(d);
-    paintLog();
+    if (d.live) {
+      document.getElementById("hsSwitch").hidden = true;
+      document.getElementById("hsAuditIdx").textContent = "Who did what · permanent";
+      document.getElementById("hsAuditNote").innerHTML =
+        "Written to the database as it happens, stamped with whoever was signed in. Nobody can edit or delete an entry, including us. " +
+        '<a href="#" id="hsExport" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px">Copy the log</a> to keep a copy.';
+      admitted(d.who);
+      paintLog(d.audit);
+    } else {
+      openDoor(d);
+      paintLog();
+    }
 
     /* ── the project gate: nothing from one issue bleeds into another ── */
     var projects = d.projects || [{ id: "all", issue: "All", title: "All projects", units: d.totalUnits, models: (d.roster || []).map(function (r) { return r.name; }), pictures: 0, videos: 0, assets: [] }];
@@ -890,9 +960,12 @@
     bar.addEventListener("click", function (e) {
       var b = e.target.closest("[data-pj]"); if (!b) return;
       pj = projects.filter(function (x) { return x.id === b.getAttribute("data-pj"); })[0] || pj;
-      rows = (d.roster || []).filter(function (r) { return (pj.models || []).indexOf(r.name) >= 0; });
-      document.getElementById("hUnits").value = pj.units || 1;
-      document.getElementById("hCount").textContent = rows.length + " models · " + (pj.units || 0) + " units · " + esc(pj.issue);
+      if (!d.live) {
+        /* sealed ledgers: the roster follows the project */
+        rows = (d.roster || []).filter(function (r) { return (pj.models || []).indexOf(r.name) >= 0; });
+        document.getElementById("hUnits").value = pj.units || 1;
+        document.getElementById("hCount").textContent = rows.length + " models · " + (pj.units || 0) + " units · " + esc(pj.issue);
+      }
       paintProjects(); paintAssets(null); run(true);
       logIt("Switched project", pj.issue);
     });
@@ -911,7 +984,7 @@
       host.setAttribute("data-captions", list.map(function (a) { return (a.model || "") + (a.frame ? " · " + a.frame : "") + (a.set ? " · " + a.set : ""); }).join("|"));
       host.innerHTML = list.map(function (a) {
         return '<figure><img src="' + esc(a.src.replace(/\.jpe?g$/i, "-sm.jpg")) + '" alt="" loading="lazy" decoding="async">' +
-          "<figcaption>" + esc(a.model || "") + (a.frame ? " · " + a.frame : "") + "</figcaption></figure>";
+          "<figcaption>" + esc(a.model || "") + (a.frame ? " · " + a.frame : "") + (a.unit === false ? " · no unit" : "") + "</figcaption></figure>";
       }).join("") || '<p class="pf-note">Nothing filed here yet.</p>';
     }
     document.getElementById("hsFilter").addEventListener("click", function (e) {
@@ -924,16 +997,23 @@
     function gate() {
       var can = (WHO && WHO.can) || [];
       var closer = can.indexOf("close") >= 0;
-      document.getElementById("hRev").disabled = !closer;
-      document.getElementById("hUnits").disabled = !closer;
+      document.getElementById("hRev").disabled = !closer || (d.live && d.quarterStatus !== "open");
+      document.getElementById("hUnits").disabled = !closer || !!d.live;
       var q = document.getElementById("hsQuarter").querySelector(".idx");
       if (q) q.textContent = closer ? "Enter the revenue · everything else follows" : "Founder only · you can see it, not close it";
       document.getElementById("hCopyAll").style.display = closer ? "" : "none";
       var pub = document.getElementById("hPublish"); if (pub && !closer) pub.hidden = true;
     }
     window.__gate = gate;
+    if (d.live) gate();
 
-    var rows = (d.roster || []).filter(function (r) { return (pj.models || []).indexOf(r.name) >= 0; });
+    /* the quarter pays on the whole Vault, so with the database the roster is every model and every unit */
+    var rows = d.live ? (d.roster || []) : (d.roster || []).filter(function (r) { return (pj.models || []).indexOf(r.name) >= 0; });
+    if (d.live) document.getElementById("hCount").textContent = rows.length + " models · " + d.totalUnits + " units · whole Vault";
+    var poBy = {};
+    if (d.live && d.quarterStatus !== "open") {
+      (d.payouts || []).forEach(function (p) { if (p.quarter_id === d.quarterId) poBy[p.profile_id] = p; });
+    }
     function run(quiet) {
       var R = Math.max(0, +document.getElementById("hRev").value || 0);
       var T = Math.max(1, +document.getElementById("hUnits").value || 1);
@@ -943,21 +1023,34 @@
       document.getElementById("hUnit").textContent = money(unit);
 
       document.getElementById("hRoster").innerHTML = rows.map(function (m, i) {
-        var earned = unit * m.units, payable = (m.balance || 0) + earned;
-        var pays = payable >= 100;
-        if (pays) owed += payable;
+        var po = poBy[m.id];
+        var carried = po ? +po.carried_in : (m.balance || 0);
+        var earned = po ? +po.amount : unit * m.units;
+        var payable = po ? +po.payable : carried + earned;
+        var pays = po ? payable > 0 : payable >= 100;
+        if (pays && !(po && po.paid)) owed += payable;
+        var tail = po
+          ? (po.paid ? '<span style="font-size:9px;letter-spacing:.2em;color:var(--gold)">PAID</span>'
+             : (pays && (WHO && WHO.can.indexOf("pay") >= 0)
+                ? '<a href="#" data-pay="' + esc(m.id) + '" style="color:var(--gold);font-size:9px;letter-spacing:.2em;text-transform:uppercase">Mark paid</a>'
+                : ""))
+          : "";
         return "<tr><td>" + esc(m.name) + (m.handle ? ' <span style="color:var(--faint)">' + esc(m.handle) + "</span>" : "") +
-          "</td><td>" + esc(m.units) + "</td><td>" + esc(m.share) + "%</td><td>" + money(m.balance || 0) +
+          "</td><td>" + esc(m.units) + "</td><td>" + esc(m.share) + "%</td><td>" + money(carried) +
           "</td><td>" + money(earned) + "</td><td" + (pays ? "" : ' style="color:var(--faint)"') + ">" +
-          money(payable) + (pays ? "" : ' <span style="font-size:9px;letter-spacing:.2em">ROLLS</span>') +
-          '</td><td><a href="#" data-stmt="' + i + '" style="color:var(--gold);font-size:9px;letter-spacing:.2em;text-transform:uppercase">Copy</a></td></tr>';
+          money(pays ? payable : carried + earned) + (pays ? "" : ' <span style="font-size:9px;letter-spacing:.2em">ROLLS</span>') +
+          '</td><td><a href="#" data-stmt="' + i + '" style="color:var(--gold);font-size:9px;letter-spacing:.2em;text-transform:uppercase">Copy</a> ' + tail + "</td></tr>";
       }).join("");
 
       document.getElementById("hOwed").textContent = money(owed);
       document.getElementById("hNote").innerHTML = R === 0
         ? "Nothing payable until a revenue figure goes in. Type the quarter's gross Vault revenue and the roster settles itself."
-        : "Anyone under $100 rolls forward, shown as <strong>ROLLS</strong>. Once you have paid, write the new balances into " +
-          "<strong>tools/plain/</strong> and run <strong>portal_keys.py seal</strong>.";
+        : d.live
+          ? (d.quarterStatus === "open"
+             ? "A preview. Anyone under $100 rolls forward, shown as <strong>ROLLS</strong>. Nothing is written until you close the quarter below."
+             : "Written to the database when " + esc(d.quarter) + " was closed. Pay each model, then mark her paid here; every model sees her own line the moment it changes.")
+          : "Anyone under $100 rolls forward, shown as <strong>ROLLS</strong>. Once you have paid, write the new balances into " +
+            "<strong>tools/plain/</strong> and run <strong>portal_keys.py seal</strong>.";
       window.__stmt = function (i) {
         var m = rows[i], earned = unit * m.units, payable = (m.balance || 0) + earned;
         return [
@@ -998,6 +1091,117 @@
     });
     run(true);
 
+    /* ── the database: pick a quarter, close it, pay it ── */
+    if (d.live) {
+      var row = document.getElementById("hCloseRow"), btn = document.getElementById("hClose"), cnote = document.getElementById("hCloseNote");
+      var closer = WHO && WHO.can.indexOf("close") >= 0;
+      var qbar = document.getElementById("hQuarters");
+      row.hidden = false;
+
+      var unpaidIn = function (q) {
+        return (d.payouts || []).filter(function (p) { return p.quarter_id === q.id && p.payable > 0 && !p.paid; }).length;
+      };
+      /* open on the quarter that needs a hand: unpaid money first, then the next one to close */
+      var pick = (d.quarters || []).slice().reverse().filter(function (q) { return q.status !== "open" && unpaidIn(q) > 0; })[0]
+              || (d.quarters || []).filter(function (q) { return q.status === "open"; })[0]
+              || (d.quarters || [])[(d.quarters || []).length - 1];
+
+      function showQuarter(q) {
+        d.quarterId = q.id; d.quarter = q.label; d.quarterStatus = q.status;
+        d.quarterRevenue = q.revenue != null ? +q.revenue : null; d.payoutDate = q.paid_on;
+        poBy = {};
+        if (q.status !== "open") (d.payouts || []).forEach(function (p) { if (p.quarter_id === q.id) poBy[p.profile_id] = p; });
+        qbar.hidden = (d.quarters || []).length < 2;
+        qbar.innerHTML = (d.quarters || []).map(function (x) {
+          var u = unpaidIn(x);
+          return '<button type="button" data-q="' + esc(x.id) + '"' + (x.id === q.id ? ' class="is-on"' : "") + ">" +
+            '<span class="no">' + esc(x.label.split(" ")[0]) + '</span><span class="t">' + esc(x.label.split(" ")[1] || "") + "</span>" +
+            '<span class="s">' + esc(x.status === "open" ? "open · pays " + (x.paid_on || "") : x.status + " · " + money(x.revenue || 0) + (u ? " · " + u + " to pay" : "")) + "</span></button>";
+        }).join("");
+        var rev = document.getElementById("hRev");
+        if (q.status === "open") {
+          rev.value = 0;
+          btn.hidden = !closer;
+          btn.disabled = false;
+          btn.textContent = "Close " + q.label + " at this revenue";
+          cnote.textContent = closer ? "Writes every payout to the database and logs it. Cannot be undone." : "Founder only · you can see it, not close it";
+        } else {
+          rev.value = d.quarterRevenue || 0;
+          btn.hidden = true;
+          cnote.textContent = q.label + " closed at " + money(d.quarterRevenue || 0) + (unpaidIn(q) ? " · " + unpaidIn(q) + " still to pay." : " · everyone paid.");
+        }
+        gate(); run(true);
+      }
+      qbar.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-q]"); if (!b) return;
+        var q = (d.quarters || []).filter(function (x) { return x.id === b.getAttribute("data-q"); })[0];
+        if (q) showQuarter(q);
+      });
+      btn.addEventListener("click", function () {
+        if (d.quarterStatus !== "open") return;
+        var R = Math.max(0, +document.getElementById("hRev").value || 0);
+        if (!(R > 0)) { cnote.textContent = "Enter the quarter's gross Vault revenue first."; return; }
+        if (!window.confirm("Close " + d.quarter + " at " + money(R) + "?\n\nEvery model's payout is written and logged. This cannot be undone.")) return;
+        btn.disabled = true; cnote.textContent = "Closing…";
+        window.PCLive.closeQuarter(d.quarterId, R).then(function () { location.reload(); })
+          .catch(function (e) { btn.disabled = false; cnote.textContent = "Not closed: " + (e && e.message ? e.message : "unknown error"); });
+      });
+      document.getElementById("hRoster").addEventListener("click", function (e) {
+        var a = e.target.closest("[data-pay]"); if (!a) return;
+        e.preventDefault();
+        var m = rows.filter(function (r) { return r.id === a.getAttribute("data-pay"); })[0]; if (!m) return;
+        if (!window.confirm("Mark " + m.name + " paid for " + d.quarter + "?")) return;
+        window.PCLive.markPaid(d.quarterId, m.id).then(function () { location.reload(); })
+          .catch(function (er) { a.textContent = "Failed"; if (window.console) console.error(er); });
+      });
+      if (pick) showQuarter(pick);
+
+      /* applications, reviewed in the room */
+      document.getElementById("hsApps").hidden = true;
+      var appHost = document.getElementById("hsAppList"); appHost.hidden = false;
+      var canApprove = WHO && WHO.can.indexOf("approve") >= 0, isFounder = closer;
+      function paintApps() {
+        var apps = d.applications || [];
+        appHost.innerHTML = apps.length ? apps.map(function (a, i) {
+          var when = new Date(a.created_at);
+          var open = a.status === "new" || a.status === "shortlisted";
+          return '<article class="hs-app" data-app="' + i + '">' +
+            '<header><b>' + esc(a.name) + '</b><span class="pill pill--' + esc(a.status) + '">' + esc(a.status) + '</span>' +
+            '<time>' + esc(isNaN(when) ? "" : when.toLocaleDateString("en-US", { month: "short", day: "numeric" })) + '</time></header>' +
+            '<p class="m">' + [a.city, a.instagram, a.height, a.sizes, a.experience].filter(Boolean).map(esc).join("  ·  ") + '</p>' +
+            '<p class="m"><a href="mailto:' + esc(a.email) + '">' + esc(a.email) + '</a>' + (a.phone ? " · " + esc(a.phone) : "") +
+            (a.photos_url ? ' · <a href="' + esc(a.photos_url) + '" target="_blank" rel="noopener">her photos ↗</a>' : "") + '</p>' +
+            (a.note ? '<p class="n">' + esc(a.note) + '</p>' : "") +
+            (open && canApprove ? '<div class="acts">' +
+              (a.status === "new" ? '<button type="button" data-act="shortlisted">Shortlist</button>' : "") +
+              '<button type="button" data-act="approved">Approve</button>' +
+              '<button type="button" data-act="declined">Decline</button></div>' : "") +
+            (a.status === "approved" && a.on_roster ? '<p class="m">On the roster. Now create her login: Supabase → Authentication → Users → Add user with <b>' + esc(a.on_roster) + '</b> and a password, and send it to her.</p>' : "") +
+            "</article>";
+        }).join("") : '<p class="pf-note">No applications yet. The public form at /casting/ writes straight in here.</p>';
+      }
+      appHost.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-act]"); if (!b) return;
+        var card = b.closest("[data-app]"), a = d.applications[+card.getAttribute("data-app")], act = b.getAttribute("data-act");
+        if (act === "declined" && !window.confirm("Decline " + a.name + "?")) return;
+        b.disabled = true;
+        window.PCLive.review(a.id, act).then(function () {
+          a.status = act;
+          logIt("Review application", a.name + " · " + act, true);
+          if (act === "approved" && isFounder) {
+            var email = window.prompt("Put " + a.name + " on the roster. Her login email:", a.email || "");
+            if (email) {
+              return window.PCLive.addToRoster({ email: email, name: a.name, handle: a.instagram, city: a.city })
+                .then(function () { a.on_roster = email.trim().toLowerCase(); logIt("Added to roster", a.name); })
+                .catch(function (er) { window.alert("Not added: " + (er && er.message ? er.message : "unknown error")); });
+            }
+          }
+        }).catch(function (er) { window.alert("Not saved: " + (er && er.message ? er.message : "unknown error")); })
+          .then(paintApps);
+      });
+      paintApps();
+    }
+
     var pc = document.getElementById("hPubCopy");
     if (pc) pc.addEventListener("click", function () {
       var t = document.getElementById("hPubCode").textContent;
@@ -1025,7 +1229,9 @@
     });
     document.getElementById("hsExport").addEventListener("click", function (e) {
       e.preventDefault();
-      var all = []; try { all = JSON.parse(localStorage.getItem(("pc-house-log-v" + (window.__auditV || 1))) || "[]"); } catch (x) {}
+      var all = [];
+      if (d.live) all = d.audit || [];
+      else { try { all = JSON.parse(localStorage.getItem(("pc-house-log-v" + (window.__auditV || 1))) || "[]"); } catch (x) {} }
       navigator.clipboard.writeText(all.map(function (r) {
         return new Date(r.at).toISOString() + "  " + r.who + "  " + r.action + (r.detail ? " · " + r.detail : "");
       }).join("\n"));
@@ -1042,11 +1248,18 @@
     });
     var doorOut = document.getElementById("hsDoorOut");
     if (doorOut) doorOut.addEventListener("click", function (e) {
-      e.preventDefault(); store.clear("pc-portal"); location.reload();
+      e.preventDefault(); signOut();
     });
     document.getElementById("hsOut").addEventListener("click", function (e) {
-      e.preventDefault(); logIt("Signed out"); store.clear("pc-portal"); location.reload();
+      e.preventDefault(); logIt("Signed out"); signOut();
     });
+  }
+
+  /* one way out, whichever way you came in */
+  function signOut() {
+    store.clear("pc-portal");
+    var done = function () { location.reload(); };
+    if (window.PCLive && window.PCLive.ready) window.PCLive.signOut().then(done, done); else done();
   }
 
   /* studio updates + casting board */
@@ -1109,10 +1322,92 @@
     });
   }
 
-  var saved = store.get("pc-portal");
-  if (saved) { tryKey(saved, true); } else { document.body.style.overflow = "hidden"; }
+  /* ── the gate ──
+     Accounts live in the database: email + password, checked by Supabase Auth,
+     and every row that comes back is filtered server-side by who you are.
+     The sealed access keys still work underneath, for anyone not moved over yet. */
+  var LIVE = !!(window.PCLive && window.PCLive.ready && window.supabase);
+  var loginForm = document.getElementById("pfLogin"), keyForm = document.getElementById("pfForm"),
+      setForm = document.getElementById("pfSetPass"), alt = document.getElementById("pfGateAlt");
+  var KEY_HINT = "Each model has her own key — there is no shared password.<br>Yours came with your call sheet. Lost it? Message the studio.";
+  function showLogin() {
+    loginForm.hidden = false; keyForm.hidden = true; setForm.hidden = true; alt.hidden = false;
+    hint.textContent = "Sign in with the email and password the studio gave you.";
+    document.getElementById("pfUseKey").textContent = "Have an access key instead?";
+  }
+  function showKeyGate() {
+    loginForm.hidden = true; keyForm.hidden = false; setForm.hidden = true; alt.hidden = !LIVE;
+    hint.innerHTML = KEY_HINT;
+    document.getElementById("pfUseKey").textContent = "Sign in with email instead";
+  }
+  function showSetPass() {
+    loginForm.hidden = true; keyForm.hidden = true; setForm.hidden = false; alt.hidden = true;
+    hint.textContent = "Choose your password. Eight characters or more.";
+    document.body.style.overflow = "hidden";
+  }
+  function enterLive() {
+    hint.textContent = "Opening…";
+    return window.PCLive.load().then(function (r) {
+      open(r.data, null);
+      window.PCLive.crewKey().then(function (k) { crewKey = k; feed(); });
+    }).catch(function (e) {
+      var msg = e && e.message;
+      window.PCLive.signOut();
+      showLogin();
+      if (msg === "noprofile") deny("That email isn't on the roster. Message the studio.");
+      else if (msg === "inactive") deny("That account is closed. Message the studio.");
+      else if (msg === "nosession") document.body.style.overflow = "hidden";
+      else { if (window.console) console.error("Portal failed to open:", e); deny("Couldn't open the portal. Tell the studio what you see."); }
+    });
+  }
 
-  document.getElementById("pfForm").addEventListener("submit", function (e) {
+  var saved = store.get("pc-portal");
+  if (LIVE) {
+    var authType = (location.hash.match(/[#&]type=([a-z]+)/) || [])[1];
+    showLogin();
+    window.PCLive.onAuth(function (ev) { if (ev === "PASSWORD_RECOVERY") showSetPass(); });
+    window.PCLive.session().then(function (s) {
+      if (s) { if (authType === "recovery" || authType === "invite" || authType === "signup") showSetPass(); else enterLive(); }
+      else if (saved) { showKeyGate(); tryKey(saved, true); }
+      else document.body.style.overflow = "hidden";
+    }).catch(function () { showKeyGate(); if (saved) tryKey(saved, true); else document.body.style.overflow = "hidden"; });
+
+    loginForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = document.getElementById("pfEmail").value, pw = document.getElementById("pfPass").value;
+      if (!email.trim() || !pw) return;
+      document.getElementById("pfLoginGo").disabled = true; hint.textContent = "Checking…";
+      window.PCLive.signIn(email, pw).then(enterLive).catch(function (er) {
+        document.getElementById("pfPass").value = "";
+        deny(/confirm/i.test(er && er.message || "") ? "That account hasn't been confirmed yet. Message the studio." : "That email and password don't match.");
+      }).then(function () { document.getElementById("pfLoginGo").disabled = false; });
+    });
+    setForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var a = document.getElementById("pfNew").value, b = document.getElementById("pfNew2").value;
+      if (a !== b) { deny("Those don't match. Try again."); showSetPass(); return; }
+      hint.textContent = "Saving…";
+      window.PCLive.setPassword(a).then(function () { history.replaceState(null, "", location.pathname); return enterLive(); })
+        .catch(function (er) { deny(er && er.message ? er.message : "Couldn't set that password."); showSetPass(); });
+    });
+    document.getElementById("pfForgot").addEventListener("click", function (e) {
+      e.preventDefault();
+      var email = document.getElementById("pfEmail").value.trim();
+      if (!email) { hint.textContent = "Type your email first, then tap this again."; document.getElementById("pfEmail").focus(); return; }
+      hint.textContent = "Sending…";
+      window.PCLive.sendReset(email).then(function () {
+        hint.textContent = "If that address is on the roster, a reset link is on its way. No email in a few minutes? Message the studio and we'll reset it.";
+      }).catch(function () { hint.textContent = "Couldn't send. Message the studio and we'll reset it by hand."; });
+    });
+    document.getElementById("pfUseKey").addEventListener("click", function (e) {
+      e.preventDefault(); if (keyForm.hidden) showKeyGate(); else showLogin();
+    });
+  } else {
+    showKeyGate();
+    if (saved) { tryKey(saved, true); } else { document.body.style.overflow = "hidden"; }
+  }
+
+  keyForm.addEventListener("submit", function (e) {
     e.preventDefault();
     var v = document.getElementById("pfKey").value;
     if (v.trim()) tryKey(v, false);
@@ -1120,9 +1415,7 @@
 
   ["pfOut", "pfOut2"].forEach(function (id) {
     var b = document.getElementById(id); if (!b) return;
-    b.addEventListener("click", function (e) {
-      e.preventDefault(); store.clear("pc-portal"); location.reload();
-    });
+    b.addEventListener("click", function (e) { e.preventDefault(); signOut(); });
   });
 })();
 </script>
