@@ -59,7 +59,21 @@
 </div>
 
 <main id="main">
-<header class="pf-head">
+<header class="pf-card-head" id="pfCard" hidden>
+  <div class="pf-portrait"><img id="pfPortrait" src="" alt="" decoding="async"></div>
+  <div class="pf-who">
+    <span class="credit" id="pfCredit">—</span>
+    <span class="pf-name" id="pfName2">—</span>
+    <p class="tag" id="pfTag"></p>
+    <p class="meta" id="pfMeta">—</p>
+    <div class="pf-head__row" style="margin-top:22px">
+      <a class="btn" href="#me">Edit My Details <span class="arr">→</span></a>
+      <a class="btn" href="#" id="pfOut2">Sign Out</a>
+    </div>
+  </div>
+</header>
+
+<header class="pf-head" id="pfPlainHead">
   <span class="eyebrow eyebrow--gold" id="pfStatus">—</span>
   <h2 class="pf-name" id="pfName">—</h2>
   <div class="pf-head__row">
@@ -145,6 +159,49 @@
     </table>
   </div>
   <p class="pf-note">Only <strong>Vault-approved</strong> content is counted. One photo is one unit, one video is one unit. Nothing is weighted by followers or likes.</p>
+</section>
+
+
+<!-- PORTFOLIO -->
+<section class="pf-sect" data-model-only id="pfFolioWrap" style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head">
+    <h2>Your Portfolio</h2>
+    <span class="idx" id="pfFolioCount">—</span>
+  </div>
+  <div class="pf-folio" id="pfFolio"></div>
+  <p class="pf-note">Every frame of yours the Club holds. Tap any of them to open it full size. Want one for your book or a repost? It's yours — finals are cleared for posting.</p>
+</section>
+
+<!-- HER DETAILS -->
+<section class="pf-sect" data-model-only id="me" style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head">
+    <h2>Your Details</h2>
+    <span class="idx">You control this</span>
+  </div>
+  <form class="pf-me" id="pfMe" autocomplete="on">
+    <label class="wide"><span>Your line</span><input name="tagline" placeholder="One sentence. However you want to be introduced."></label>
+    <label><span>City</span><input name="city" autocomplete="address-level2"></label>
+    <label><span>Height</span><input name="height" placeholder="5'6&quot;"></label>
+    <label><span>Dress / Swim</span><input name="size" placeholder="S · 4"></label>
+    <label><span>Shoe</span><input name="shoe" placeholder="8"></label>
+    <label><span>Socials</span><input name="socials" placeholder="@ · @"></label>
+    <label><span>Free For</span><input name="available" placeholder="Weekends · overnight ok"></label>
+    <label class="wide"><span>What you want to shoot next</span><textarea name="wants" placeholder="A look, a mood, a reference. This is how you get cast for the thing you actually want."></textarea></label>
+  </form>
+  <div class="pf-head__row" style="margin-top:24px">
+    <a class="btn btn--solid" href="#" id="pfSave">Save &amp; Send to Studio <span class="arr">→</span></a>
+    <span class="eyebrow" style="color:var(--faint)" id="pfSaved">Saved on this device the moment you type. Sending files it with the studio.</span>
+  </div>
+</section>
+
+<!-- THE CAST -->
+<section class="pf-sect" data-model-only style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head">
+    <h2>The Cast</h2>
+    <span class="idx">Who else is in the Club</span>
+  </div>
+  <div class="pf-cast" id="pfCast"></div>
+  <p class="pf-note">Everyone who has shot for an issue. Names and credits only — nobody's details, numbers or contact are visible to anyone but the studio.</p>
 </section>
 
 <!-- UPDATES -->
@@ -323,6 +380,81 @@
     if (msg) msg.href = "mailto:info@playersclubhq.com?subject=" +
       encodeURIComponent("Portal — " + (d.name || "Model"));
 
+    /* the model card */
+    var card = document.getElementById("pfCard");
+    if (d.portrait) {
+      card.hidden = false;
+      document.getElementById("pfPlainHead").hidden = true;
+      document.getElementById("pfPortrait").src = d.portrait;
+      document.getElementById("pfPortrait").alt = d.name || "";
+      document.getElementById("pfCredit").textContent = d.credit || d.status || "";
+      document.getElementById("pfName2").textContent = d.name || "";
+      document.getElementById("pfMeta").textContent =
+        (d.handle ? d.handle + " · " : "") + "With the Club since " + (d.since || "—");
+    }
+
+    /* her portfolio — every frame of hers the Club holds */
+    var photos = d.photos || [];
+    if (photos.length) {
+      var wrap = document.getElementById("pfFolioWrap");
+      wrap.setAttribute("data-photos", photos.join(","));
+      wrap.setAttribute("data-set-title", (d.name || "") + " — Portfolio");
+      document.getElementById("pfFolioCount").textContent =
+        photos.length + (photos.length === 1 ? " frame" : " frames");
+      document.getElementById("pfFolio").innerHTML = photos.map(function (src, i) {
+        var sm = src.replace(/\.jpe?g$/i, "-sm.jpg");
+        return '<figure><img src="' + esc(sm) + '" alt="" loading="lazy" decoding="async">' +
+               '<figcaption>FR.' + String(i + 1).padStart(3, "0") + "</figcaption></figure>";
+      }).join("");
+    } else {
+      document.getElementById("pfFolioWrap").hidden = true;
+    }
+
+    /* her details — hers to write, kept on her device until she sends them */
+    var me = document.getElementById("pfMe");
+    var seed = d.profile || {};
+    var localKey = "pc-profile-" + (d.name || "model");
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(localKey) || "{}"); } catch (e) {}
+    Array.prototype.forEach.call(me.elements, function (el) {
+      if (!el.name) return;
+      el.value = saved[el.name] != null ? saved[el.name] : (seed[el.name] || "");
+      el.addEventListener("input", function () {
+        var out = {};
+        Array.prototype.forEach.call(me.elements, function (x) { if (x.name) out[x.name] = x.value; });
+        try { localStorage.setItem(localKey, JSON.stringify(out)); } catch (e) {}
+        document.getElementById("pfSaved").textContent = "Saved on this device.";
+      });
+    });
+    if (seed.tagline || saved.tagline) document.getElementById("pfTag").textContent = saved.tagline || seed.tagline;
+    document.getElementById("pfSave").addEventListener("click", function (e) {
+      e.preventDefault();
+      var lines = ["Updated details — " + (d.name || ""), ""];
+      Array.prototype.forEach.call(me.elements, function (x) {
+        if (!x.name) return;
+        var label = x.parentElement.querySelector("span");
+        lines.push((label ? label.textContent : x.name) + ": " + (x.value || "—"));
+      });
+      window.location.href = "mailto:info@playersclubhq.com?subject=" +
+        encodeURIComponent("Portal details — " + (d.name || "")) +
+        "&body=" + encodeURIComponent(lines.join("\n"));
+    });
+
+    /* who else is in the Club */
+    if (crewKey) {
+      fetch("cast.json", { cache: "no-store" }).then(function (r) { return r.json(); })
+        .then(function (blob) { return unseal(crewKey, blob); })
+        .then(function (c) {
+          document.getElementById("pfCast").innerHTML = (c.cast || []).map(function (m) {
+            var mine = m.name === d.name;
+            return '<figure><div class="ring' + (mine ? " me" : "") + '">' +
+              '<img src="' + esc(m.portrait.replace(/\.jpe?g$/i, "-sm.jpg")) + '" alt="" loading="lazy" decoding="async"></div>' +
+              '<span class="n">' + esc(m.name) + (mine ? " ·" : "") + "</span>" +
+              '<span class="c">' + esc(m.credit) + "</span></figure>";
+          }).join("");
+        }).catch(function () {});
+    }
+
     /* what the Vault actually earned — published by the studio, never guessed */
     fetch("../content/quarters.json").then(function (r) { return r.json(); }).then(function (q) {
       var cur = (q.quarters || []).filter(function (x) { return x.id === q.current; })[0];
@@ -487,10 +619,11 @@
     if (v.trim()) tryKey(v, false);
   });
 
-  document.getElementById("pfOut").addEventListener("click", function (e) {
-    e.preventDefault();
-    store.clear("pc-portal");
-    location.reload();
+  ["pfOut", "pfOut2"].forEach(function (id) {
+    var b = document.getElementById(id); if (!b) return;
+    b.addEventListener("click", function (e) {
+      e.preventDefault(); store.clear("pc-portal"); location.reload();
+    });
   });
 })();
 </script>

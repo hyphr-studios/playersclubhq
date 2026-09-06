@@ -679,3 +679,42 @@ a.pf-card:hover{background:#111}
 /* notes */
 .pf-note{font-size:11px;color:var(--dim);line-height:1.9;max-width:70ch;margin-top:18px}
 .pf-note strong{color:var(--white);font-weight:500}
+
+/* ── model card: portrait + credit ── */
+.pf-card-head{display:grid;grid-template-columns:minmax(180px,300px) 1fr;gap:clamp(22px,5vw,54px);align-items:end;
+  padding:clamp(96px,14vh,150px) var(--pad) clamp(26px,4vh,44px);border-bottom:1px solid var(--hair)}
+.pf-portrait{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--coal);border:1px solid var(--hair-soft)}
+.pf-portrait img{width:100%;height:100%;object-fit:cover;display:block}
+.pf-portrait::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 90px rgba(10,10,10,.5)}
+.pf-who h1,.pf-who .pf-name{font-family:var(--serif);font-weight:400;font-size:clamp(40px,8vw,92px);line-height:.95;letter-spacing:-.015em}
+.pf-who .credit{display:block;font-size:9.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.pf-who .meta{margin-top:16px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+.pf-who .tag{margin-top:14px;font-family:var(--serif);font-style:italic;font-size:clamp(16px,2.4vw,22px);color:rgba(244,242,237,.9)}
+@media (max-width:700px){.pf-card-head{grid-template-columns:1fr;align-items:start}.pf-portrait{max-width:230px}}
+
+/* ── portfolio ── */
+.pf-folio{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(210px,46vw),1fr));gap:10px;cursor:pointer}
+.pf-folio figure{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--coal)}
+.pf-folio img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.6,.2,1),filter .6s}
+.pf-folio figure:hover img{transform:scale(1.05);filter:brightness(1.12)}
+.pf-folio figcaption{position:absolute;bottom:9px;left:11px;font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:rgba(244,242,237,.75)}
+
+/* ── the cast ── */
+.pf-cast{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(150px,40vw),1fr));gap:12px}
+.pf-cast figure{text-align:center}
+.pf-cast .ring{aspect-ratio:1;overflow:hidden;border-radius:50%;border:1px solid var(--hair);background:var(--coal)}
+.pf-cast img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.9)}
+.pf-cast figure:hover img{filter:saturate(1.05) brightness(1.1)}
+.pf-cast .n{display:block;margin-top:13px;font-family:var(--serif);font-size:17px}
+.pf-cast .c{display:block;margin-top:5px;font-size:8px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint)}
+.pf-cast .me{border-color:var(--gold)}
+
+/* ── her own details ── */
+.pf-me{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:1px;background:var(--hair-soft);border:1px solid var(--hair-soft)}
+.pf-me label{background:var(--black);padding:19px 19px 17px;display:block}
+.pf-me label.wide{grid-column:1/-1}
+.pf-me span{display:block;font-size:8.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.pf-me input,.pf-me textarea{width:100%;background:transparent;border:0;border-bottom:1px solid var(--hair);
+  color:var(--white);font-family:var(--sans);font-size:13.5px;padding:0 0 8px}
+.pf-me textarea{border:1px solid var(--hair);padding:10px;min-height:64px;resize:vertical;line-height:1.7}
+.pf-me input:focus,.pf-me textarea:focus{outline:none;border-color:var(--gold)}

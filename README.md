@@ -45,7 +45,7 @@ drop full-res originals (1600–2400px long edge, JPG) over them any time.
 | `cherri-01.jpg` | Cherri feature + Vault Set 02 |
 | `kaykay-01.jpg` / `kaykay-02.jpg` | Kay Kay feature + Vault Set 03 |
 | `naiomi-01.jpg` | The Cast strip + Vault Set 04 |
-| `ivorie-01.jpg` | The Cast strip |
+| `sets/ivorie/ivorie-03.jpg` | The Cast strip |
 | `cast-01.jpg` | The Cast strip + Vault After Hours |
 | `resort.jpg` | Resort teaser plate |
 
