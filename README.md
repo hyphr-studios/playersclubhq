@@ -195,3 +195,58 @@ Checked, not assumed:
   the whole script.
 - **Slow phone on 3G** — largest paint is under 1.2s on every page and layout
   shift is effectively zero.
+
+
+## Model Portal
+
+Three pages behind `/portal/`, plus a public `/casting/` board.
+
+**How access works.** Each model has an access key (e.g. `PC-KARMA-8241`).
+The key is hashed in her browser with SHA-256 and the first 16 hex characters
+name her ledger file — `portal/ledger/<hash>.json`. Nothing on the site lists
+the models, there is no index to enumerate, and she only ever loads her own
+file.
+
+**Be clear-eyed about what that is.** It is a lock on a door, not a bank vault.
+Anyone holding a key can read that model's ledger, and a key shared in a group
+chat is a key that works for everyone in it. Content-unit counts and balances
+are fine there. **Bank details, addresses, ID documents and tax forms must
+never go in these files** — those belong in the studio's own records.
+
+**Adding a model**
+
+```bash
+python3 - <<'EOF'
+import json, hashlib
+KEY  = "PC-NEWNAME-1234"          # give her this
+NAME = "New Name"
+doc = {
+  "name": NAME, "handle": "@handle", "since": "Sep 2026", "status": "Cast — 002",
+  "units": 0, "poolShare": 0.0, "balance": 0.00, "threshold": 100,
+  "quarter": "Q4 2026", "payoutDate": "January 2027",
+  "note": "", "lines": [], "statements": []
+}
+h = hashlib.sha256(KEY.strip().upper().encode()).hexdigest()[:16]
+json.dump(doc, open(f"portal/ledger/{h}.json","w"), indent=2, ensure_ascii=False)
+print("ledger:", h)
+EOF
+```
+
+To revoke a key, delete the file. To change a key, rename the file to the new
+hash.
+
+**Updating everyone after a quarter closes:** edit each ledger's `units`,
+`poolShare` and `balance`. The maths that produces those numbers is on
+`/portal/royalties/`, and the calculator there does it for you.
+
+**The casting board and updates** are `content/castings.json` and
+`content/updates.json` — both plain JSON, both feed the public casting page
+and the portal at once.
+
+### When to replace this with real accounts
+
+When money actually moves, or when models need to log in with an email and
+password rather than a key. That needs a backend: **Supabase** is the natural
+fit — real auth, a row per model, and rules so a model can read only her own
+row. The portal's front end is already shaped for it; what changes is where
+`tryKey()` looks. Until then, keys are the honest version of this.
