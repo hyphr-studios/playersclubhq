@@ -917,3 +917,85 @@ input:disabled{opacity:.35;cursor:not-allowed}
 .pill--approved{border-color:#7fd19a;color:#7fd19a}
 .pill--declined{opacity:.55}
 @media (max-width:700px){.hs-app header time{margin-left:0;width:100%}}
+
+/* ── the House is an admin account, not a model page ───────────── */
+body.is-house #pfStrip,body.is-house #pfNoteWrap{display:none!important}
+.pf-gate__welcome{font-family:var(--serif);font-size:20px;letter-spacing:.01em;color:var(--white);margin:0 0 4px;line-height:1.5}
+.pf-gate__welcome small{display:block;font-family:var(--sans);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-top:6px}
+.pf-gate input[readonly]{color:var(--dim);border-style:dashed}
+
+/* the team */
+.hs-team{border:1px solid var(--hair)}
+.hs-member{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;gap:10px 18px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--hair-soft)}
+.hs-member:last-child{border-bottom:0}
+.hs-member .n{font-family:var(--serif);font-size:19px;color:var(--white);letter-spacing:.01em}
+.hs-member .n small{display:block;font-family:var(--sans);font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-top:4px}
+.hs-member .e{font-size:11px;color:var(--dim);letter-spacing:.04em;overflow-wrap:anywhere}
+.hs-member .e b{display:block;font-weight:500;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin-top:3px}
+.hs-member .e b.on{color:#7fd19a}.hs-member .e b.inv{color:var(--gold)}
+.hs-member .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.hs-member .acts button,.pf-table .tiny{background:transparent;border:1px solid var(--hair);color:var(--white);padding:7px 11px;cursor:pointer;
+  font-family:var(--sans);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;white-space:nowrap}
+.hs-member .acts button:hover,.pf-table .tiny:hover{border-color:var(--gold);color:var(--gold)}
+.hs-member .acts button:disabled{opacity:.4;cursor:default}
+.pf-table .tiny{display:inline-block;margin-left:8px;vertical-align:middle;text-decoration:none}
+.pf-table .access{display:block;font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin-top:4px}
+.pf-table .access.inv{color:var(--gold)}
+@media (max-width:700px){.hs-member{grid-template-columns:1fr;gap:8px}.hs-member .acts{justify-content:flex-start}}
+
+.hs-invite{margin-top:18px;border:1px solid var(--hair);padding:20px}
+.hs-invite .k{display:block;font-size:8.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.hs-invite form{display:grid;grid-template-columns:1fr 1.3fr .9fr auto;gap:10px;align-items:stretch}
+.hs-invite input,.hs-invite select{background:transparent;border:1px solid var(--hair);color:var(--white);padding:12px 14px;font-family:var(--sans);font-size:12px;letter-spacing:.06em;min-width:0}
+.hs-invite select option{background:#0E0E0E;color:var(--white)}
+.hs-invite input:focus,.hs-invite select:focus{outline:none;border-color:var(--gold)}
+.hs-invite .btn{justify-content:center}
+@media (max-width:820px){.hs-invite form{grid-template-columns:1fr 1fr}.hs-invite .btn{grid-column:1/-1}}
+@media (max-width:480px){.hs-invite form{grid-template-columns:1fr}}
+
+/* the vault, grouped by who is in the frame */
+.hs-group{margin-top:22px}
+.hs-group:first-child{margin-top:0}
+.hs-group__t{display:flex;align-items:baseline;gap:12px;margin:0 0 10px}
+.hs-group__t b{font-family:var(--serif);font-weight:400;font-size:20px;color:var(--white);letter-spacing:.01em}
+.hs-group__t span{font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--faint)}
+
+/* a sheet: a statement to keep, or an invite code to send */
+.sheet{position:fixed;inset:0;z-index:1250;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:24px var(--pad);overflow:auto}
+.sheet__in{width:min(560px,100%);max-height:100%;display:flex;flex-direction:column;gap:14px}
+.sheet__paper{background:#F4F1EA;color:#111;padding:34px 34px 28px;font-family:var(--sans);font-size:12px;line-height:1.7;letter-spacing:.02em;overflow:auto;max-height:70vh}
+.sheet__paper h3{font-family:var(--serif);font-weight:400;font-size:26px;margin:0;letter-spacing:.01em;color:#111}
+.sheet__paper .sub{font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:#7a7568;margin:6px 0 22px}
+.sheet__paper table{width:100%;border-collapse:collapse;margin:0 0 18px}
+.sheet__paper td{padding:7px 0;border-bottom:1px solid #d9d4c8;vertical-align:top}
+.sheet__paper td:first-child{color:#7a7568;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;width:46%}
+.sheet__paper td:last-child{text-align:right;font-variant-numeric:tabular-nums;color:#111}
+.sheet__paper tr.total td{border-bottom:0;padding-top:12px}
+.sheet__paper tr.total td:last-child{font-family:var(--serif);font-size:24px}
+.sheet__paper .foot{font-size:9.5px;color:#7a7568;line-height:1.8;margin-top:8px}
+.sheet__paper .code{font-family:var(--serif);font-size:clamp(28px,7vw,40px);letter-spacing:.06em;text-align:center;margin:10px 0 6px;color:#111;user-select:all}
+.sheet__paper .msg{background:#fff;border:1px solid #d9d4c8;padding:14px 16px;white-space:pre-wrap;font-size:12px;line-height:1.7;margin-top:14px;user-select:all}
+.sheet__acts{display:flex;gap:8px;flex-wrap:wrap}
+.sheet__acts .btn{flex:1 1 auto;justify-content:center}
+@media print{
+  body *{visibility:hidden!important}
+  .sheet,.sheet *{visibility:visible!important}
+  .sheet{position:static;background:#fff;padding:0;display:block}
+  .sheet__paper{max-height:none;background:#fff;padding:0}
+  .sheet__acts{display:none!important}
+}
+.hs-assets.is-grouped{display:block}
+.hs-assets.is-grouped .hs-group .hs-assets{display:grid}
+/* quarters: a compact row you can scroll, not a stack of cards */
+.hs-quarters{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;margin-bottom:16px;scrollbar-width:none;border:0}
+.hs-quarters::-webkit-scrollbar{display:none}
+.hs-quarters button{flex:0 0 auto;min-width:118px;padding:12px 14px;border:1px solid var(--hair);background:transparent;text-align:left}
+.hs-quarters button.is-on{border-color:var(--gold);background:rgba(244,242,237,.03)}
+.hs-quarters button .no{font-size:8.5px;letter-spacing:.3em;color:var(--gold)}
+.hs-quarters button .t{font-family:var(--serif);font-size:17px;display:block;margin:4px 0 2px}
+.hs-quarters button .s{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+@media (max-width:700px){.hs-assets{grid-template-columns:repeat(3,1fr);gap:6px}}
+.pf-table tr[data-stmt]{cursor:pointer}
+.pf-table tr[data-stmt]:hover td{color:var(--white)}
+.hs-projects.hs-quarters{flex-wrap:nowrap;background:transparent;border:0;gap:8px}
+.hs-projects.hs-quarters button{flex:0 0 auto}

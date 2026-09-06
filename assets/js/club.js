@@ -318,7 +318,7 @@
     pre.src = lbxList[(lbxIdx + 1) % lbxList.length];
   };
   var lbxClose = function () { if (lbx) { lbx.classList.remove("open"); document.body.style.overflow = ""; } };
-  var lbxOpen = function (list, title, caps) {
+  var lbxOpen = function (list, title, caps, start) {
     if (!lbx) {
       lbx = document.createElement("div");
       lbx.className = "lbx";
@@ -343,17 +343,19 @@
     lbxList = list; lbxTitle = title; lbxCaps = caps || [];
     lbx.classList.add("open");
     document.body.style.overflow = "hidden";
-    lbxShow(0);
+    lbxShow(start || 0);
   };
   document.addEventListener("click", function (e) {
     var el = e.target.closest("[data-photos]");
     if (!el || el.getAttribute("data-video")) return;
     e.preventDefault();
     var caps = el.getAttribute("data-captions");
+    var hit = e.target.closest("[data-i]");
     lbxOpen(
       el.getAttribute("data-photos").split(","),
       el.getAttribute("data-set-title") || "",
-      caps ? caps.split("|") : []
+      caps ? caps.split("|") : [],
+      hit && el.contains(hit) ? +hit.getAttribute("data-i") || 0 : 0
     );
   });
 

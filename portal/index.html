@@ -38,6 +38,18 @@
     <input type="password" id="pfNew2" placeholder="Once more" aria-label="New password again" required minlength="8" autocomplete="new-password">
     <button type="submit">Set Password</button>
   </form>
+  <form autocomplete="off" id="pfJoin" hidden>
+    <input type="text" id="pfCode" placeholder="Invite Code" aria-label="Invite code" required
+           autocapitalize="characters" autocorrect="off" spellcheck="false">
+    <button type="submit">Continue</button>
+  </form>
+  <form autocomplete="on" id="pfJoin2" hidden>
+    <p class="pf-gate__welcome" id="pfWelcome"></p>
+    <input type="email" id="pfJoinEmail" readonly aria-label="Email" autocomplete="username" tabindex="-1">
+    <input type="password" id="pfJoinPass" placeholder="Choose a password" aria-label="Choose a password" required minlength="8" autocomplete="new-password">
+    <input type="password" id="pfJoinPass2" placeholder="Once more" aria-label="Password again" required minlength="8" autocomplete="new-password">
+    <button type="submit" id="pfJoinGo">Create My Account</button>
+  </form>
   <form autocomplete="off" id="pfForm" hidden>
     <input type="text" name="key" id="pfKey" placeholder="Access Key" aria-label="Access key"
            autocapitalize="characters" autocorrect="off" spellcheck="false" required>
@@ -45,6 +57,8 @@
   </form>
   <span class="hint" id="pfHint">Sign in with the email and password the studio gave you.</span>
   <div class="pf-gate__alt" id="pfGateAlt">
+    <a href="#" class="hint" id="pfHaveCode">Have an invite code?</a>
+    <a href="#" class="hint" id="pfBack" hidden>← Sign in instead</a>
     <a href="#" class="hint" id="pfForgot">Forgot your password?</a>
     <a href="#" class="hint" id="pfUseKey">Have an access key instead?</a>
   </div>
@@ -83,6 +97,14 @@
     <a href="#" id="hsBack">← someone else</a>
     <a href="#" id="hsDoorOut">Sign out of the House</a>
     <a href="../">Leave the portal</a>
+  </div>
+</div>
+
+<!-- A STATEMENT, OR AN INVITE CODE -->
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true">
+  <div class="sheet__in">
+    <div class="sheet__paper" id="sheetPaper"></div>
+    <div class="sheet__acts" id="sheetActs"></div>
   </div>
 </div>
 
@@ -153,7 +175,7 @@
 </header>
 
 <!-- THE NUMBERS -->
-<section class="pf-strip">
+<section class="pf-strip" id="pfStrip">
   <div>
     <span class="k">Content Units</span>
     <span class="v" id="pfUnits">—</span>
@@ -227,9 +249,28 @@
   <div class="hs-assets" id="hsAssets"></div>
   <p class="pf-note">Every frame filed under this project. Tap any of them. The filter is by who is in the frame.</p>
 
+  <div id="hsTeamWrap" hidden>
+    <div class="pf-sect__head" id="hsTeamSec" style="margin-top:clamp(38px,7vh,64px)">
+      <h2>The Team</h2>
+      <span class="idx" id="hsTeamIdx">Who runs the House</span>
+    </div>
+    <div class="hs-team" id="hsTeam"></div>
+    <div class="hs-invite" id="hsInvite" hidden>
+      <span class="k">Invite someone</span>
+      <form id="hsInviteForm" autocomplete="off">
+        <input name="name" placeholder="Name" aria-label="Name" required>
+        <input name="email" type="email" placeholder="Email" aria-label="Email" required autocapitalize="off" autocorrect="off">
+        <select name="role" aria-label="Account type"></select>
+        <button class="btn btn--solid" type="submit">Mint the Code</button>
+      </form>
+      <p class="pf-note">They open <strong>playersclubhq.com/portal</strong>, tap <strong>Have an invite code?</strong>, enter it, choose a password, and they're in.
+        A code works once, for that email only, and expires in 30 days.</p>
+    </div>
+  </div>
+
   <div class="pf-sect__head" style="margin-top:clamp(38px,7vh,64px)">
     <h2>Applications</h2>
-    <span class="idx">Founder and Partner</span>
+    <span class="idx" id="hsAppsIdx">Founder and Partner</span>
   </div>
   <div class="hs-apps" id="hsAppList" hidden></div>
   <p class="pf-note" id="hsApps">
@@ -282,6 +323,22 @@
   </p>
 </section>
 
+
+<!-- STATEMENTS -->
+<section class="pf-sect" data-model-only id="pfStmtWrap" hidden style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head">
+    <h2>Your Statements</h2>
+    <span class="idx" id="pfStmtIdx">One per quarter, since the Club began</span>
+  </div>
+  <div class="pf-wrap">
+    <table class="pf-table">
+      <thead><tr><th>Quarter</th><th>Units</th><th>Per Unit</th><th>Earned</th><th>Status</th><th></th></tr></thead>
+      <tbody id="pfStmts"></tbody>
+    </table>
+  </div>
+  <p class="pf-note">Your numbers only. Nobody else's line is visible to you, and yours is visible to nobody but the studio.
+    Open any quarter to download it or save it as a PDF.</p>
+</section>
 
 <!-- PORTFOLIO -->
 <section class="pf-sect" data-model-only id="pfFolioWrap" style="border-top:1px solid var(--hair)">
@@ -514,6 +571,46 @@
     (data.role === "house" ? renderHouse : render)(data);
   }
 
+  /* ── a sheet on screen: something to keep or to send ── */
+  function sheet(paperHtml, acts) {
+    var el = document.getElementById("sheet"), paper = document.getElementById("sheetPaper"), host = document.getElementById("sheetActs");
+    paper.innerHTML = paperHtml;
+    host.innerHTML = "";
+    (acts || []).forEach(function (a) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "btn" + (a.solid ? " btn--solid" : ""); b.textContent = a.label;
+      b.addEventListener("click", function () { a.run(b); }); host.appendChild(b);
+    });
+    var x = document.createElement("button"); x.type = "button"; x.className = "btn"; x.textContent = "Close";
+    x.addEventListener("click", closeSheet); host.appendChild(x);
+    el.hidden = false; document.body.style.overflow = "hidden";
+  }
+  function closeSheet() { document.getElementById("sheet").hidden = true; document.body.style.overflow = ""; }
+  document.getElementById("sheet").addEventListener("click", function (e) { if (e.target.id === "sheet") closeSheet(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !document.getElementById("sheet").hidden) closeSheet(); });
+  function download(name, text) {
+    try {
+      var blob = new Blob([text], { type: "text/plain;charset=utf-8" }), url = URL.createObjectURL(blob);
+      var a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click();
+      setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 800);
+    } catch (e) { window.open("data:text/plain;charset=utf-8," + encodeURIComponent(text)); }
+  }
+  function copyText(t, b, done) {
+    var fin = function () { if (b) { var was = b.textContent; b.textContent = done || "Copied"; setTimeout(function () { b.textContent = was; }, 1600); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(fin, fin); else fin();
+  }
+  /* the invite code, and the message to send with it */
+  function codeSheet(name, role, code, email) {
+    var msg = "PLAYER'S CLUB — your portal invite\n\n" +
+      "1. Open playersclubhq.com/portal\n2. Tap \"Have an invite code?\"\n3. Enter " + code + " with " + email + "\n4. Choose your password. You're in.\n\n" +
+      "The code works once and expires in 30 days. Keep it to yourself.";
+    sheet('<h3>' + esc(name) + '</h3><p class="sub">' + esc(role) + ' · one-time invite · ' + esc(email) + '</p>' +
+          '<div class="code">' + esc(code) + '</div>' +
+          '<p class="foot" style="text-align:center">This is the only time the code is shown. Send it to her now.</p>' +
+          '<div class="msg">' + esc(msg) + '</div>',
+      [{ label: "Copy the Code", solid: true, run: function (b) { copyText(code, b); } },
+       { label: "Copy the Message", run: function (b) { copyText(msg, b); } }]);
+  }
+
   /* ── model view ── */
 
   /* ═══ THE PORTFOLIO ═══
@@ -647,6 +744,45 @@
     if (msg) msg.href = "mailto:info@playersclubhq.com?subject=" +
       encodeURIComponent("Portal — " + (d.name || "Model"));
 
+    /* her statements: one per quarter, her numbers only */
+    if (d.live && d.statements) {
+      var sw = document.getElementById("pfStmtWrap"); sw.hidden = !d.statements.length;
+      var stBy = {}; d.statements.forEach(function (st) { stBy[st.id] = st; });
+      document.getElementById("pfStmts").innerHTML = d.statements.map(function (st) {
+        var status = st.status === "open" ? "Open"
+                   : st.free ? "Free · $0"
+                   : st.paid ? "Paid"
+                   : st.payable > 0 ? "Payable"
+                   : "Rolls";
+        return '<tr data-stmt="' + esc(st.id) + '" title="Open this statement"><td>' + esc(st.label) + (st.window ? ' <span style="color:var(--faint)">' + esc(st.window) + "</span>" : "") +
+          "</td><td>" + esc(st.units) + "</td><td>" + (st.perUnit == null ? "—" : money(st.perUnit)) +
+          "</td><td>" + money(st.amount) + "</td><td" + (st.status === "open" || st.free ? ' style="color:var(--faint)"' : "") + ">" + esc(status) +
+          '</td><td><a href="#" data-stmt="' + esc(st.id) + '" style="color:var(--gold);font-size:9px;letter-spacing:.2em;text-transform:uppercase">Open</a></td></tr>';
+      }).join("");
+      document.getElementById("pfStmts").addEventListener("click", function (e) {
+        var a = e.target.closest("[data-stmt]"); if (!a) return;
+        e.preventDefault();
+        var st = stBy[a.getAttribute("data-stmt")]; if (!st) return;
+        var today = new Date().toISOString().slice(0, 10);
+        var lines = [
+          ["Model", d.name], ["Quarter", st.label + (st.window ? " · " + st.window : "")],
+          ["Approved units", String(st.units)], ["Value per unit", st.perUnit == null ? "—" : money(st.perUnit)],
+          ["Earned", money(st.amount)], ["Carried forward", money(st.carried)],
+          ["Status", st.status === "open" ? "Open · pays " + st.paidOn : st.free ? "The Vault was open at no charge" : st.paid ? "Paid" : st.payable > 0 ? "Payable " + st.paidOn : "Under $100 · rolls forward"]
+        ];
+        var text = ["PLAYER'S CLUB™ — STATEMENT", st.label + (st.window ? " · " + st.window : ""), ""]
+          .concat(lines.map(function (l) { return (l[0] + ":").padEnd(18) + l[1]; }))
+          .concat(["", "Payable:          " + money(st.payable), "", "Prepared by PLAYER'S CLUB · playersclubhq.com · info@playersclubhq.com", "Generated " + today]).join("\n");
+        sheet('<h3>Statement</h3><p class="sub">PLAYER\'S CLUB™ · ' + esc(st.label) + (st.window ? " · " + esc(st.window) : "") + "</p>" +
+          "<table>" + lines.map(function (l) { return "<tr><td>" + esc(l[0]) + "</td><td>" + esc(l[1]) + "</td></tr>"; }).join("") +
+          '<tr class="total"><td>Payable</td><td>' + esc(money(st.payable)) + "</td></tr></table>" +
+          '<p class="foot">Your numbers only. One photo is one unit, one video is one unit; placements carry their bonus. ' +
+          "Anything under $100 rolls into the next quarter. Questions: info@playersclubhq.com · generated " + esc(today) + "</p>",
+          [{ label: "Download", solid: true, run: function () { download("PLAYERS-CLUB-Statement-" + st.id + "-" + (d.name || "model").replace(/\s+/g, "") + ".txt", text); } },
+           { label: "Print / Save as PDF", run: function () { window.print(); } }]);
+      });
+    }
+
     /* the model card */
     var card = document.getElementById("pfCard");
     if (d.portrait) {
@@ -749,13 +885,17 @@
     /* what the Vault actually earned — published by the studio, never guessed */
     if (d.live) {
       var qi = d.quarterInfo, qel = document.getElementById("pfQuarter");
-      if (!qi) {
-        qel.textContent = "Covering " + (d.quarter || "—") + " · revenue not yet reported";
+      if (!qi || qi.free) {
+        qel.textContent = "Covering " + (d.quarter || "—") + (qi && qi.free ? " · the Vault has been free so far" : " · revenue not yet reported");
+        if (qi && qi.free) document.getElementById("pfNote").innerHTML =
+          "The Vault has been open at no charge since the Club began, so every quarter through " + esc(qi.label) +
+          " closed at $0 and there was nothing to split. Your units are banked and count from the first paid quarter. " +
+          "Next: " + esc(d.quarter) + ", paid " + esc(d.payoutDate) + ".";
       } else {
-        qel.textContent = qi.label + " closed · " + (qi.perUnit != null ? money(qi.perUnit) + " per unit" : "");
+        qel.textContent = qi.label + " closed" + (qi.perUnit != null ? " · " + money(qi.perUnit) + " per unit" : "");
         document.getElementById("pfNote").innerHTML =
-          esc(qi.label) + ": the Vault took " + esc(money(qi.revenue)) + ". The model pool was " + esc(money(qi.pool)) +
-          ". Your " + esc(qi.units) + " units earned <strong>" + esc(money(qi.amount)) + "</strong>" +
+          esc(qi.label) + ": your " + esc(qi.units) + " units" + (qi.perUnit != null ? " at " + esc(money(qi.perUnit)) + " a unit" : "") +
+          " earned <strong>" + esc(money(qi.amount)) + "</strong>" +
           (qi.payable > 0 ? (qi.paid ? ", paid." : ", payable " + esc(qi.paidOn || "") + ".") : ". Under the $100 threshold, so it rolls into next quarter.") +
           " Next: " + esc(d.quarter) + ", paid " + esc(d.payoutDate) + ".";
       }
@@ -974,6 +1114,7 @@
     function paintAssets(who) {
       var list = (pj.assets || []).filter(function (a) { return !who || (a.models || [a.model]).indexOf(who) >= 0; });
       var names = []; (pj.assets || []).forEach(function (a) { (a.models || [a.model]).forEach(function (n) { if (n && names.indexOf(n) < 0) names.push(n); }); });
+      var ord = pj.models || []; names.sort(function (a, b) { var i = ord.indexOf(a), j = ord.indexOf(b); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j) || a.localeCompare(b); });
       document.getElementById("hsFilter").innerHTML =
         '<button type="button"' + (who ? "" : ' class="is-on"') + ' data-who="">Everyone</button>' +
         names.map(function (n) { return '<button type="button"' + (who === n ? ' class="is-on"' : "") + ' data-who="' + esc(n) + '">' + esc(n) + "</button>"; }).join("");
@@ -982,10 +1123,29 @@
       host.setAttribute("data-photos", list.map(function (a) { return a.src; }).join(","));
       host.setAttribute("data-set-title", pj.issue + (who ? " — " + who : ""));
       host.setAttribute("data-captions", list.map(function (a) { return (a.model || "") + (a.frame ? " · " + a.frame : "") + (a.set ? " · " + a.set : ""); }).join("|"));
-      host.innerHTML = list.map(function (a) {
-        return '<figure><img src="' + esc(a.src.replace(/\.jpe?g$/i, "-sm.jpg")) + '" alt="" loading="lazy" decoding="async">' +
+      var fig = function (a, i) {
+        return '<figure data-i="' + i + '"><img src="' + esc(a.src.replace(/\.jpe?g$/i, "-sm.jpg")) + '" alt="" loading="lazy" decoding="async">' +
           "<figcaption>" + esc(a.model || "") + (a.frame ? " · " + a.frame : "") + (a.unit === false ? " · no unit" : "") + "</figcaption></figure>";
-      }).join("") || '<p class="pf-note">Nothing filed here yet.</p>';
+      };
+      if (!who && list.length) {
+        /* everyone: her frames under her name, the shared frames under Group */
+        var groups = names.map(function (n) {
+          return { name: n, items: list.filter(function (a) { return (a.models || [a.model]).length === 1 && (a.models || [a.model])[0] === n; }) };
+        }).filter(function (g) { return g.items.length; });
+        var shared = list.filter(function (a) { return (a.models || [a.model]).length > 1; });
+        if (shared.length) groups.push({ name: "Group", items: shared });
+        host.removeAttribute("data-photos");
+        host.innerHTML = groups.map(function (g) {
+          return '<section class="hs-group" data-photos="' + esc(g.items.map(function (a) { return a.src; }).join(",")) + '" data-set-title="' + esc(pj.issue + " — " + g.name) + '"' +
+            ' data-captions="' + esc(g.items.map(function (a) { return (a.model || "") + (a.frame ? " · " + a.frame : "") + (a.set ? " · " + a.set : ""); }).join("|")) + '">' +
+            '<h3 class="hs-group__t"><b>' + esc(g.name) + "</b><span>" + g.items.length + (g.items.length === 1 ? " frame" : " frames") + "</span></h3>" +
+            '<div class="hs-assets">' + g.items.map(fig).join("") + "</div></section>";
+        }).join("");
+        host.classList.add("is-grouped");
+      } else {
+        host.classList.remove("is-grouped");
+        host.innerHTML = list.map(fig).join("") || '<p class="pf-note">Nothing filed here yet.</p>';
+      }
     }
     document.getElementById("hsFilter").addEventListener("click", function (e) {
       var b = e.target.closest("[data-who]"); if (!b) return;
@@ -1035,7 +1195,13 @@
                 ? '<a href="#" data-pay="' + esc(m.id) + '" style="color:var(--gold);font-size:9px;letter-spacing:.2em;text-transform:uppercase">Mark paid</a>'
                 : ""))
           : "";
-        return "<tr><td>" + esc(m.name) + (m.handle ? ' <span style="color:var(--faint)">' + esc(m.handle) + "</span>" : "") +
+        var access = "";
+        if (d.live && m.access) {
+          var canInv = WHO && WHO.can.indexOf("invite") >= 0;
+          access = '<span class="access' + (m.access.state === "invited" ? " inv" : "") + '">' + esc(m.access.label) +
+            (canInv && m.access.state !== "active" ? ' <a href="#" class="tiny" data-invite="' + esc(m.id) + '">' + (m.access.state === "invited" ? "New code" : "Invite") + "</a>" : "") + "</span>";
+        }
+        return "<tr><td>" + esc(m.name) + (m.handle ? ' <span style="color:var(--faint)">' + esc(m.handle) + "</span>" : "") + access +
           "</td><td>" + esc(m.units) + "</td><td>" + esc(m.share) + "%</td><td>" + money(carried) +
           "</td><td>" + money(earned) + "</td><td" + (pays ? "" : ' style="color:var(--faint)"') + ">" +
           money(pays ? payable : carried + earned) + (pays ? "" : ' <span style="font-size:9px;letter-spacing:.2em">ROLLS</span>') +
@@ -1068,6 +1234,7 @@
         ].join("\n");
       };
       var pub = document.getElementById("hPublish");
+      if (pub && d.live) { pub.hidden = true; pub = null; }
       if (pub) {
         if (R > 0) {
           pub.hidden = false;
@@ -1156,10 +1323,88 @@
       });
       if (pick) showQuarter(pick);
 
+      /* ── invites: mint a code for anyone, from anywhere in the room ── */
+      function mint(name, email, role, profileId) {
+        return window.PCLive.invite(email, name, role, profileId).then(function (code) {
+          codeSheet(name, window.PCLive.roleTitle(role), code, String(email).trim().toLowerCase());
+          logIt("Invited", name + " · " + window.PCLive.roleTitle(role), true);
+          return code;
+        }).catch(function (er) { window.alert("No code minted: " + (er && er.message ? er.message : "unknown error")); });
+      }
+      document.getElementById("hRoster").addEventListener("click", function (e) {
+        var a = e.target.closest("[data-invite]"); if (!a) return;
+        e.preventDefault();
+        var m = rows.filter(function (r) { return r.id === a.getAttribute("data-invite"); })[0]; if (!m) return;
+        var email = window.prompt("Invite " + m.name + ". Her email:", /\.pending@/.test(m.email || "") ? "" : (m.email || ""));
+        if (!email) return;
+        mint(m.name, email, "model", m.id).then(function (code) { if (code) { m.access = { state: "invited", label: "Invited · code sent" }; run(true); } });
+      });
+
+      /* ── the team ── */
+      var teamWrap = document.getElementById("hsTeamWrap"); teamWrap.hidden = false;
+      var canInvite = WHO && WHO.can.indexOf("invite") >= 0, canTeam = WHO && WHO.can.indexOf("team") >= 0;
+      document.getElementById("hsTeamIdx").textContent = canTeam ? "Founder account · you can invite, rename and switch anyone off" : canInvite ? "You can invite: " + (WHO.invites || []).map(window.PCLive.roleTitle).join(", ").toLowerCase() : "Who runs the House";
+      function paintTeam() {
+        document.getElementById("hsTeam").innerHTML = (d.team || []).map(function (t) {
+          var acts = "";
+          if (!t.me) {
+            var mayInvite = canInvite && (WHO.invites || []).indexOf(t.key) >= 0;
+            if (mayInvite && t.access.state !== "active") acts += '<button type="button" data-tm="invite" data-id="' + esc(t.id) + '">' + (t.access.state === "invited" ? "New code" : "Invite") + "</button>";
+            if (mayInvite && t.access.state === "invited") acts += '<button type="button" data-tm="revoke" data-id="' + esc(t.id) + '">Revoke</button>';
+            if (canTeam && t.key !== "owner") acts += '<button type="button" data-tm="rename" data-id="' + esc(t.id) + '">Rename</button>' +
+              '<button type="button" data-tm="toggle" data-id="' + esc(t.id) + '">' + (t.active ? "Switch off" : "Switch on") + "</button>";
+          }
+          return '<div class="hs-member"><span class="n">' + esc(t.name) + (t.me ? ' <span style="color:var(--faint);font-size:12px">· you</span>' : "") + "<small>" + esc(t.title) + "</small></span>" +
+            '<span class="e">' + esc(/\.pending@/.test(t.email || "") ? "no email yet" : t.email) + "<b" + (t.access.state === "active" && t.active ? ' class="on"' : t.access.state === "invited" ? ' class="inv"' : "") + ">" +
+            esc(!t.active && t.access.state !== "invited" ? "Switched off" : t.access.label) + "</b></span>" +
+            '<span class="acts">' + acts + "</span></div>";
+        }).join("");
+      }
+      paintTeam();
+      document.getElementById("hsTeam").addEventListener("click", function (e) {
+        var b = e.target.closest("[data-tm]"); if (!b) return;
+        var t = (d.team || []).filter(function (x) { return x.id === b.getAttribute("data-id"); })[0]; if (!t) return;
+        var act = b.getAttribute("data-tm");
+        if (act === "invite") {
+          var email = window.prompt("Invite " + t.name + " as " + t.title + ". Their email:", /\.pending@/.test(t.email || "") ? "" : (t.email || ""));
+          if (!email) return;
+          mint(t.name, email, t.key, t.id).then(function (code) { if (code) { t.email = email.trim().toLowerCase(); t.access = { state: "invited", label: "Invited · code sent" }; paintTeam(); } });
+        } else if (act === "revoke") {
+          if (!window.confirm("Revoke " + t.name + "'s code?")) return;
+          var inv = (d.invites || []).filter(function (i) { return i.email === t.email; })[0];
+          (inv ? window.PCLive.inviteRevoke(inv.id) : Promise.resolve()).then(function () { t.access = { state: "off", label: "Switched off" }; paintTeam(); logIt("Revoked an invite", t.name, true); })
+            .catch(function (er) { window.alert(er && er.message ? er.message : "Could not revoke"); });
+        } else if (act === "rename") {
+          var nm = window.prompt("New name for " + t.name + ":", t.name); if (!nm || nm.trim() === t.name) return;
+          window.PCLive.setMember(t.id, nm.trim(), null, null).then(function () { t.name = nm.trim(); paintTeam(); logIt("Renamed", nm.trim(), true); })
+            .catch(function (er) { window.alert(er && er.message ? er.message : "Could not rename"); });
+        } else if (act === "toggle") {
+          if (!window.confirm((t.active ? "Switch off " : "Switch on ") + t.name + "?")) return;
+          window.PCLive.setMember(t.id, null, null, !t.active).then(function () { t.active = !t.active; t.access = t.active ? { state: "active", label: "Has a login" } : { state: "off", label: "Switched off" }; paintTeam(); logIt(t.active ? "Switched on" : "Switched off", t.name, true); })
+            .catch(function (er) { window.alert(er && er.message ? er.message : "Could not change that"); });
+        }
+      });
+      var invBox = document.getElementById("hsInvite"), invForm = document.getElementById("hsInviteForm");
+      if (canInvite) {
+        invBox.hidden = false;
+        invForm.role.innerHTML = (WHO.invites || []).map(function (k) { return '<option value="' + esc(k) + '">' + esc(window.PCLive.roleTitle(k)) + "</option>"; }).join("");
+        invForm.role.value = (WHO.invites || []).indexOf("model") >= 0 ? "model" : (WHO.invites || [])[0];
+        invForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (!invForm.reportValidity()) return;
+          var b = invForm.querySelector("button"); b.disabled = true;
+          mint(invForm.name.value.trim(), invForm.email.value, invForm.role.value, null).then(function (code) {
+            b.disabled = false;
+            if (code) { invForm.reset(); invForm.role.value = (WHO.invites || []).indexOf("model") >= 0 ? "model" : (WHO.invites || [])[0]; }
+          });
+        });
+      }
+
       /* applications, reviewed in the room */
+      document.getElementById("hsAppsIdx").textContent = "Founder, President and Vice President";
       document.getElementById("hsApps").hidden = true;
       var appHost = document.getElementById("hsAppList"); appHost.hidden = false;
-      var canApprove = WHO && WHO.can.indexOf("approve") >= 0, isFounder = closer;
+      var canApprove = WHO && WHO.can.indexOf("approve") >= 0, mayInviteModel = canInvite && (WHO.invites || []).indexOf("model") >= 0;
       function paintApps() {
         var apps = d.applications || [];
         appHost.innerHTML = apps.length ? apps.map(function (a, i) {
@@ -1176,7 +1421,8 @@
               (a.status === "new" ? '<button type="button" data-act="shortlisted">Shortlist</button>' : "") +
               '<button type="button" data-act="approved">Approve</button>' +
               '<button type="button" data-act="declined">Decline</button></div>' : "") +
-            (a.status === "approved" && a.on_roster ? '<p class="m">On the roster. Now create her login: Supabase → Authentication → Users → Add user with <b>' + esc(a.on_roster) + '</b> and a password, and send it to her.</p>' : "") +
+            (a.status === "approved" && a.on_roster ? '<p class="m">Invited as a model with <b>' + esc(a.on_roster) + '</b>. Send her the code.</p>' : "") +
+            (a.status === "approved" && !a.on_roster && mayInviteModel ? '<div class="acts"><button type="button" data-act="invite">Invite her</button></div>' : "") +
             "</article>";
         }).join("") : '<p class="pf-note">No applications yet. The public form at /casting/ writes straight in here.</p>';
       }
@@ -1185,18 +1431,16 @@
         var card = b.closest("[data-app]"), a = d.applications[+card.getAttribute("data-app")], act = b.getAttribute("data-act");
         if (act === "declined" && !window.confirm("Decline " + a.name + "?")) return;
         b.disabled = true;
-        window.PCLive.review(a.id, act).then(function () {
+        var inviteHer = function () {
+          var email = window.prompt("Invite " + a.name + " as a model. Her login email:", a.email || "");
+          if (!email) return Promise.resolve();
+          return mint(a.name, email, "model", null).then(function (code) { if (code) a.on_roster = email.trim().toLowerCase(); });
+        };
+        (act === "invite" ? inviteHer() : window.PCLive.review(a.id, act).then(function () {
           a.status = act;
           logIt("Review application", a.name + " · " + act, true);
-          if (act === "approved" && isFounder) {
-            var email = window.prompt("Put " + a.name + " on the roster. Her login email:", a.email || "");
-            if (email) {
-              return window.PCLive.addToRoster({ email: email, name: a.name, handle: a.instagram, city: a.city })
-                .then(function () { a.on_roster = email.trim().toLowerCase(); logIt("Added to roster", a.name); })
-                .catch(function (er) { window.alert("Not added: " + (er && er.message ? er.message : "unknown error")); });
-            }
-          }
-        }).catch(function (er) { window.alert("Not saved: " + (er && er.message ? er.message : "unknown error")); })
+          if (act === "approved" && mayInviteModel) return inviteHer();
+        })).catch(function (er) { window.alert("Not saved: " + (er && er.message ? er.message : "unknown error")); })
           .then(paintApps);
       });
       paintApps();
@@ -1328,20 +1572,43 @@
      The sealed access keys still work underneath, for anyone not moved over yet. */
   var LIVE = !!(window.PCLive && window.PCLive.ready && window.supabase);
   var loginForm = document.getElementById("pfLogin"), keyForm = document.getElementById("pfForm"),
-      setForm = document.getElementById("pfSetPass"), alt = document.getElementById("pfGateAlt");
+      setForm = document.getElementById("pfSetPass"), alt = document.getElementById("pfGateAlt"),
+      joinForm = document.getElementById("pfJoin"), joinForm2 = document.getElementById("pfJoin2");
+  var forms = [loginForm, keyForm, setForm, joinForm, joinForm2];
+  function only(f) { forms.forEach(function (x) { x.hidden = x !== f; }); }
   var KEY_HINT = "Each model has her own key — there is no shared password.<br>Yours came with your call sheet. Lost it? Message the studio.";
+  function mode(m) {
+    alt.hidden = false;
+    document.getElementById("pfHaveCode").hidden = m !== "login";
+    document.getElementById("pfForgot").hidden = m !== "login";
+    document.getElementById("pfUseKey").hidden = !(m === "login" || m === "key");
+    document.getElementById("pfBack").hidden = m === "login";
+  }
   function showLogin() {
-    loginForm.hidden = false; keyForm.hidden = true; setForm.hidden = true; alt.hidden = false;
+    only(loginForm); mode("login");
     hint.textContent = "Sign in with the email and password the studio gave you.";
     document.getElementById("pfUseKey").textContent = "Have an access key instead?";
   }
   function showKeyGate() {
-    loginForm.hidden = true; keyForm.hidden = false; setForm.hidden = true; alt.hidden = !LIVE;
+    only(keyForm); mode("key"); alt.hidden = !LIVE;
     hint.innerHTML = KEY_HINT;
     document.getElementById("pfUseKey").textContent = "Sign in with email instead";
   }
+  var joinCode = "", joinWho = null;
+  function showJoin() {
+    only(joinForm); mode("join");
+    hint.textContent = "Enter the invite code the studio sent you.";
+    document.getElementById("pfCode").focus();
+  }
+  function showJoin2(who) {
+    only(joinForm2); mode("join");
+    document.getElementById("pfWelcome").innerHTML = "Welcome, " + esc(who.name) + ".<small>Joining as " + esc(window.PCLive.roleTitle(who.role)) + "</small>";
+    document.getElementById("pfJoinEmail").value = who.email;
+    hint.textContent = "Choose a password. Eight characters or more. This is your login from now on.";
+    document.getElementById("pfJoinPass").focus();
+  }
   function showSetPass() {
-    loginForm.hidden = true; keyForm.hidden = true; setForm.hidden = false; alt.hidden = true;
+    only(setForm); mode("set");
     hint.textContent = "Choose your password. Eight characters or more.";
     document.body.style.overflow = "hidden";
   }
@@ -1385,10 +1652,10 @@
     setForm.addEventListener("submit", function (e) {
       e.preventDefault();
       var a = document.getElementById("pfNew").value, b = document.getElementById("pfNew2").value;
-      if (a !== b) { deny("Those don't match. Try again."); showSetPass(); return; }
+      if (a !== b) { showSetPass(); deny("Those don't match. Try again."); return; }
       hint.textContent = "Saving…";
       window.PCLive.setPassword(a).then(function () { history.replaceState(null, "", location.pathname); return enterLive(); })
-        .catch(function (er) { deny(er && er.message ? er.message : "Couldn't set that password."); showSetPass(); });
+        .catch(function (er) { showSetPass(); deny(er && er.message ? er.message : "Couldn't set that password."); });
     });
     document.getElementById("pfForgot").addEventListener("click", function (e) {
       e.preventDefault();
@@ -1402,6 +1669,43 @@
     document.getElementById("pfUseKey").addEventListener("click", function (e) {
       e.preventDefault(); if (keyForm.hidden) showKeyGate(); else showLogin();
     });
+    document.getElementById("pfHaveCode").addEventListener("click", function (e) { e.preventDefault(); showJoin(); });
+    document.getElementById("pfBack").addEventListener("click", function (e) { e.preventDefault(); showLogin(); });
+    joinForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var code = document.getElementById("pfCode").value.trim().toUpperCase(); if (!code) return;
+      hint.textContent = "Checking…";
+      window.PCLive.invitePeek(code).then(function (who) {
+        if (!who) { showJoin(); deny("That code isn't valid any more. Ask the studio for a fresh one."); return; }
+        joinCode = code; joinWho = who; showJoin2(who);
+      }).catch(function () { showJoin(); deny("Couldn't check that code. Try again in a moment."); });
+    });
+    joinForm2.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var a = document.getElementById("pfJoinPass").value, b = document.getElementById("pfJoinPass2").value;
+      if (a !== b) { showJoin2(joinWho); deny("Those don't match. Try again."); return; }
+      var go = document.getElementById("pfJoinGo"); go.disabled = true; hint.textContent = "Creating your account…";
+      var email = joinWho.email;
+      var claim = function () {
+        return window.PCLive.inviteClaim(joinCode).then(function () { history.replaceState(null, "", location.pathname); return enterLive(); });
+      };
+      window.PCLive.signUp(email, a).then(function (r) {
+        if (r && r.session) return claim();
+        /* no session back: either the address already had a login, or confirmations are still on */
+        return window.PCLive.signIn(email, a).then(claim, function () {
+          throw new Error("Almost there. This email already has a login, or the studio still has email confirmation switched on. Message the studio.");
+        });
+      }).catch(function (er) {
+        var msg = er && er.message || "";
+        if (/already registered|already been registered/i.test(msg)) msg = "That email already has a login. Sign in with its password, or message the studio.";
+        showJoin2(joinWho);
+        deny(msg || "Couldn't create the account. Message the studio.");
+      }).then(function () { go.disabled = false; });
+    });
+    if (/[#&?]join=/.test(location.hash + location.search)) {
+      var pre = ((location.hash + location.search).match(/[#&?]join=([A-Za-z0-9-]+)/) || [])[1];
+      if (pre) { document.getElementById("pfCode").value = pre.toUpperCase(); showJoin(); }
+    }
   } else {
     showKeyGate();
     if (saved) { tryKey(saved, true); } else { document.body.style.overflow = "hidden"; }

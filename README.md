@@ -364,3 +364,27 @@ key, and row level security decides what comes back.
   group frames `approved = false` so units match the ledgers (31).
 - Emails from Auth (reset links) only reach organisation members until custom
   SMTP is set. Create users with a password + Auto Confirm instead.
+
+### Account types (patch 002)
+
+One master account (`owner`, the founder-god login: stanleyfontaine83@gmail.com),
+then `president`, `vp`, `staff`, and `model`. Titles and permissions live in
+`ROLES` at the top of `portal/live.js`; the database enforces the same rules in
+`is_founder()` (owner + president: close quarters, mark paid), `can_approve()`
+(owner, president, vp: applications and invites), `is_owner()` (rename, re-role,
+switch anyone off), and `invite_create()`'s own checks (a president cannot mint a
+president; a vice president mints models only).
+
+**Invites need no email.** The House mints a one-time code (`invite_create` →
+`PC-XXXXX-XXXXX`, stored hashed). The person opens the portal, taps
+*Have an invite code?*, the page calls `invite_peek` (anon: name, email, role
+only), she chooses a password, `auth.signUp` creates the login, and
+`invite_claim` switches her profile on and burns the code. For that to work
+without a mailer, **Authentication → Sign In / Providers → Email → "Confirm
+email" must be OFF**. A profile stays `active = false` until the code is
+claimed, so someone who guesses an email gets nothing.
+
+Models see only their own money: `statements` in the model shape carry her
+units, per-unit value, earned, carried and payable. Gross revenue, the pool
+and the house cut never leave the House. Every quarter since Aug 2025 exists
+(closed at $0, the Vault was free) so she can download a $0 statement.
