@@ -36,6 +36,36 @@
   <a href="../" class="hint" style="text-decoration:underline;text-underline-offset:4px">← Back to the lobby</a>
 </div>
 
+
+<!-- A CAST MEMBER, OPENED -->
+<div class="cm" id="cmPanel" aria-hidden="true">
+  <button class="cm__x" id="cmX" aria-label="Close">×</button>
+  <div class="cm__in">
+    <div class="cm__por" id="cmPor"></div>
+    <div>
+      <span class="cm__credit" id="cmCredit"></span>
+      <div class="cm__name" id="cmName"></div>
+      <p class="cm__line" id="cmLine"></p>
+      <p class="cm__meta" id="cmMeta"></p>
+      <div class="cm__proj" id="cmProj"></div>
+    </div>
+  </div>
+</div>
+
+<!-- STAFF DOOR -->
+<div class="hs-door" id="hsDoor" hidden>
+  <img src="../assets/img/acemark-white.png" alt="" style="height:38px;opacity:.85">
+  <h2>Who's working?</h2>
+  <div class="hs-who" id="hsWho"></div>
+  <form class="hs-pin" id="hsPinForm" hidden autocomplete="off">
+    <input id="hsPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8"
+           placeholder="••••" aria-label="Your PIN" autocomplete="off">
+    <button type="submit" id="hsPinGo">Enter</button>
+  </form>
+  <span class="hs-note" id="hsNote">Every action is logged against whoever is signed in.</span>
+  <a href="#" id="hsBack" class="hs-note" style="text-decoration:underline;text-underline-offset:4px">← someone else</a>
+</div>
+
 <div id="pfInner" hidden>
 
 <nav class="nav" aria-label="Primary">
@@ -56,6 +86,26 @@
   <a href="./"><small>03</small> Portal</a>
   <a href="royalties/"><small>04</small> Royalties</a>
   <a href="faq/"><small>05</small> FAQ</a>
+</div>
+
+
+<!-- THE HOUSE -->
+<div class="hs">
+  <div class="hs-bar">
+    <span class="id"><i></i> Signed in as <b id="hsName">—</b><span id="hsRole" style="color:var(--faint)"></span></span>
+    <span class="acts">
+      <a href="#hsQuarter">Close a Quarter</a>
+      <a href="#hsRosterSec">Roster</a>
+      <a href="#hsAudit">Audit</a>
+      <a href="#" id="hsSwitch">Switch Staff</a>
+      <a href="#" id="hsOut">Sign Out</a>
+    </span>
+  </div>
+
+  <header class="hs-head">
+    <h1>PLAYER'S CLUB · House</h1>
+    <p id="hsSummary">—</p>
+  </header>
 </div>
 
 <main id="main">
@@ -113,8 +163,8 @@
 
 
 <!-- HOUSE: CONTROL ROOM -->
-<section class="pf-sect pf-sect--tight" id="pfHouse" hidden>
-  <div class="pf-sect__head">
+<section class="pf-sect pf-sect--tight hs" id="pfHouse" hidden>
+  <div class="pf-sect__head" id="hsQuarter">
     <h2>Close a Quarter</h2>
     <span class="idx">Enter the revenue · everything else follows</span>
   </div>
@@ -129,7 +179,7 @@
     <div><span class="k">Owed This Quarter</span><span class="v chrome-text" id="hOwed">—</span></div>
   </div>
 
-  <div class="pf-sect__head" style="margin-top:clamp(38px,7vh,64px)">
+  <div class="pf-sect__head" id="hsRosterSec" style="margin-top:clamp(38px,7vh,64px)">
     <h2>The Roster</h2>
     <span class="idx" id="hCount">—</span>
   </div>
@@ -140,6 +190,17 @@
     </table>
   </div>
   <p class="pf-note" id="hNote"></p>
+
+  <div class="pf-sect__head" id="hsAudit" style="margin-top:clamp(38px,7vh,64px)">
+    <h2>Audit</h2>
+    <span class="idx">Who did what, on this device</span>
+  </div>
+  <div class="hs-log" id="hsLog"></div>
+  <p class="pf-note">
+    Every action is stamped with whoever is signed in. The log lives on this device, so it is a record of
+    what was done here, not a company-wide ledger. <a href="#" id="hsExport" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px">Copy the log</a> to keep it.
+  </p>
+
   <div class="pf-head__row" style="margin-top:26px">
     <a class="btn" href="#" id="hCopyAll">Copy Every Statement</a>
     <span class="eyebrow" style="color:var(--faint)" id="hCopied"></span>
@@ -158,7 +219,7 @@
       <tbody id="pfLines"></tbody>
     </table>
   </div>
-  <p class="pf-note">Only <strong>Vault-approved</strong> content is counted. One photo is one unit, one video is one unit. Nothing is weighted by followers or likes.</p>
+  <p class="pf-note">Only <strong>Vault-approved</strong> content counts. One photo is one unit. One video is one unit. Nothing is weighted by followers or likes.</p>
 </section>
 
 
@@ -169,7 +230,7 @@
     <span class="idx" id="pfFolioCount">—</span>
   </div>
   <div class="pf-folio" id="pfFolio"></div>
-  <p class="pf-note">Every frame of yours the Club holds. Tap any of them to open it full size. Want one for your book or a repost? It's yours — finals are cleared for posting.</p>
+  <p class="pf-note">Every frame of yours the Club holds. Tap any of them to open it full size. Want one for your book or a repost? It's yours. Finals are cleared for posting.</p>
 </section>
 
 <!-- HER DETAILS -->
@@ -186,11 +247,11 @@
     <label><span>Shoe</span><input name="shoe" placeholder="8"></label>
     <label><span>Socials</span><input name="socials" placeholder="@ · @"></label>
     <label><span>Free For</span><input name="available" placeholder="Weekends · overnight ok"></label>
-    <label class="wide"><span>What you want to shoot next</span><textarea name="wants" placeholder="A look, a mood, a reference. This is how you get cast for the thing you actually want."></textarea></label>
+    <label class="wide"><span>What you want to shoot next</span><textarea name="wants" placeholder="A look, a mood, a reference. This is how you get cast for what you actually want."></textarea></label>
   </form>
-  <div class="pf-head__row" style="margin-top:24px">
-    <a class="btn btn--solid" href="#" id="pfSave">Save &amp; Send to Studio <span class="arr">→</span></a>
-    <span class="eyebrow" style="color:var(--faint)" id="pfSaved">Saved on this device the moment you type. Sending files it with the studio.</span>
+  <div class="pf-head__row" style="margin-top:22px">
+    <span class="eyebrow" id="pfSaved" style="color:var(--faint)">Saves itself as you type.</span>
+    <span class="eyebrow" id="pfSync" style="color:var(--faint)"></span>
   </div>
 </section>
 
@@ -201,7 +262,7 @@
     <span class="idx">Who else is in the Club</span>
   </div>
   <div class="pf-cast" id="pfCast"></div>
-  <p class="pf-note">Everyone who has shot for an issue. Names and credits only — nobody's details, numbers or contact are visible to anyone but the studio.</p>
+  <p class="pf-note">Everyone who has shot for an issue. Names and credits only. Nobody's details, numbers or contact are visible to anyone but the studio.</p>
 </section>
 
 <!-- UPDATES -->
@@ -232,7 +293,7 @@
     <a class="pf-card" href="royalties/">
       <span class="k">Royalties</span>
       <h3>How you get paid</h3>
-      <p>The 60/40 split, content units, the quarterly calendar, and the exact math — with a calculator.</p>
+      <p>The 60/40 split, content units, the quarterly calendar, and the exact math, with a calculator.</p>
     </a>
     <a class="pf-card" href="faq/">
       <span class="k">Protocol</span>
@@ -250,7 +311,7 @@
       <p>Access trouble, scheduling, a statement request, or anything that needs a person.</p>
     </a>
   </div>
-  <p class="pf-note">Everything inside this portal is confidential — castings, concepts, and unreleased work. Don't screenshot it, don't forward it. If someone asks: <strong>wait for the drop.</strong></p>
+  <p class="pf-note">Everything in here is confidential. Castings, concepts, unreleased work. Don't screenshot it, don't forward it. If someone asks: <strong>wait for the drop.</strong></p>
 </section>
 </main>
 
@@ -300,6 +361,43 @@
   var money = function (n) {
     return "$" + Number(n || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
+
+
+  /* ─────────────────────────────────────────────────────────────
+     SHARED PROFILES.
+     A model editing her details should be visible to the House and to the
+     rest of the cast. That needs somewhere shared to write to, which a static
+     site does not have on its own. Fill these two in from your Supabase
+     project (Settings → API) and it switches on: her edits sync, and the cast
+     cards show what everyone has written. Until then everything still saves
+     on her own device and nothing is lost.
+     ───────────────────────────────────────────────────────────── */
+  var SUPABASE_URL = "";
+  var SUPABASE_ANON_KEY = "";
+  var SYNC = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+
+  function sbHeaders() {
+    return { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+             "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates" };
+  }
+  function pushProfile(name, data) {
+    var el = document.getElementById("pfSync");
+    if (!SYNC) { if (el) el.textContent = "On this device only until the studio turns on sync."; return; }
+    fetch(SUPABASE_URL + "/rest/v1/profiles", {
+      method: "POST", headers: sbHeaders(),
+      body: JSON.stringify([{ name: name, data: data, updated: new Date().toISOString() }])
+    }).then(function (r) {
+      if (el) el.textContent = r.ok ? "Shared with the Club." : "Saved here. Sync retrying.";
+    }).catch(function () { if (el) el.textContent = "Saved here. Sync retrying."; });
+  }
+  function pullProfiles() {
+    if (!SYNC) return Promise.resolve({});
+    return fetch(SUPABASE_URL + "/rest/v1/profiles?select=name,data", { headers: sbHeaders() })
+      .then(function (r) { return r.json(); })
+      .then(function (rows) {
+        var m = {}; (rows || []).forEach(function (r) { m[r.name] = r.data || {}; }); return m;
+      }).catch(function () { return {}; });
+  }
 
   /* ── the key ──
      It names the file (SHA-256) and it decrypts the file (PBKDF2 → AES-GCM).
@@ -412,6 +510,7 @@
     }
 
     /* her details — hers to write, kept on her device until she sends them */
+    var syncT;
     var me = document.getElementById("pfMe");
     var seed = d.profile || {};
     var localKey = "pc-profile-" + (d.name || "model");
@@ -424,36 +523,60 @@
         var out = {};
         Array.prototype.forEach.call(me.elements, function (x) { if (x.name) out[x.name] = x.value; });
         try { localStorage.setItem(localKey, JSON.stringify(out)); } catch (e) {}
-        document.getElementById("pfSaved").textContent = "Saved on this device.";
+        document.getElementById("pfSaved").textContent = "Saved.";
+        if (out.tagline) document.getElementById("pfTag").textContent = out.tagline;
+        clearTimeout(syncT);
+        syncT = setTimeout(function () { pushProfile(d.name, out); }, 900);
       });
     });
     if (seed.tagline || saved.tagline) document.getElementById("pfTag").textContent = saved.tagline || seed.tagline;
-    document.getElementById("pfSave").addEventListener("click", function (e) {
-      e.preventDefault();
-      var lines = ["Updated details — " + (d.name || ""), ""];
-      Array.prototype.forEach.call(me.elements, function (x) {
-        if (!x.name) return;
-        var label = x.parentElement.querySelector("span");
-        lines.push((label ? label.textContent : x.name) + ": " + (x.value || "—"));
-      });
-      window.location.href = "mailto:info@playersclubhq.com?subject=" +
-        encodeURIComponent("Portal details — " + (d.name || "")) +
-        "&body=" + encodeURIComponent(lines.join("\n"));
-    });
-
     /* who else is in the Club */
     if (crewKey) {
-      fetch("cast.json", { cache: "no-store" }).then(function (r) { return r.json(); })
-        .then(function (blob) { return unseal(crewKey, blob); })
-        .then(function (c) {
-          document.getElementById("pfCast").innerHTML = (c.cast || []).map(function (m) {
-            var mine = m.name === d.name;
-            return '<figure><div class="ring' + (mine ? " me" : "") + '">' +
-              '<img src="' + esc(m.portrait.replace(/\.jpe?g$/i, "-sm.jpg")) + '" alt="" loading="lazy" decoding="async"></div>' +
-              '<span class="n">' + esc(m.name) + (mine ? " ·" : "") + "</span>" +
-              '<span class="c">' + esc(m.credit) + "</span></figure>";
-          }).join("");
-        }).catch(function () {});
+      Promise.all([
+        fetch("cast.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (b) { return unseal(crewKey, b); }),
+        pullProfiles()
+      ]).then(function (res) {
+        var list = res[0].cast || [], shared = res[1] || {};
+        document.getElementById("pfCast").innerHTML = list.map(function (m, i) {
+          var mine = m.name === d.name;
+          return '<figure data-cm="' + i + '"><div class="ring' + (mine ? " me" : "") + '">' +
+            '<img src="' + esc(m.portrait.replace(/\.jpe?g$/i, "-sm.jpg")) + '" alt="" loading="lazy" decoding="async"></div>' +
+            '<span class="n">' + esc(m.name) + "</span>" +
+            '<span class="c">' + esc(mine ? "You" : m.credit) + "</span></figure>";
+        }).join("");
+
+        var panel = document.getElementById("cmPanel");
+        document.getElementById("pfCast").addEventListener("click", function (e) {
+          var f = e.target.closest("[data-cm]"); if (!f) return;
+          var m = list[+f.getAttribute("data-cm")];
+          var prof = (m.name === d.name)
+            ? (function () { var o = {}; Array.prototype.forEach.call(me.elements, function (x) { if (x.name) o[x.name] = x.value; }); return o; })()
+            : (shared[m.name] || {});
+          document.getElementById("cmPor").innerHTML =
+            '<img src="' + esc(m.portrait) + '" alt="' + esc(m.name) + '">';
+          document.getElementById("cmCredit").textContent =
+            m.credit + (m.covers ? " · " + m.covers + (m.covers > 1 ? " covers" : " cover") : "");
+          document.getElementById("cmName").textContent = m.name;
+          document.getElementById("cmLine").textContent = prof.tagline || "";
+          document.getElementById("cmMeta").textContent =
+            [m.handle, prof.city, "In the Club since " + m.since, m.frames + " frames"]
+              .filter(Boolean).join("  ·  ");
+          document.getElementById("cmProj").innerHTML = (m.projects || []).map(function (pj) {
+            return '<div><span class="i">' + esc(pj.issue) + '</span><span class="w">' + esc(pj.did) + "</span></div>";
+          }).join("") + (prof.wants ? '<div><span class="i">Wants to shoot next</span><span class="w">' + esc(prof.wants) + "</span></div>" : "");
+          panel.classList.add("open"); panel.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        });
+        var shut = function () {
+          panel.classList.remove("open"); panel.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+        };
+        document.getElementById("cmX").addEventListener("click", shut);
+        panel.addEventListener("click", function (e) { if (e.target === panel) shut(); });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && panel.classList.contains("open")) shut();
+        });
+      }).catch(function () {});
     }
 
     /* what the Vault actually earned — published by the studio, never guessed */
@@ -475,28 +598,137 @@
     }).catch(function () {});
   }
 
+
+  /* ── who is working ──
+     One house key gets you to the door. Past the door you say who you are and
+     enter your own PIN, so nothing is ever done under someone else's name.
+     PINs are stored as salted hashes; the studio never sees the number. */
+  var STAFF = null, WHO = null;
+
+  function pinHash(name, pin) {
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(name.trim().toUpperCase() + ":" + pin.trim()))
+      .then(function (b) {
+        return Array.prototype.map.call(new Uint8Array(b), function (x) {
+          return x.toString(16).padStart(2, "0");
+        }).join("").slice(0, 32);
+      });
+  }
+
+  function logIt(action, detail) {
+    var e = { at: Date.now(), who: WHO ? WHO.name : "—", action: action, detail: detail || "" };
+    var all = [];
+    try { all = JSON.parse(localStorage.getItem("pc-house-log") || "[]"); } catch (x) {}
+    all.unshift(e);
+    all = all.slice(0, 300);
+    try { localStorage.setItem("pc-house-log", JSON.stringify(all)); } catch (x) {}
+    paintLog(all);
+  }
+
+  function paintLog(all) {
+    var el = document.getElementById("hsLog"); if (!el) return;
+    if (!all) { try { all = JSON.parse(localStorage.getItem("pc-house-log") || "[]"); } catch (x) { all = []; } }
+    el.innerHTML = all.length ? all.map(function (e) {
+      var d = new Date(e.at);
+      return "<div><time>" + d.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) +
+             "</time><b>" + esc(e.who) + "</b><span>" + esc(e.action) + (e.detail ? " · " + esc(e.detail) : "") + "</span></div>";
+    }).join("") : '<div><time>—</time><b>—</b><span>Nothing logged on this device yet.</span></div>';
+  }
+
+  function openDoor(d) {
+    STAFF = d.staff || [];
+    var door = document.getElementById("hsDoor");
+    var who  = document.getElementById("hsWho");
+    var form = document.getElementById("hsPinForm");
+    var note = document.getElementById("hsNote");
+    var back = document.getElementById("hsBack");
+    var pick = null;
+
+    door.hidden = false;
+    document.body.style.overflow = "hidden";
+    who.innerHTML = STAFF.map(function (m, i) {
+      return '<button type="button" data-i="' + i + '">' + esc(m.name) + "</button>";
+    }).join("");
+
+    who.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-i]"); if (!b) return;
+      pick = STAFF[+b.getAttribute("data-i")];
+      who.hidden = true; form.hidden = false; back.hidden = false;
+      note.textContent = pick.pin
+        ? "Enter your PIN, " + pick.name + "."
+        : "First time, " + pick.name + ". Choose a PIN. Nobody else sees it, not even the studio.";
+      document.getElementById("hsPinGo").textContent = pick.pin ? "Enter" : "Set my PIN";
+      setTimeout(function () { document.getElementById("hsPin").focus(); }, 60);
+    });
+
+    back.addEventListener("click", function (e) {
+      e.preventDefault(); pick = null;
+      who.hidden = false; form.hidden = true; back.hidden = true;
+      document.getElementById("hsPin").value = "";
+      note.textContent = "Every action is logged against whoever is signed in.";
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var pin = document.getElementById("hsPin").value;
+      if (!pick || pin.length < 4) {
+        note.textContent = "At least four digits.";
+        return;
+      }
+      pinHash(pick.name, pin).then(function (h) {
+        var stored = pick.pin;
+        if (!stored) {
+          /* first sign-in: they choose it, we keep the hash on this device and
+             hand them one line to send so it survives a new device */
+          try { localStorage.setItem("pc-pin-" + pick.id, h); } catch (x) {}
+          note.innerHTML = "Set. Send this one line to the studio so it works on other devices:<br>" +
+            '<b style="color:var(--gold);word-break:break-all">' + pick.id + ":" + h + "</b>";
+          setTimeout(function () { admitted(pick); }, 2600);
+          return;
+        }
+        var local = null;
+        try { local = localStorage.getItem("pc-pin-" + pick.id); } catch (x) {}
+        if (h === stored || h === local) { admitted(pick); }
+        else {
+          door.classList.remove("deny"); void door.offsetWidth; door.classList.add("deny");
+          document.getElementById("hsPin").value = "";
+          note.textContent = "That PIN doesn't match.";
+        }
+      });
+    });
+
+    /* a staff member who set a PIN on this device before */
+    STAFF.forEach(function (m) {
+      if (m.pin) return;
+      try { if (localStorage.getItem("pc-pin-" + m.id)) m.pin = localStorage.getItem("pc-pin-" + m.id); } catch (x) {}
+    });
+  }
+
+  function admitted(m) {
+    WHO = m;
+    document.getElementById("hsDoor").hidden = true;
+    document.body.style.overflow = "";
+    document.getElementById("hsName").textContent = m.name;
+    document.getElementById("hsRole").textContent = " · " + (m.role || "Staff");
+    logIt("Signed in");
+  }
+
   /* ── house view: the control room ── */
   function renderHouse(d) {
-    document.getElementById("pfName").textContent = d.name || "PLAYER'S CLUB";
-    document.getElementById("pfStatus").textContent = d.status || "House";
-    document.getElementById("pfSince").textContent = d.models + " models · " + d.totalUnits + " approved units";
-    document.getElementById("pfUnits").textContent = d.totalUnits;
-    document.getElementById("pfShare").textContent = d.models;
-    document.querySelector("#pfShare").previousElementSibling.textContent = "Models on the Roster";
-    document.getElementById("pfBal").textContent = money(0);
-    document.getElementById("pfThresh").textContent = "Owed once a quarter is closed";
-    document.getElementById("pfNext").textContent = d.payoutDate || "—";
-    document.getElementById("pfQuarter").textContent = "Covering " + (d.quarter || "—");
-    document.getElementById("pfNote").innerHTML = d.note ? esc(d.note) : "";
+    document.body.classList.add("is-house");
+    document.getElementById("hsSummary").textContent =
+      d.models + " models on the roster · " + d.totalUnits + " approved units in the Vault · " +
+      (d.quarter || "") + " pays " + (d.payoutDate || "");
 
-    document.querySelectorAll("[data-model-only]").forEach(function (n) { n.hidden = true; });
     var H = document.getElementById("pfHouse");
     H.hidden = false;
     document.getElementById("hUnits").value = d.totalUnits;
     document.getElementById("hCount").textContent = d.models + " models · " + d.totalUnits + " units";
 
+    openDoor(d);
+    paintLog();
+
     var rows = d.roster || [];
-    function run() {
+    function run(quiet) {
       var R = Math.max(0, +document.getElementById("hRev").value || 0);
       var T = Math.max(1, +document.getElementById("hUnits").value || 1);
       var pool = R * 0.4, unit = pool / T, owed = 0;
@@ -510,20 +742,20 @@
         if (pays) owed += payable;
         return "<tr><td>" + esc(m.name) + (m.handle ? ' <span style="color:var(--faint)">' + esc(m.handle) + "</span>" : "") +
           "</td><td>" + esc(m.units) + "</td><td>" + esc(m.share) + "%</td><td>" + money(m.balance || 0) +
-          "</td><td>" + money(earned) + "</td><td" + (pays ? '' : ' style="color:var(--faint)"') + ">" +
-          money(payable) + (pays ? "" : " <span style=\"font-size:9px;letter-spacing:.2em\">ROLLS</span>") +
+          "</td><td>" + money(earned) + "</td><td" + (pays ? "" : ' style="color:var(--faint)"') + ">" +
+          money(payable) + (pays ? "" : ' <span style="font-size:9px;letter-spacing:.2em">ROLLS</span>') +
           '</td><td><a href="#" data-stmt="' + i + '" style="color:var(--gold);font-size:9px;letter-spacing:.2em;text-transform:uppercase">Copy</a></td></tr>';
       }).join("");
 
       document.getElementById("hOwed").textContent = money(owed);
       document.getElementById("hNote").innerHTML = R === 0
-        ? "No revenue entered, so nothing is payable yet. Type this quarter's gross Vault revenue above and the whole roster settles itself."
-        : "Anyone under the $100 threshold rolls forward automatically — shown as <strong>ROLLS</strong>. " +
-          "When you have paid a quarter, write the new balances into <strong>tools/plain/</strong> and run <strong>portal_keys.py seal</strong>.";
+        ? "Nothing payable until a revenue figure goes in. Type the quarter's gross Vault revenue and the roster settles itself."
+        : "Anyone under $100 rolls forward, shown as <strong>ROLLS</strong>. Once you have paid, write the new balances into " +
+          "<strong>tools/plain/</strong> and run <strong>portal_keys.py seal</strong>.";
       window.__stmt = function (i) {
         var m = rows[i], earned = unit * m.units, payable = (m.balance || 0) + earned;
         return [
-          "PLAYER'S CLUB™ — Statement", d.quarter, "",
+          "PLAYER'S CLUB — Statement", d.quarter, "",
           "Model:            " + m.name,
           "Approved units:   " + m.units + "  (" + m.share + "% of " + T + ")",
           "Gross Vault rev:  " + money(R),
@@ -531,30 +763,57 @@
           "Value per unit:   " + money(unit),
           "Earned:           " + money(earned),
           "Carried forward:  " + money(m.balance || 0),
-          "Payable:          " + money(payable) + (payable >= 100 ? "" : "   (under $100 — rolls forward)"),
-          "", "Paid " + (d.payoutDate || "") + ". Questions: info@playersclubhq.com"
+          "Payable:          " + money(payable) + (payable >= 100 ? "" : "   (under $100, rolls forward)"),
+          "", "Paid " + (d.payoutDate || "") + ". Questions: info@playersclubhq.com",
+          "Prepared by " + (WHO ? WHO.name : "the studio") + "."
         ].join("\n");
       };
+      if (!quiet && R > 0) logIt("Ran a quarter", money(R) + " over " + T + " units");
     }
+    var t;
     ["hRev", "hUnits"].forEach(function (id) {
-      document.getElementById(id).addEventListener("input", run);
+      document.getElementById(id).addEventListener("input", function () {
+        run(true); clearTimeout(t); t = setTimeout(function () { run(false); }, 1400);
+      });
     });
-    run();
+    run(true);
 
     document.getElementById("hRoster").addEventListener("click", function (e) {
       var a = e.target.closest("[data-stmt]"); if (!a) return;
       e.preventDefault();
-      navigator.clipboard.writeText(window.__stmt(+a.getAttribute("data-stmt"))).then(function () {
+      var i = +a.getAttribute("data-stmt");
+      navigator.clipboard.writeText(window.__stmt(i)).then(function () {
         a.textContent = "Copied"; setTimeout(function () { a.textContent = "Copy"; }, 1600);
+        logIt("Copied a statement", rows[i].name);
       });
     });
     document.getElementById("hCopyAll").addEventListener("click", function (e) {
       e.preventDefault();
-      var all = rows.map(function (_, i) { return window.__stmt(i); }).join("\n\n" + "-".repeat(46) + "\n\n");
+      var all = rows.map(function (_, i) { return window.__stmt(i); }).join("\n\n" + "----------------------------------------------" + "\n\n");
       navigator.clipboard.writeText(all).then(function () {
         document.getElementById("hCopied").textContent = rows.length + " statements copied";
         setTimeout(function () { document.getElementById("hCopied").textContent = ""; }, 2600);
+        logIt("Copied every statement", rows.length + " models");
       });
+    });
+    document.getElementById("hsExport").addEventListener("click", function (e) {
+      e.preventDefault();
+      var all = []; try { all = JSON.parse(localStorage.getItem("pc-house-log") || "[]"); } catch (x) {}
+      navigator.clipboard.writeText(all.map(function (r) {
+        return new Date(r.at).toISOString() + "  " + r.who + "  " + r.action + (r.detail ? " · " + r.detail : "");
+      }).join("\n"));
+      logIt("Exported the log", all.length + " entries");
+    });
+    document.getElementById("hsSwitch").addEventListener("click", function (e) {
+      e.preventDefault(); logIt("Signed out"); WHO = null;
+      document.getElementById("hsDoor").hidden = false;
+      document.getElementById("hsWho").hidden = false;
+      document.getElementById("hsPinForm").hidden = true;
+      document.getElementById("hsPin").value = "";
+      document.body.style.overflow = "hidden";
+    });
+    document.getElementById("hsOut").addEventListener("click", function (e) {
+      e.preventDefault(); logIt("Signed out"); store.clear("pc-portal"); location.reload();
     });
   }
 
@@ -606,6 +865,13 @@
       open(data, key); feed();
     }).catch(function (e) {
       if (e === "nocrypto") { deny("This browser can't open the portal. Try Safari or Chrome."); return; }
+      /* a bad key and a broken page should never look the same */
+      var badKey = e && (e.message === "nokey" || e.name === "OperationError");
+      if (!badKey) {
+        if (window.console) console.error("Portal failed to open:", e);
+        deny("Something went wrong opening the portal. Tell the studio what you see.");
+        return;
+      }
       if (!quiet) deny("That key isn't recognised. Check your call sheet, or message the studio.");
       else { store.clear("pc-portal"); document.body.style.overflow = "hidden"; }
     });
