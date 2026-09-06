@@ -317,3 +317,25 @@ SWIM 001 stands at **31 units** — Karma 15 (cover), Cherri 6, Kay Kay 4, Naiom
    guess revenue**; her calculator reads that file.
 4. After paying, write the new balances into `tools/plain/` and run
    `python3 tools/portal_keys.py seal`.
+
+
+## Supabase (the real backend)
+
+Project: `PLAYER'S CLUB SITE` · `https://oghgufyayowoafbtrvjh.supabase.co`
+Publishable key (safe in the browser): `sb_publishable_krmQVDhvrPTb2NjoHKrWPw_oIniiDPC`
+
+`tools/schema.sql` is the whole thing: tables, roles, an append-only audit
+log, and functions that check the caller's role on the server. `tools/seed.sql`
+loads SWIM 001 — the real frames with their camera data, credits, placements
+and bonuses. Run schema first, seed second, in the SQL editor. The seed ends
+with a check that should read Karma 15, Cherri 6, Kay Kay 4, Naiomi 3, Ivorie 3.
+
+Rules the database enforces, not the page:
+- `audit_log` cannot be updated or deleted by anyone, including the founder.
+- Only `close_quarter()` writes money, and it refuses anyone but the founder.
+- A partner (`LJ`) reads everything and can `review_application()`; that is all.
+- A model reads only rows carrying her email.
+- Applications may be inserted by anyone (the public form), read only by the house.
+
+Model and partner rows are seeded with `*.pending@playersclubhq.com` placeholders:
+put the real email on the row, then invite that email from Authentication → Users.
