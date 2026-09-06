@@ -168,7 +168,10 @@
 
 <!-- HOUSE: CONTROL ROOM -->
 <section class="pf-sect pf-sect--tight hs" id="pfHouse" hidden>
-  <div class="pf-sect__head" id="hsQuarter">
+  <div class="hs-projects" id="hsProjects" aria-label="Projects"></div>
+  <div class="pf-strip hs-totals" id="hsTotals"></div>
+
+  <div class="pf-sect__head" id="hsQuarter" style="margin-top:clamp(38px,7vh,64px)">
     <h2>Close a Quarter</h2>
     <span class="idx">Enter the revenue · everything else follows</span>
   </div>
@@ -194,6 +197,24 @@
     </table>
   </div>
   <p class="pf-note" id="hNote"></p>
+
+  <div class="pf-sect__head" id="hsVaultSec" style="margin-top:clamp(38px,7vh,64px)">
+    <h2>The Vault, This Project</h2>
+    <span class="idx" id="hsVaultCount">—</span>
+  </div>
+  <div class="hs-filter" id="hsFilter"></div>
+  <div class="hs-assets" id="hsAssets"></div>
+  <p class="pf-note">Every frame filed under this project. Tap any of them. The filter is by who is in the frame.</p>
+
+  <div class="pf-sect__head" style="margin-top:clamp(38px,7vh,64px)">
+    <h2>Applications</h2>
+    <span class="idx">Founder and Partner</span>
+  </div>
+  <p class="pf-note" id="hsApps">
+    Applications arrive by email at <strong>castings@playersclubhq.com</strong>. To bring someone in:
+    reply to her, then add her to the roster with <strong>tools/portal_keys.py new "Name"</strong> and send her the key it prints.
+    In-portal approve / decline arrives with the database.
+  </p>
 
   <div class="pf-publish" id="hPublish" hidden>
     <span class="k">Publish it — this is what the models see</span>
@@ -469,6 +490,103 @@
   }
 
   /* ── model view ── */
+
+  /* ═══ THE PORTFOLIO ═══
+     Closed: a small stack. Open: the frames fanned out. Tapped: one frame,
+     large, with the moment the camera recorded — frame number, time, glass. */
+  function folio(d) {
+    var frames = d.frames || (d.photos || []).map(function (src) { return { src: src }; });
+    var wrap = document.getElementById("pfFolioWrap");
+    if (!frames.length) { wrap.hidden = true; return; }
+    document.getElementById("pfFolioCount").textContent = frames.length + (frames.length === 1 ? " frame" : " frames");
+    var host = document.getElementById("pfFolio");
+    var sm = function (x) { return x.replace(/\.jpe?g$/i, "-sm.jpg"); };
+    var md = function (x) { return x.replace(/\.jpe?g$/i, "-md.jpg"); };
+
+    /* closed: the stack */
+    host.innerHTML =
+      '<button type="button" class="stack" id="pfStack" aria-label="Open your portfolio">' +
+        frames.slice(0, 4).map(function (f, i) {
+          return '<span class="stack__card" style="--i:' + i + '"><img src="' + esc(sm(f.src)) + '" alt="" loading="lazy" decoding="async"></span>';
+        }).reverse().join("") +
+        '<span class="stack__label"><b>' + esc(d.name || "") + '</b><i>' + frames.length + " frames · tap to open</i></span>" +
+      "</button>" +
+      '<div class="fan" id="pfFan" hidden></div>';
+
+    var stack = document.getElementById("pfStack"), fan = document.getElementById("pfFan");
+    stack.addEventListener("click", function () {
+      stack.classList.add("is-open");
+      setTimeout(function () {
+        stack.hidden = true; fan.hidden = false;
+        fan.innerHTML = frames.map(function (f, i) {
+          return '<figure class="fan__card" style="--i:' + i + '" data-fr="' + i + '">' +
+            '<img src="' + esc(sm(f.src)) + '" alt="" loading="lazy" decoding="async">' +
+            '<figcaption>' + (f.frame ? esc(f.frame) : "FR." + String(i + 1).padStart(3, "0")) + "</figcaption></figure>";
+        }).join("") +
+        '<button type="button" class="fan__close" id="pfRestack">Stack them back</button>';
+        requestAnimationFrame(function () { fan.classList.add("is-in"); });
+        document.getElementById("pfRestack").addEventListener("click", function () {
+          fan.classList.remove("is-in");
+          setTimeout(function () { fan.hidden = true; stack.hidden = false; stack.classList.remove("is-open"); }, 380);
+        });
+      }, 420);
+    });
+
+    /* tapped: the frame */
+    var view = document.getElementById("frameView");
+    if (!view) {
+      view = document.createElement("div"); view.id = "frameView"; view.className = "frame";
+      view.innerHTML =
+        '<button class="frame__x" aria-label="Close">×</button>' +
+        '<button class="frame__nav frame__prev" aria-label="Previous">←</button>' +
+        '<div class="frame__img"><img alt=""></div>' +
+        '<button class="frame__nav frame__next" aria-label="Next">→</button>' +
+        '<aside class="frame__meta"></aside>';
+      document.body.appendChild(view);
+      view.addEventListener("click", function (e) {
+        if (e.target.closest(".frame__x") || e.target === view) closeFrame();
+        if (e.target.closest(".frame__prev")) showFrame(cur - 1);
+        if (e.target.closest(".frame__next")) showFrame(cur + 1);
+      });
+      document.addEventListener("keydown", function (e) {
+        if (!view.classList.contains("open")) return;
+        if (e.key === "Escape") closeFrame();
+        if (e.key === "ArrowLeft") showFrame(cur - 1);
+        if (e.key === "ArrowRight") showFrame(cur + 1);
+      });
+    }
+    var cur = 0;
+    function when(iso) {
+      if (!iso) return null;
+      var t = new Date(iso); if (isNaN(t)) return null;
+      var date = t.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/Los_Angeles" });
+      var time = t.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit", timeZone: "America/Los_Angeles" });
+      return { date: date, time: time };
+    }
+    function showFrame(i) {
+      cur = (i + frames.length) % frames.length;
+      var f = frames[cur], w = when(f.taken);
+      view.querySelector(".frame__img img").src = md(f.src);
+      var rows = [];
+      rows.push(["Frame", (f.frame || ("FR." + String(cur + 1).padStart(3, "0"))) + '<span class="of">' + (cur + 1) + " / " + frames.length + "</span>"]);
+      if (f.set) rows.push(["Set", f.set]);
+      if (w) { rows.push(["Taken", w.date]); rows.push(["At", w.time + " · Las Vegas"]); }
+      if (f.camera) rows.push(["Camera", f.camera]);
+      if (f.lens) rows.push(["Glass", f.lens]);
+      var exp = [f.aperture, f.shutter, f.iso ? "ISO " + f.iso : null].filter(Boolean).join("  ·  ");
+      if (exp) rows.push(["Exposure", exp]);
+      view.querySelector(".frame__meta").innerHTML =
+        '<span class="frame__who">' + esc(d.name || "") + "</span>" +
+        rows.map(function (r) { return '<div class="frame__row"><span class="k">' + r[0] + '</span><span class="v">' + (r[0] === "Frame" ? r[1] : esc(r[1])) + "</span></div>"; }).join("") +
+        '<p class="frame__note">' + (w ? "The time is what the camera stamped on the file, set to the shoot day." : "No camera data travelled with this frame.") + "</p>";
+      view.classList.add("open"); document.body.style.overflow = "hidden";
+    }
+    function closeFrame() { view.classList.remove("open"); document.body.style.overflow = ""; }
+    fan.addEventListener("click", function (e) {
+      var c = e.target.closest("[data-fr]"); if (c) showFrame(+c.getAttribute("data-fr"));
+    });
+  }
+
   function render(d) {
     document.getElementById("pfName").textContent = d.name || "Model";
     document.getElementById("pfStatus").textContent = d.status || "Model";
@@ -487,8 +605,17 @@
     document.getElementById("pfNote").innerHTML = d.note ? esc(d.note) : "";
 
     document.getElementById("pfLines").innerHTML = (d.lines || []).map(function (l) {
-      return "<tr><td>" + esc(l.set) + "</td><td>" + esc(l.issue) + "</td><td>" +
-             esc(l.kind === "video" ? "Video" : "Photo") + "</td><td>" + esc(l.units) + "</td></tr>";
+      var list = l.photos && l.photos.length ? l.photos
+               : (l.videos || []).map(function (v) { return v.replace(/\.mp4$/i, "-poster.jpg"); });
+      var caps = l.videos ? (l.videos || []).map(function (v, i) { return l.set + " · tape " + (i + 1) + " · playing in the Vault"; }) : null;
+      var open = list.length
+        ? ' data-photos="' + esc(list.join(",")) + '" data-set-title="' + esc(l.set) + '"' +
+          (caps ? ' data-captions="' + esc(caps.join("|")) + '"' : "") + ' title="Open these frames"'
+        : "";
+      return "<tr class=\"pf-line" + (list.length ? " is-open" : "") + "\"" + open + "><td>" + esc(l.set) +
+             (list.length ? ' <span class="pf-line__go">' + list.length + " · open →</span>" : "") +
+             "</td><td>" + esc(l.issue) + "</td><td>" +
+             esc(l.kind === "video" ? "Video" : l.kind === "bonus" ? "Placement" : "Photo") + "</td><td>" + esc(l.units) + "</td></tr>";
     }).join("") || '<tr><td colspan="4" style="color:var(--faint)">Nothing banked yet.</td></tr>';
 
     var msg = document.getElementById("pfMsg");
@@ -509,22 +636,8 @@
         (d.handle ? d.handle + " · " : "") + "With the Club since " + (d.since || "—");
     }
 
-    /* her portfolio — every frame of hers the Club holds */
-    var photos = d.photos || [];
-    if (photos.length) {
-      var wrap = document.getElementById("pfFolioWrap");
-      wrap.setAttribute("data-photos", photos.join(","));
-      wrap.setAttribute("data-set-title", (d.name || "") + " — Portfolio");
-      document.getElementById("pfFolioCount").textContent =
-        photos.length + (photos.length === 1 ? " frame" : " frames");
-      document.getElementById("pfFolio").innerHTML = photos.map(function (src, i) {
-        var sm = src.replace(/\.jpe?g$/i, "-sm.jpg");
-        return '<figure><img src="' + esc(sm) + '" alt="" loading="lazy" decoding="async">' +
-               '<figcaption>FR.' + String(i + 1).padStart(3, "0") + "</figcaption></figure>";
-      }).join("");
-    } else {
-      document.getElementById("pfFolioWrap").hidden = true;
-    }
+    /* her portfolio — a stack you open, then a frame you can read */
+    folio(d);
 
     /* her details — hers to write, kept on her device until she sends them */
     var syncT;
@@ -559,7 +672,7 @@
           return '<figure data-cm="' + i + '"><div class="ring' + (mine ? " me" : "") + '">' +
             '<img src="' + esc(m.portrait.replace(/\.jpe?g$/i, "-sm.jpg")) + '" alt="" loading="lazy" decoding="async"></div>' +
             '<span class="n">' + esc(m.name) + "</span>" +
-            '<span class="c">' + esc(mine ? "You" : m.credit) + "</span></figure>";
+            '<span class="c">' + esc(mine ? "You · " + (m.latest || m.credit || "") : (m.latest || m.credit || "")) + "</span></figure>";
         }).join("");
 
         var panel = document.getElementById("cmPanel");
@@ -578,8 +691,8 @@
           document.getElementById("cmMeta").textContent =
             [m.handle, prof.city, "In the Club since " + m.since, m.frames + " frames"]
               .filter(Boolean).join("  ·  ");
-          document.getElementById("cmProj").innerHTML = (m.projects || []).map(function (pj) {
-            return '<div><span class="i">' + esc(pj.issue) + '</span><span class="w">' + esc(pj.did) + "</span></div>";
+          document.getElementById("cmProj").innerHTML = (m.credits || m.projects || []).map(function (pj) {
+            return '<div><span class="i">' + esc(pj.issue || pj.project) + '</span><span class="w">' + esc(pj.billing || pj.did || pj.role) + "</span></div>";
           }).join("") + (prof.wants ? '<div><span class="i">Wants to shoot next</span><span class="w">' + esc(prof.wants) + "</span></div>" : "");
           panel.classList.add("open"); panel.setAttribute("aria-hidden", "false");
           document.body.style.overflow = "hidden";
@@ -634,16 +747,16 @@
   function logIt(action, detail) {
     var e = { at: Date.now(), who: WHO ? WHO.name : "—", action: action, detail: detail || "" };
     var all = [];
-    try { all = JSON.parse(localStorage.getItem("pc-house-log") || "[]"); } catch (x) {}
+    try { all = JSON.parse(localStorage.getItem(("pc-house-log-v" + (window.__auditV || 1))) || "[]"); } catch (x) {}
     all.unshift(e);
     all = all.slice(0, 300);
-    try { localStorage.setItem("pc-house-log", JSON.stringify(all)); } catch (x) {}
+    try { localStorage.setItem(("pc-house-log-v" + (window.__auditV || 1)), JSON.stringify(all)); } catch (x) {}
     paintLog(all);
   }
 
   function paintLog(all) {
     var el = document.getElementById("hsLog"); if (!el) return;
-    if (!all) { try { all = JSON.parse(localStorage.getItem("pc-house-log") || "[]"); } catch (x) { all = []; } }
+    if (!all) { try { all = JSON.parse(localStorage.getItem(("pc-house-log-v" + (window.__auditV || 1))) || "[]"); } catch (x) { all = []; } }
     el.innerHTML = all.length ? all.map(function (e) {
       var d = new Date(e.at);
       return "<div><time>" + d.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) +
@@ -697,7 +810,7 @@
         if (!stored) {
           /* first sign-in: they choose it, we keep the hash on this device and
              hand them one line to send so it survives a new device */
-          try { localStorage.setItem("pc-pin-" + pick.id, h); } catch (x) {}
+          try { localStorage.setItem(("pc-pin-v" + (window.__auditV || 1) + "-") + pick.id, h); } catch (x) {}
           note.innerHTML =
             "Set. Send this one line to the studio so your PIN works on another device:" +
             '<br><b style="color:var(--gold);word-break:break-all">' + pick.id + ":" + h + "</b><br>" +
@@ -713,7 +826,7 @@
           return;
         }
         var local = null;
-        try { local = localStorage.getItem("pc-pin-" + pick.id); } catch (x) {}
+        try { local = localStorage.getItem(("pc-pin-v" + (window.__auditV || 1) + "-") + pick.id); } catch (x) {}
         if (h === stored || h === local) { admitted(pick); }
         else {
           door.classList.remove("deny"); void door.offsetWidth; door.classList.add("deny");
@@ -726,12 +839,13 @@
     /* a staff member who set a PIN on this device before */
     STAFF.forEach(function (m) {
       if (m.pin) return;
-      try { if (localStorage.getItem("pc-pin-" + m.id)) m.pin = localStorage.getItem("pc-pin-" + m.id); } catch (x) {}
+      try { if (localStorage.getItem(("pc-pin-v" + (window.__auditV || 1) + "-") + m.id)) m.pin = localStorage.getItem(("pc-pin-v" + (window.__auditV || 1) + "-") + m.id); } catch (x) {}
     });
   }
 
   function admitted(m) {
     WHO = m;
+    if (window.__gate) setTimeout(window.__gate, 0);
     document.getElementById("hsDoor").hidden = true;
     document.getElementById("pfInner").hidden = false;
     document.body.style.overflow = "";
@@ -742,6 +856,7 @@
 
   /* ── house view: the control room ── */
   function renderHouse(d) {
+    window.__auditV = d.auditVersion || 1;
     document.body.classList.add("is-house");
     document.getElementById("hsSummary").textContent =
       d.models + " models on the roster · " + d.totalUnits + " approved units in the Vault · " +
@@ -755,7 +870,70 @@
     openDoor(d);
     paintLog();
 
-    var rows = d.roster || [];
+    /* ── the project gate: nothing from one issue bleeds into another ── */
+    var projects = d.projects || [{ id: "all", issue: "All", title: "All projects", units: d.totalUnits, models: (d.roster || []).map(function (r) { return r.name; }), pictures: 0, videos: 0, assets: [] }];
+    var pj = projects[0];
+    var allPics = projects.reduce(function (n, x) { return n + (x.pictures || 0); }, 0);
+    var bar = document.getElementById("hsProjects");
+    function paintProjects() {
+      bar.innerHTML = projects.map(function (x) {
+        return '<button type="button" data-pj="' + esc(x.id) + '"' + (x.id === pj.id ? ' class="is-on"' : "") + ">" +
+          '<span class="no">' + esc(x.issue) + '</span><span class="t">' + esc(x.title) + "</span>" +
+          '<span class="s">' + esc(x.status || "") + (x.pictures ? " · " + x.pictures + " frames" : "") + "</span></button>";
+      }).join("");
+      document.getElementById("hsTotals").innerHTML =
+        '<div><span class="k">This project</span><span class="v">' + (pj.pictures || 0) + '</span><span class="s">pictures in the Vault</span></div>' +
+        '<div><span class="k">Films</span><span class="v">' + (pj.videos || 0) + '</span><span class="s">this project</span></div>' +
+        '<div><span class="k">Units</span><span class="v">' + (pj.units || 0) + '</span><span class="s">approved · ' + (pj.models || []).length + ' models</span></div>' +
+        '<div><span class="k">Whole Vault</span><span class="v">' + allPics + '</span><span class="s">pictures across ' + projects.length + ' projects</span></div>';
+    }
+    bar.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-pj]"); if (!b) return;
+      pj = projects.filter(function (x) { return x.id === b.getAttribute("data-pj"); })[0] || pj;
+      rows = (d.roster || []).filter(function (r) { return (pj.models || []).indexOf(r.name) >= 0; });
+      document.getElementById("hUnits").value = pj.units || 1;
+      document.getElementById("hCount").textContent = rows.length + " models · " + (pj.units || 0) + " units · " + esc(pj.issue);
+      paintProjects(); paintAssets(null); run(true);
+      logIt("Switched project", pj.issue);
+    });
+
+    /* ── the whole Vault for this project, filterable by who is in the frame ── */
+    function paintAssets(who) {
+      var list = (pj.assets || []).filter(function (a) { return !who || (a.models || [a.model]).indexOf(who) >= 0; });
+      var names = []; (pj.assets || []).forEach(function (a) { (a.models || [a.model]).forEach(function (n) { if (n && names.indexOf(n) < 0) names.push(n); }); });
+      document.getElementById("hsFilter").innerHTML =
+        '<button type="button"' + (who ? "" : ' class="is-on"') + ' data-who="">Everyone</button>' +
+        names.map(function (n) { return '<button type="button"' + (who === n ? ' class="is-on"' : "") + ' data-who="' + esc(n) + '">' + esc(n) + "</button>"; }).join("");
+      document.getElementById("hsVaultCount").textContent = list.length + " of " + (pj.assets || []).length + " frames";
+      var host = document.getElementById("hsAssets");
+      host.setAttribute("data-photos", list.map(function (a) { return a.src; }).join(","));
+      host.setAttribute("data-set-title", pj.issue + (who ? " — " + who : ""));
+      host.setAttribute("data-captions", list.map(function (a) { return (a.model || "") + (a.frame ? " · " + a.frame : "") + (a.set ? " · " + a.set : ""); }).join("|"));
+      host.innerHTML = list.map(function (a) {
+        return '<figure><img src="' + esc(a.src.replace(/\.jpe?g$/i, "-sm.jpg")) + '" alt="" loading="lazy" decoding="async">' +
+          "<figcaption>" + esc(a.model || "") + (a.frame ? " · " + a.frame : "") + "</figcaption></figure>";
+      }).join("") || '<p class="pf-note">Nothing filed here yet.</p>';
+    }
+    document.getElementById("hsFilter").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-who]"); if (!b) return;
+      paintAssets(b.getAttribute("data-who") || null);
+    });
+    paintProjects(); paintAssets(null);
+
+    /* ── who may do what ── */
+    function gate() {
+      var can = (WHO && WHO.can) || [];
+      var closer = can.indexOf("close") >= 0;
+      document.getElementById("hRev").disabled = !closer;
+      document.getElementById("hUnits").disabled = !closer;
+      var q = document.getElementById("hsQuarter").querySelector(".idx");
+      if (q) q.textContent = closer ? "Enter the revenue · everything else follows" : "Founder only · you can see it, not close it";
+      document.getElementById("hCopyAll").style.display = closer ? "" : "none";
+      var pub = document.getElementById("hPublish"); if (pub && !closer) pub.hidden = true;
+    }
+    window.__gate = gate;
+
+    var rows = (d.roster || []).filter(function (r) { return (pj.models || []).indexOf(r.name) >= 0; });
     function run(quiet) {
       var R = Math.max(0, +document.getElementById("hRev").value || 0);
       var T = Math.max(1, +document.getElementById("hUnits").value || 1);
@@ -847,7 +1025,7 @@
     });
     document.getElementById("hsExport").addEventListener("click", function (e) {
       e.preventDefault();
-      var all = []; try { all = JSON.parse(localStorage.getItem("pc-house-log") || "[]"); } catch (x) {}
+      var all = []; try { all = JSON.parse(localStorage.getItem(("pc-house-log-v" + (window.__auditV || 1))) || "[]"); } catch (x) {}
       navigator.clipboard.writeText(all.map(function (r) {
         return new Date(r.at).toISOString() + "  " + r.who + "  " + r.action + (r.detail ? " · " + r.detail : "");
       }).join("\n"));
