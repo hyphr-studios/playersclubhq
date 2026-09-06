@@ -119,6 +119,38 @@
   .sheet__meta .v{font-family:var(--serif);font-size:clamp(19px,3vw,27px)}
   .sheet__cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:clamp(38px,7vh,64px)}
 
+
+  /* ── out my dms ── */
+  .dms-head{text-align:center;margin-bottom:clamp(30px,6vh,52px)}
+  .dms-title{font-family:var(--serif);font-weight:400;font-size:clamp(34px,7vw,72px);line-height:1;margin:14px 0 10px;
+    text-shadow:-1.5px 0 0 rgba(255,58,140,.7),1.5px 0 0 rgba(60,220,255,.55)}
+  .dms-sub{font-family:var(--serif);font-style:italic;color:#FFB7D5;font-size:clamp(16px,2.6vw,23px)}
+  .dms{max-width:660px;margin:0 auto}
+  .dms-screen{border:1px solid rgba(255,58,140,.34);background:rgba(12,4,10,.72);padding:clamp(28px,5vw,44px);position:relative}
+  .dms-screen::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(180deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px)}
+  .dms-step{position:absolute;top:14px;right:18px;font-size:9px;letter-spacing:.3em;color:rgba(255,183,213,.7)}
+  .dms-q{font-family:var(--serif);font-size:clamp(21px,3.6vw,32px);line-height:1.3;min-height:2.2em;position:relative;z-index:1}
+  .dms-opts{display:flex;flex-direction:column;gap:9px;margin-top:26px;position:relative;z-index:1}
+  .dms-opts button{
+    text-align:left;background:transparent;color:var(--white);cursor:pointer;
+    border:1px solid rgba(244,242,237,.24);padding:15px 18px;
+    font-family:var(--sans);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    transition:border-color .25s,background .25s,padding-left .25s;
+  }
+  .dms-opts button:hover{border-color:rgba(255,58,140,.7);background:rgba(255,58,140,.09);padding-left:24px}
+  .dms-verdict{font-family:var(--serif);font-style:italic;color:#FFB7D5}
+  .dms-again{
+    display:block;margin:18px auto 0;background:transparent;border:1px solid rgba(244,242,237,.24);
+    color:var(--white);padding:12px 22px;cursor:pointer;
+    font-family:var(--sans);font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;
+  }
+  .dms-rules{max-width:660px;margin:clamp(34px,6vh,58px) auto 0;border-top:1px solid var(--hair-soft);padding-top:26px}
+  .dms-rules .k{display:block;font-size:8.5px;letter-spacing:.34em;text-transform:uppercase;color:#FF6FAE;margin-bottom:16px}
+  .dms-rules ul{list-style:none;padding:0}
+  .dms-rules li{font-size:13px;color:rgba(244,242,237,.82);line-height:1.85;padding:9px 0 9px 22px;position:relative;border-bottom:1px solid var(--hair-soft)}
+  .dms-rules li::before{content:"—";position:absolute;left:0;color:#FF6FAE}
+
   @media (max-width:700px){
     .tape__hud{top:78px}
     .tape__foot{bottom:22px;gap:8px}
@@ -199,6 +231,36 @@
     </div>
   </div>
 </section>
+
+<!-- OUT MY DMs -->
+<section class="sheet" id="dms" style="border-top:1px solid var(--hair)">
+  <div class="sheet__in">
+    <div class="dms-head rv">
+      <span class="eyebrow eyebrow--gold">From the issue · Page 07</span>
+      <h2 class="dms-title">Out My DMs</h2>
+      <p class="dms-sub">Not every &ldquo;hey&rdquo; deserves a reply. A field guide.</p>
+    </div>
+
+    <div class="dms" id="dmsGame">
+      <div class="dms-screen">
+        <span class="dms-step" id="dmsStep">01</span>
+        <p class="dms-q" id="dmsQ">He slid in. Now what?</p>
+        <div class="dms-opts" id="dmsOpts"></div>
+      </div>
+      <button class="dms-again" id="dmsAgain" hidden>Run it again</button>
+    </div>
+
+    <div class="dms-rules rv">
+      <span class="k">House Rules</span>
+      <ul>
+        <li>If the vibe is off, the vibe is off. You don't owe anyone a second read.</li>
+        <li>&ldquo;wyd&rdquo; is not an opener. It's a survey.</li>
+        <li>A like on your story is not a conversation.</li>
+        <li>Screenshots are forever. So is your peace.</li>
+      </ul>
+    </div>
+  </div>
+</section>
 </main>
 
 <footer class="foot">
@@ -219,6 +281,60 @@
     var t=Math.floor(f/30), p=function(n){return String(n).padStart(2,"0")};
     el.textContent = p(Math.floor(t/3600))+":"+p(Math.floor(t/60)%60)+":"+p(t%60)+":"+p(f%30);
   },33);
+})();
+</script>
+
+<script>
+/* Out My DMs — the flowchart from the issue, playable */
+(function(){
+  var T = {
+    start:{q:"He slid in. Now what?",a:[["Do I know him?","know"]]},
+    know:{q:"Do you know him in real life?",a:[["Yes","energy"],["No","profile"]]},
+    energy:{q:"Safe energy, or sus energy?",a:[["Safe","owes"],["Sus","block_sus"]]},
+    owes:{q:"Does he owe you money or an apology?",a:[["He does","seen"],["Neither","interesting"]]},
+    interesting:{q:"Is the message actually interesting?",a:[["It is","reply"],["Not remotely","thumb"]]},
+    profile:{q:"Is the profile giving? Pictures, bio, all of it.",a:[["It's giving","mutuals"],["It is not","block_profile"]]},
+    mutuals:{q:"Any mutuals?",a:[["A few","sane"],["None","check"]]},
+    sane:{q:"Single and sane?",a:[["Both","gif"],["Pick one","ignore"]]},
+    check:{q:"Blue check, or broke check?",a:[["Blue check","taste"],["Broke check","fine"]]},
+    taste:{q:"Taste, or just followers?",a:[["Taste","flirt"],["Followers","seen2"]]},
+    fine:{q:"Broke — but fine?",a:[["Fine","laugh"],["Not fine","block_now"]]},
+
+    block_sus:{end:"Block. Screenshot it for the group chat first."},
+    seen:{end:"Leave him on seen. Indefinitely. He knows what he did."},
+    reply:{end:"Reply. Guard up, expectations low."},
+    thumb:{end:"👍 and keep it moving. That's a whole sentence."},
+    block_profile:{end:"Block. There are no second chances at a first impression."},
+    gif:{end:"One cute GIF. That's the entire investment."},
+    ignore:{end:"Ignore. You already know how this ends."},
+    flirt:{end:"Flirt responsibly. Taste is rare and should be encouraged."},
+    seen2:{end:"Seen it. Didn't reply. Followers aren't a personality."},
+    laugh:{end:"One laughing emoji. Let him sit with it."},
+    block_now:{end:"Block immediately. Broke AND not fine is a choice."}
+  };
+  var qEl=document.getElementById("dmsQ"), oEl=document.getElementById("dmsOpts"),
+      sEl=document.getElementById("dmsStep"), again=document.getElementById("dmsAgain");
+  if(!qEl) return;
+  var n=0;
+  function go(id){
+    var node=T[id]; if(!node) return;
+    if(node.end){
+      n++; sEl.textContent="END";
+      qEl.innerHTML='<span class="dms-verdict">'+node.end+'</span>';
+      oEl.innerHTML=""; again.hidden=false; return;
+    }
+    n++; sEl.textContent=String(n).padStart(2,"0");
+    qEl.textContent=node.q; again.hidden=true;
+    oEl.innerHTML="";
+    node.a.forEach(function(opt){
+      var b=document.createElement("button");
+      b.type="button"; b.textContent=opt[0];
+      b.addEventListener("click",function(){ go(opt[1]); });
+      oEl.appendChild(b);
+    });
+  }
+  again.addEventListener("click",function(){ n=0; go("know"); });
+  go("know");
 })();
 </script>
 </body>

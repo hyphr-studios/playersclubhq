@@ -1,0 +1,24 @@
+{
+  "note": "The studio closes a quarter by filling in `revenue`. Until then it reads as not yet reported, and no model is asked to guess it.",
+  "current": "Q3-2026",
+  "quarters": [
+    {
+      "id": "Q3-2026",
+      "label": "Q3 2026",
+      "window": "Jul – Sep 2026",
+      "paidOn": "October 2026",
+      "status": "open",
+      "revenue": null,
+      "totalUnits": 22
+    },
+    {
+      "id": "Q2-2026",
+      "label": "Q2 2026",
+      "window": "Apr – Jun 2026",
+      "paidOn": "July 2026",
+      "status": "pre-vault",
+      "revenue": 0,
+      "totalUnits": 0
+    }
+  ]
+}

@@ -197,56 +197,69 @@ Checked, not assumed:
   shift is effectively zero.
 
 
+
 ## Model Portal
 
-Three pages behind `/portal/`, plus a public `/casting/` board.
+`/portal/` (gated) · `/casting/` (public) · briefs and ledgers encrypted.
 
-**How access works.** Each model has an access key (e.g. `PC-KARMA-8241`).
-The key is hashed in her browser with SHA-256 and the first 16 hex characters
-name her ledger file — `portal/ledger/<hash>.json`. Nothing on the site lists
-the models, there is no index to enumerate, and she only ever loads her own
-file.
+### Why the ledgers are encrypted
 
-**Be clear-eyed about what that is.** It is a lock on a door, not a bank vault.
-Anyone holding a key can read that model's ledger, and a key shared in a group
-chat is a key that works for everyone in it. Content-unit counts and balances
-are fine there. **Bank details, addresses, ID documents and tax forms must
-never go in these files** — those belong in the studio's own records.
+This site is served from a **public repo**, and GitHub Pages publishes every
+file in it. Naming a file after a hash hides nothing: anyone can list the
+folder on github.com. So ledgers and casting briefs are **AES-GCM encrypted**.
+The model's access key derives the decryption key in her browser (PBKDF2,
+310k iterations) and never leaves it. Published, the file is noise.
 
-**Adding a model**
+What that does and doesn't buy you:
+- **Does:** a stranger who finds the URL gets ciphertext. Concepts and earnings
+  stay private even though the repo is public.
+- **Doesn't:** protect against a key being forwarded. A shared key is a shared
+  ledger. Rotate it (`rekey`) if that happens.
+- **Still true:** no bank details, ID documents or tax forms in these files, ever.
+
+### Everyday use
 
 ```bash
-python3 - <<'EOF'
-import json, hashlib
-KEY  = "PC-NEWNAME-1234"          # give her this
-NAME = "New Name"
-doc = {
-  "name": NAME, "handle": "@handle", "since": "Sep 2026", "status": "Cast — 002",
-  "units": 0, "poolShare": 0.0, "balance": 0.00, "threshold": 100,
-  "quarter": "Q4 2026", "payoutDate": "January 2027",
-  "note": "", "lines": [], "statements": []
-}
-h = hashlib.sha256(KEY.strip().upper().encode()).hexdigest()[:16]
-json.dump(doc, open(f"portal/ledger/{h}.json","w"), indent=2, ensure_ascii=False)
-print("ledger:", h)
-EOF
+python3 tools/portal_keys.py list                # who has a key
+python3 tools/portal_keys.py new "New Model"     # mint key + blank ledger
+python3 tools/portal_keys.py rekey <file.json>   # retire a key, issue a new one
+python3 tools/portal_keys.py open <KEY>          # read one back
+python3 tools/portal_keys.py seal                # re-encrypt after editing
 ```
 
-To revoke a key, delete the file. To change a key, rename the file to the new
-hash.
+Plaintext lives in `tools/plain/` and is **gitignored** — that folder is the
+one place the real numbers sit unencrypted, so it stays on your machine. Edit
+there, run `seal`, commit `portal/ledger/`.
 
-**Updating everyone after a quarter closes:** edit each ledger's `units`,
-`poolShare` and `balance`. The maths that produces those numbers is on
-`/portal/royalties/`, and the calculator there does it for you.
+### Two kinds of key
 
-**The casting board and updates** are `content/castings.json` and
-`content/updates.json` — both plain JSON, both feed the public casting page
-and the portal at once.
+- **Model key** — opens her own ledger: units, share of the pool, balance,
+  what counts toward it, plus the casting briefs.
+- **House key** — opens the control room: the whole roster, and a quarter-close
+  panel. Type the quarter's gross Vault revenue and it computes the 60/40 split,
+  the value per unit, what each model earned, who clears the $100 threshold and
+  who rolls over — then copies a statement per model, or all of them at once.
 
-### When to replace this with real accounts
+### Closing a quarter
 
-When money actually moves, or when models need to log in with an email and
-password rather than a key. That needs a backend: **Supabase** is the natural
-fit — real auth, a row per model, and rules so a model can read only her own
-row. The portal's front end is already shaped for it; what changes is where
-`tryKey()` looks. Until then, keys are the honest version of this.
+1. Open the portal with the house key, enter the revenue, read the roster.
+2. Copy the statements and pay out.
+3. Put the new balances into `tools/plain/*.json`, and the revenue into
+   `content/quarters.json` (set `revenue` and `status: "closed"`).
+4. `python3 tools/portal_keys.py seal`, then commit.
+
+Step 3 matters: until `revenue` is filled in, every model's portal honestly
+says *revenue not yet reported* rather than asking her to guess a number only
+you can know.
+
+### Castings are deliberately two-tier
+
+`content/castings.json` is public and says **nothing** about what is being
+shot — only that a call is open. The real briefs (concept, spots, dates,
+direction) live in `portal/briefs.json`, encrypted with a crew key that every
+model's ledger carries. Sealing new briefs:
+
+```bash
+python3 tools/portal_keys.py open <ANY-MODEL-KEY>   # read the crewKey out
+# edit the briefs, then re-seal them with that crewKey
+```

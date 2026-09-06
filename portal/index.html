@@ -93,12 +93,47 @@
   </div>
 </section>
 
-<section class="pf-sect pf-sect--tight">
+<section class="pf-sect pf-sect--tight" id="pfNoteWrap">
   <p class="pf-note" id="pfNote"></p>
 </section>
 
+
+<!-- HOUSE: CONTROL ROOM -->
+<section class="pf-sect pf-sect--tight" id="pfHouse" hidden>
+  <div class="pf-sect__head">
+    <h2>Close a Quarter</h2>
+    <span class="idx">Enter the revenue · everything else follows</span>
+  </div>
+  <div class="pf-calc">
+    <label><span>Gross Vault Revenue</span><input type="number" id="hRev" value="0" min="0" step="100" inputmode="numeric"></label>
+    <label><span>Total Approved Units</span><input type="number" id="hUnits" value="22" min="1" step="1" inputmode="numeric"></label>
+  </div>
+  <div class="pf-out">
+    <div><span class="k">House (60%)</span><span class="v" id="hHouse">—</span></div>
+    <div><span class="k">Model Pool (40%)</span><span class="v" id="hPool">—</span></div>
+    <div><span class="k">Value Per Unit</span><span class="v" id="hUnit">—</span></div>
+    <div><span class="k">Owed This Quarter</span><span class="v chrome-text" id="hOwed">—</span></div>
+  </div>
+
+  <div class="pf-sect__head" style="margin-top:clamp(38px,7vh,64px)">
+    <h2>The Roster</h2>
+    <span class="idx" id="hCount">—</span>
+  </div>
+  <div class="pf-wrap">
+    <table class="pf-table">
+      <thead><tr><th>Model</th><th>Units</th><th>Share</th><th>Carried</th><th>This Quarter</th><th>Payable</th><th></th></tr></thead>
+      <tbody id="hRoster"></tbody>
+    </table>
+  </div>
+  <p class="pf-note" id="hNote"></p>
+  <div class="pf-head__row" style="margin-top:26px">
+    <a class="btn" href="#" id="hCopyAll">Copy Every Statement</a>
+    <span class="eyebrow" style="color:var(--faint)" id="hCopied"></span>
+  </div>
+</section>
+
 <!-- WHAT'S BANKED -->
-<section class="pf-sect">
+<section class="pf-sect" data-model-only>
   <div class="pf-sect__head">
     <h2>Your Content</h2>
     <span class="idx">What counts toward your share</span>
@@ -209,16 +244,40 @@
     return "$" + Number(n || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
-  /* the key never leaves the browser: it is hashed, and the hash names the file */
+  /* ── the key ──
+     It names the file (SHA-256) and it decrypts the file (PBKDF2 → AES-GCM).
+     The site is served from a public repo, so the published ledger is
+     ciphertext: without the key it is noise. The key never leaves the browser. */
+  var ITERS = 310000;
+  var b64 = function (s) {
+    var bin = atob(s), a = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i);
+    return a;
+  };
+
   function keyToFile(key) {
     var norm = key.trim().toUpperCase();
-    if (!window.crypto || !window.crypto.subtle) return Promise.reject("nocrypto");
+    if (!window.crypto || !crypto.subtle) return Promise.reject("nocrypto");
     return crypto.subtle.digest("SHA-256", new TextEncoder().encode(norm)).then(function (buf) {
       var hex = Array.prototype.map.call(new Uint8Array(buf), function (b) {
         return b.toString(16).padStart(2, "0");
       }).join("");
       return "ledger/" + hex.slice(0, 16) + ".json";
     });
+  }
+
+  function unseal(key, blob) {
+    var norm = key.trim().toUpperCase();
+    return crypto.subtle.importKey("raw", new TextEncoder().encode(norm), "PBKDF2", false, ["deriveKey"])
+      .then(function (base) {
+        return crypto.subtle.deriveKey(
+          { name: "PBKDF2", salt: b64(blob.salt), iterations: blob.iters || ITERS, hash: "SHA-256" },
+          base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+      })
+      .then(function (aes) {
+        return crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(blob.iv) }, aes, b64(blob.ct));
+      })
+      .then(function (pt) { return JSON.parse(new TextDecoder().decode(pt)); });
   }
 
   function deny(msg) {
@@ -233,9 +292,11 @@
     gate.style.opacity = "0"; gate.style.visibility = "hidden";
     inner.removeAttribute("hidden");
     document.body.style.overflow = "";
-    render(data);
+    crewKey = data.crewKey || null;
+    (data.role === "house" ? renderHouse : render)(data);
   }
 
+  /* ── model view ── */
   function render(d) {
     document.getElementById("pfName").textContent = d.name || "Model";
     document.getElementById("pfStatus").textContent = d.status || "Model";
@@ -259,13 +320,113 @@
     }).join("") || '<tr><td colspan="4" style="color:var(--faint)">Nothing banked yet.</td></tr>';
 
     var msg = document.getElementById("pfMsg");
-    if (msg) {
-      msg.href = "mailto:info@playersclubhq.com?subject=" +
-        encodeURIComponent("Portal — " + (d.name || "Model"));
+    if (msg) msg.href = "mailto:info@playersclubhq.com?subject=" +
+      encodeURIComponent("Portal — " + (d.name || "Model"));
+
+    /* what the Vault actually earned — published by the studio, never guessed */
+    fetch("../content/quarters.json").then(function (r) { return r.json(); }).then(function (q) {
+      var cur = (q.quarters || []).filter(function (x) { return x.id === q.current; })[0];
+      if (!cur) return;
+      var el = document.getElementById("pfQuarter");
+      if (cur.revenue == null) {
+        el.textContent = "Covering " + cur.label + " · revenue not yet reported";
+      } else {
+        var pool = cur.revenue * 0.4, unit = pool / (cur.totalUnits || 1);
+        el.textContent = "Covering " + cur.label + " · " + money(unit) + " per unit";
+        document.getElementById("pfNote").innerHTML =
+          "This quarter the Vault took " + esc(money(cur.revenue)) + ". The model pool is " +
+          esc(money(pool)) + " across " + esc(cur.totalUnits) + " approved units — " +
+          esc(money(unit)) + " a unit. Your " + esc(d.units) + " units come to <strong>" +
+          esc(money(unit * d.units)) + "</strong>.";
+      }
+    }).catch(function () {});
+  }
+
+  /* ── house view: the control room ── */
+  function renderHouse(d) {
+    document.getElementById("pfName").textContent = d.name || "PLAYER'S CLUB";
+    document.getElementById("pfStatus").textContent = d.status || "House";
+    document.getElementById("pfSince").textContent = d.models + " models · " + d.totalUnits + " approved units";
+    document.getElementById("pfUnits").textContent = d.totalUnits;
+    document.getElementById("pfShare").textContent = d.models;
+    document.querySelector("#pfShare").previousElementSibling.textContent = "Models on the Roster";
+    document.getElementById("pfBal").textContent = money(0);
+    document.getElementById("pfThresh").textContent = "Owed once a quarter is closed";
+    document.getElementById("pfNext").textContent = d.payoutDate || "—";
+    document.getElementById("pfQuarter").textContent = "Covering " + (d.quarter || "—");
+    document.getElementById("pfNote").innerHTML = d.note ? esc(d.note) : "";
+
+    document.querySelectorAll("[data-model-only]").forEach(function (n) { n.hidden = true; });
+    var H = document.getElementById("pfHouse");
+    H.hidden = false;
+    document.getElementById("hUnits").value = d.totalUnits;
+    document.getElementById("hCount").textContent = d.models + " models · " + d.totalUnits + " units";
+
+    var rows = d.roster || [];
+    function run() {
+      var R = Math.max(0, +document.getElementById("hRev").value || 0);
+      var T = Math.max(1, +document.getElementById("hUnits").value || 1);
+      var pool = R * 0.4, unit = pool / T, owed = 0;
+      document.getElementById("hHouse").textContent = money(R * 0.6);
+      document.getElementById("hPool").textContent = money(pool);
+      document.getElementById("hUnit").textContent = money(unit);
+
+      document.getElementById("hRoster").innerHTML = rows.map(function (m, i) {
+        var earned = unit * m.units, payable = (m.balance || 0) + earned;
+        var pays = payable >= 100;
+        if (pays) owed += payable;
+        return "<tr><td>" + esc(m.name) + (m.handle ? ' <span style="color:var(--faint)">' + esc(m.handle) + "</span>" : "") +
+          "</td><td>" + esc(m.units) + "</td><td>" + esc(m.share) + "%</td><td>" + money(m.balance || 0) +
+          "</td><td>" + money(earned) + "</td><td" + (pays ? '' : ' style="color:var(--faint)"') + ">" +
+          money(payable) + (pays ? "" : " <span style=\"font-size:9px;letter-spacing:.2em\">ROLLS</span>") +
+          '</td><td><a href="#" data-stmt="' + i + '" style="color:var(--gold);font-size:9px;letter-spacing:.2em;text-transform:uppercase">Copy</a></td></tr>';
+      }).join("");
+
+      document.getElementById("hOwed").textContent = money(owed);
+      document.getElementById("hNote").innerHTML = R === 0
+        ? "No revenue entered, so nothing is payable yet. Type this quarter's gross Vault revenue above and the whole roster settles itself."
+        : "Anyone under the $100 threshold rolls forward automatically — shown as <strong>ROLLS</strong>. " +
+          "When you have paid a quarter, write the new balances into <strong>tools/plain/</strong> and run <strong>portal_keys.py seal</strong>.";
+      window.__stmt = function (i) {
+        var m = rows[i], earned = unit * m.units, payable = (m.balance || 0) + earned;
+        return [
+          "PLAYER'S CLUB™ — Statement", d.quarter, "",
+          "Model:            " + m.name,
+          "Approved units:   " + m.units + "  (" + m.share + "% of " + T + ")",
+          "Gross Vault rev:  " + money(R),
+          "Model pool (40%): " + money(pool),
+          "Value per unit:   " + money(unit),
+          "Earned:           " + money(earned),
+          "Carried forward:  " + money(m.balance || 0),
+          "Payable:          " + money(payable) + (payable >= 100 ? "" : "   (under $100 — rolls forward)"),
+          "", "Paid " + (d.payoutDate || "") + ". Questions: info@playersclubhq.com"
+        ].join("\n");
+      };
     }
+    ["hRev", "hUnits"].forEach(function (id) {
+      document.getElementById(id).addEventListener("input", run);
+    });
+    run();
+
+    document.getElementById("hRoster").addEventListener("click", function (e) {
+      var a = e.target.closest("[data-stmt]"); if (!a) return;
+      e.preventDefault();
+      navigator.clipboard.writeText(window.__stmt(+a.getAttribute("data-stmt"))).then(function () {
+        a.textContent = "Copied"; setTimeout(function () { a.textContent = "Copy"; }, 1600);
+      });
+    });
+    document.getElementById("hCopyAll").addEventListener("click", function (e) {
+      e.preventDefault();
+      var all = rows.map(function (_, i) { return window.__stmt(i); }).join("\n\n" + "-".repeat(46) + "\n\n");
+      navigator.clipboard.writeText(all).then(function () {
+        document.getElementById("hCopied").textContent = rows.length + " statements copied";
+        setTimeout(function () { document.getElementById("hCopied").textContent = ""; }, 2600);
+      });
+    });
   }
 
   /* studio updates + casting board */
+  var crewKey = null;
   function feed() {
     fetch("../content/updates.json").then(function (r) { return r.json(); }).then(function (data) {
       document.getElementById("pfUpdates").innerHTML = (data.updates || []).map(function (u) {
@@ -278,21 +439,26 @@
       }).join("");
     }).catch(function () {});
 
-    fetch("../content/castings.json").then(function (r) { return r.json(); }).then(function (data) {
-      var cls = { open: "pf-tag--open", soon: "pf-tag--soon", shut: "pf-tag--shut" };
-      document.getElementById("pfCastings").innerHTML = (data.calls || []).map(function (c) {
-        var inner =
-          '<span class="pf-row__no">' + esc(c.no) + "</span><span>" +
-          '<span class="pf-row__t">' + esc(c.title) + "</span>" +
-          '<span class="pf-row__s">' + esc(c.sub) + "</span>" +
-          '<span class="pf-row__s" style="color:var(--faint)">' + esc(c.meta) + " · " + esc(c.looks) + "</span></span>" +
-          '<span class="pf-row__side"><span class="pf-tag ' + (cls[c.state] || "") + '">' + esc(c.tag) + "</span>" +
-          (c.apply ? '<span class="btn">Apply <span class="arr">→</span></span>' : "") + "</span>";
-        return c.href
-          ? '<a class="pf-row" href="' + esc(c.href) + '">' + inner + "</a>"
-          : '<div class="pf-row">' + inner + "</div>";
-      }).join("");
-    }).catch(function () {});
+    /* the real briefs are sealed with the crew key carried in the ledger */
+    if (!crewKey) return;
+    fetch("briefs.json", { cache: "no-store" }).then(function (r) { return r.json(); })
+      .then(function (blob) { return unseal(crewKey, blob); })
+      .then(function (data) {
+        var cls = { open: "pf-tag--open", soon: "pf-tag--soon", shut: "pf-tag--shut" };
+        document.getElementById("pfCastings").innerHTML = (data.calls || []).map(function (c) {
+          var body =
+            '<span class="pf-row__no">' + esc(c.no) + "</span><span>" +
+            '<span class="pf-row__t">' + esc(c.title) + "</span>" +
+            '<span class="pf-row__s">' + esc(c.sub) + "</span>" +
+            '<span class="pf-row__s" style="color:var(--faint)">' + esc(c.meta) + " · " + esc(c.looks) + "</span></span>" +
+            '<span class="pf-row__side"><span class="pf-tag ' + (cls[c.state] || "") + '">' + esc(c.tag) + "</span></span>";
+          return c.href ? '<a class="pf-row" href="' + esc(c.href) + '">' + body + "</a>"
+                        : '<div class="pf-row">' + body + "</div>";
+        }).join("");
+      }).catch(function () {
+        document.getElementById("pfCastings").innerHTML =
+          '<p class="pf-note">Briefs could not be opened. Message the studio.</p>';
+      });
   }
 
   function tryKey(key, quiet) {
@@ -301,11 +467,13 @@
         if (!r.ok) throw new Error("nokey");
         return r.json();
       });
+    }).then(function (blob) {
+      return unseal(key, blob);
     }).then(function (data) {
       open(data, key); feed();
     }).catch(function (e) {
       if (e === "nocrypto") { deny("This browser can't open the portal. Try Safari or Chrome."); return; }
-      if (!quiet) deny("That key isn't recognised. Check the call sheet, or message the studio.");
+      if (!quiet) deny("That key isn't recognised. Check your call sheet, or message the studio.");
       else { store.clear("pc-portal"); document.body.style.overflow = "hidden"; }
     });
   }
