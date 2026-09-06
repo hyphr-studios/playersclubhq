@@ -2,7 +2,7 @@
   "note": "Public. Deliberately says nothing about what we are shooting.",
   "status": {
     "open": 1,
-    "upcoming": 1,
+    "upcoming": 0,
     "line": "One call is open now."
   }
 }

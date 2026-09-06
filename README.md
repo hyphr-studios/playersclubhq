@@ -295,3 +295,25 @@ Add it to `lines` in `tools/plain/<her file>.json`, bump `units`, recompute
 `poolShare` for everyone, then `seal`. **It changes what every model is paid**,
 because the pool is fixed and shares are relative. Tell the cast before, not
 after.
+
+
+## Royalty rule, as it stands
+
+- Split **60 house / 40 model pool**, paid **quarterly**, **$100** minimum or it rolls.
+- **1 approved photo = 1 unit. 1 approved video = 1 unit.**
+- **Placement bonuses, once per issue:** cover **+5 units**, named feature **+2 units**.
+- Pool ÷ total units = value per unit. Your units × that = your payout.
+- Only Vault-approved work counts. Changes apply forward, never backward.
+
+SWIM 001 stands at **31 units** — Karma 15 (cover), Cherri 6, Kay Kay 4, Naiomi 3, Ivorie 3.
+
+## Closing a quarter
+
+1. Sign into the portal with the House key, pick your name, enter your PIN.
+2. Type the quarter's gross Vault revenue. The roster settles itself and each
+   model's statement can be copied straight out.
+3. Copy the published block it gives you into `content/quarters.json` and commit —
+   that is what makes the figure visible to the models. **A model is never asked to
+   guess revenue**; her calculator reads that file.
+4. After paying, write the new balances into `tools/plain/` and run
+   `python3 tools/portal_keys.py seal`.

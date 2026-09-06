@@ -50,7 +50,7 @@
 
 <section class="pf-strip">
   <div><span class="k">The Split</span><span class="v">60 / 40</span><span class="s">House / Model pool</span></div>
-  <div><span class="k">A Content Unit</span><span class="v">1 = 1</span><span class="s">One photo or one video</span></div>
+  <div><span class="k">A Content Unit</span><span class="v">1 = 1</span><span class="s">One photo or one video<br>Cover +5 · Feature +2</span></div>
   <div><span class="k">Payouts</span><span class="v">Quarterly</span><span class="s">Four times a year</span></div>
   <div><span class="k">Threshold</span><span class="v">$100</span><span class="s">Below it, rolls over</span></div>
 </section>
@@ -81,9 +81,9 @@
   </div>
 
   <div class="pf-calc rv">
-    <label><span>Quarterly Vault Revenue</span><input type="number" id="cRev" value="12000" min="0" step="100" inputmode="numeric"></label>
-    <label><span>Total Approved Units</span><input type="number" id="cTot" value="24" min="1" step="1" inputmode="numeric"></label>
-    <label><span>Your Approved Units</span><input type="number" id="cMine" value="6" min="0" step="1" inputmode="numeric"></label>
+    <label><span>Gross Vault Revenue <em id="cRevSrc" style="font-style:normal;color:var(--faint)">· published by the studio</em></span><input type="number" id="cRev" value="0" min="0" step="100" inputmode="numeric"></label>
+    <label><span>Total Units — everyone <em style="font-style:normal;color:var(--faint)">· published</em></span><input type="number" id="cTot" value="1" min="1" step="1" inputmode="numeric"></label>
+    <label><span>Your Units <em style="font-style:normal;color:var(--faint)">· from your portal</em></span><input type="number" id="cMine" value="0" min="0" step="1" inputmode="numeric"></label>
   </div>
   <div class="pf-out rv">
     <div><span class="k">House (60%)</span><span class="v" id="oHouse">—</span></div>
@@ -98,22 +98,52 @@
 <section class="pf-sect" style="border-top:1px solid var(--hair)">
   <div class="pf-sect__head rv">
     <h2>A Worked Quarter</h2>
-    <span class="idx">$12,000 · 24 units · $200 a unit</span>
+    <span class="idx">$12,000 · 31 units · $154.84 a unit</span>
   </div>
   <div class="pf-wrap rv">
     <table class="pf-table">
-      <thead><tr><th>Model</th><th>Approved Units</th><th>Share of Pool</th><th>Payout</th></tr></thead>
+      <thead><tr><th>Placement</th><th>Approved Units</th><th>Share of Pool</th><th>Payout</th></tr></thead>
       <tbody>
-        <tr><td>Model A</td><td>6</td><td>25.0%</td><td>$1,200.00</td></tr>
-        <tr><td>Model B</td><td>5</td><td>20.8%</td><td>$1,000.00</td></tr>
-        <tr><td>Model C</td><td>4</td><td>16.7%</td><td>$800.00</td></tr>
-        <tr><td>Model D</td><td>3</td><td>12.5%</td><td>$600.00</td></tr>
-        <tr><td>Model E</td><td>2</td><td>8.3%</td><td>$400.00</td></tr>
-        <tr><td>Model F</td><td>1</td><td>4.2%</td><td>$200.00</td></tr>
+        <tr><td>Cover — 10 frames + 5 bonus</td><td>15</td><td>48.4%</td><td>$2,322.58</td></tr>
+        <tr><td>Feature — 4 frames + 2 bonus</td><td>6</td><td>19.4%</td><td>$929.03</td></tr>
+        <tr><td>Feature — 2 frames + 2 bonus</td><td>4</td><td>12.9%</td><td>$619.35</td></tr>
+        <tr><td>Cast — 3 frames</td><td>3</td><td>9.7%</td><td>$464.52</td></tr>
+        <tr><td>Cast — 3 frames</td><td>3</td><td>9.7%</td><td>$464.52</td></tr>
+        <tr><td><strong>Pool</strong></td><td><strong>31</strong></td><td><strong>100%</strong></td><td><strong>$4,800.00</strong></td></tr>
       </tbody>
     </table>
   </div>
-  <p class="pf-note rv">Illustration only. Real totals depend on the quarter's revenue and how much approved content exists.</p>
+  <p class="pf-note rv">These are the real unit counts from SWIM 001 against an invented $12,000 quarter, so
+     you can see how placement moves the numbers. Names are left off on purpose. What anyone actually earns
+     depends on the revenue the studio publishes for that quarter — you will never be asked to guess it.</p>
+</section>
+
+<!-- PLACEMENT BONUS -->
+<section class="pf-sect" style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head rv">
+    <h2>Placement Counts</h2>
+    <span class="idx">Carrying the issue is worth more</span>
+  </div>
+  <div class="pf-grid rv">
+    <div class="pf-card">
+      <span class="k">Cover</span><h3>+5 units</h3>
+      <p>The cover sells the issue. Whoever carries it is credited five units on top of everything
+         she shot, once per issue.</p>
+    </div>
+    <div class="pf-card">
+      <span class="k">Feature</span><h3>+2 units</h3>
+      <p>A named feature spread — your own pages inside the issue — is credited two units on top of
+         your frames.</p>
+    </div>
+    <div class="pf-card">
+      <span class="k">Everything else</span><h3>1 unit each</h3>
+      <p>Every approved photo is one unit, every approved video is one unit, cover or not.</p>
+    </div>
+  </div>
+  <p class="pf-note rv">Bonuses are awarded once per issue and only on Vault-approved work. They are
+     part of your unit count, so they change your share of the pool the same way any other unit does —
+     they are not a separate payment. <strong>SWIM 001:</strong> cover to Karma, features to Cherri
+     and Kay Kay.</p>
 </section>
 
 <!-- THE CALENDAR -->
@@ -191,6 +221,35 @@
   }
   [rev, tot, mine].forEach(function (el) { el.addEventListener("input", run); });
   run();
+})();
+</script>
+
+<script>
+/* The revenue figure is the studio's to publish, never the model's to guess.
+   Both published fields fill themselves from content/quarters.json. */
+(function () {
+  fetch("../../content/quarters.json", { cache: "no-store" })
+    .then(function (r) { return r.json(); })
+    .then(function (q) {
+      var cur = (q.quarters || []).filter(function (x) { return x.id === q.current; })[0];
+      if (!cur) return;
+      var rev = document.getElementById("cRev"),
+          tot = document.getElementById("cTot"),
+          src = document.getElementById("cRevSrc");
+      if (tot && cur.totalUnits) tot.value = cur.totalUnits;
+      if (cur.revenue == null) {
+        if (src) src.textContent = "· " + cur.label + " not closed yet — try a number";
+        if (rev) rev.placeholder = "not reported yet";
+      } else {
+        if (rev) rev.value = cur.revenue;
+        if (src) src.textContent = "· " + cur.label + ", published by the studio";
+      }
+      ["cRev", "cTot", "cMine"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    })
+    .catch(function () {});
 })();
 </script>
 </body>

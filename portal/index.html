@@ -63,7 +63,11 @@
     <button type="submit" id="hsPinGo">Enter</button>
   </form>
   <span class="hs-note" id="hsNote">Every action is logged against whoever is signed in.</span>
-  <a href="#" id="hsBack" class="hs-note" style="text-decoration:underline;text-underline-offset:4px">← someone else</a>
+  <div class="hs-exits">
+    <a href="#" id="hsBack">← someone else</a>
+    <a href="#" id="hsDoorOut">Sign out of the House</a>
+    <a href="../">Leave the portal</a>
+  </div>
 </div>
 
 <div id="pfInner" hidden>
@@ -190,6 +194,14 @@
     </table>
   </div>
   <p class="pf-note" id="hNote"></p>
+
+  <div class="pf-publish" id="hPublish" hidden>
+    <span class="k">Publish it — this is what the models see</span>
+    <p>Paste this over the current quarter in <strong>content/quarters.json</strong>, commit, and every model's
+       portal shows the real figure instead of "not yet reported".</p>
+    <pre id="hPubCode"></pre>
+    <button class="btn" id="hPubCopy" type="button">Copy the block</button>
+  </div>
 
   <div class="pf-sect__head" id="hsAudit" style="margin-top:clamp(38px,7vh,64px)">
     <h2>Audit</h2>
@@ -649,6 +661,7 @@
     var pick = null;
 
     door.hidden = false;
+    document.getElementById("pfInner").hidden = true;   /* nothing shows behind the door */
     document.body.style.overflow = "hidden";
     who.innerHTML = STAFF.map(function (m, i) {
       return '<button type="button" data-i="' + i + '">' + esc(m.name) + "</button>";
@@ -685,9 +698,18 @@
           /* first sign-in: they choose it, we keep the hash on this device and
              hand them one line to send so it survives a new device */
           try { localStorage.setItem("pc-pin-" + pick.id, h); } catch (x) {}
-          note.innerHTML = "Set. Send this one line to the studio so it works on other devices:<br>" +
-            '<b style="color:var(--gold);word-break:break-all">' + pick.id + ":" + h + "</b>";
-          setTimeout(function () { admitted(pick); }, 2600);
+          note.innerHTML =
+            "Set. Send this one line to the studio so your PIN works on another device:" +
+            '<br><b style="color:var(--gold);word-break:break-all">' + pick.id + ":" + h + "</b><br>" +
+            '<button type="button" id="hsPinCopy" class="hs-inline">Copy it</button> ' +
+            '<button type="button" id="hsPinGoOn" class="hs-inline">Continue &rarr;</button>';
+          var cbtn = document.getElementById("hsPinCopy");
+          var gbtn = document.getElementById("hsPinGoOn");
+          if (cbtn) cbtn.addEventListener("click", function () {
+            if (navigator.clipboard) navigator.clipboard.writeText(pick.id + ":" + h);
+            cbtn.textContent = "Copied";
+          });
+          if (gbtn) gbtn.addEventListener("click", function () { admitted(pick); });
           return;
         }
         var local = null;
@@ -711,6 +733,7 @@
   function admitted(m) {
     WHO = m;
     document.getElementById("hsDoor").hidden = true;
+    document.getElementById("pfInner").hidden = false;
     document.body.style.overflow = "";
     document.getElementById("hsName").textContent = m.name;
     document.getElementById("hsRole").textContent = " · " + (m.role || "Staff");
@@ -773,6 +796,20 @@
           "Prepared by " + (WHO ? WHO.name : "the studio") + "."
         ].join("\n");
       };
+      var pub = document.getElementById("hPublish");
+      if (pub) {
+        if (R > 0) {
+          pub.hidden = false;
+          document.getElementById("hPubCode").textContent = JSON.stringify({
+            id: (d.quarter || "").replace(" ", "-"),
+            label: d.quarter || "",
+            paidOn: d.payoutDate || "",
+            status: "closed",
+            revenue: R,
+            totalUnits: T
+          }, null, 2);
+        } else { pub.hidden = true; }
+      }
       if (!quiet && R > 0) logIt("Ran a quarter", money(R) + " over " + T + " units");
     }
     var t;
@@ -782,6 +819,13 @@
       });
     });
     run(true);
+
+    var pc = document.getElementById("hPubCopy");
+    if (pc) pc.addEventListener("click", function () {
+      var t = document.getElementById("hPubCode").textContent;
+      if (navigator.clipboard) navigator.clipboard.writeText(t);
+      pc.textContent = "Copied"; setTimeout(function () { pc.textContent = "Copy the block"; }, 1600);
+    });
 
     document.getElementById("hRoster").addEventListener("click", function (e) {
       var a = e.target.closest("[data-stmt]"); if (!a) return;
@@ -812,10 +856,15 @@
     document.getElementById("hsSwitch").addEventListener("click", function (e) {
       e.preventDefault(); logIt("Signed out"); WHO = null;
       document.getElementById("hsDoor").hidden = false;
+      document.getElementById("pfInner").hidden = true;
       document.getElementById("hsWho").hidden = false;
       document.getElementById("hsPinForm").hidden = true;
       document.getElementById("hsPin").value = "";
       document.body.style.overflow = "hidden";
+    });
+    var doorOut = document.getElementById("hsDoorOut");
+    if (doorOut) doorOut.addEventListener("click", function (e) {
+      e.preventDefault(); store.clear("pc-portal"); location.reload();
     });
     document.getElementById("hsOut").addEventListener("click", function (e) {
       e.preventDefault(); logIt("Signed out"); store.clear("pc-portal"); location.reload();

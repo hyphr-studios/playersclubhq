@@ -5,6 +5,7 @@
 
 :root{
   --black:#0A0A0A;
+  --navh:64px;
   --coal:#111112;
   --charcoal:#2E2E2E;
   --white:#F4F2ED;
@@ -725,11 +726,13 @@ a.pf-card:hover{background:#111}
 
 /* ═══ THE HOUSE — admin. Deliberately not a model page. ═══ */
 .hs{display:none}
-body.is-house .hs{display:block}
+body.is-house .hs{display:block;padding-top:var(--navh)}
 body.is-house .pf-card-head,body.is-house #pfPlainHead,body.is-house [data-model-only]{display:none!important}
 
 .hs-bar{
-  position:sticky;top:0;z-index:60;display:flex;flex-wrap:wrap;gap:10px 26px;
+  /* the site nav is fixed at z-index 1000; stick beneath it or it swallows
+     these controls and the clicks land on the navigation instead */
+  position:sticky;top:var(--navh);z-index:60;display:flex;flex-wrap:wrap;gap:10px 26px;
   align-items:center;justify-content:space-between;
   padding:16px var(--pad);border-bottom:1px solid var(--hair);
   background:rgba(8,8,8,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
@@ -794,3 +797,21 @@ body.is-house .pf-card-head,body.is-house #pfPlainHead,body.is-house [data-model
 .cm__x:hover{color:var(--white)}
 .pf-cast figure{cursor:pointer}
 @media (max-width:700px){.cm__in{grid-template-columns:1fr;gap:18px}.cm__por{max-width:190px}}
+
+
+.hs-exits{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;margin-top:18px}
+.hs-exits a{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);
+  text-decoration:underline;text-underline-offset:4px;transition:color .3s}
+.hs-exits a:hover{color:var(--white)}
+
+
+.pf-publish{border:1px solid var(--hair-soft);padding:clamp(20px,3vw,28px);margin-top:22px;background:#0C0C0C}
+.pf-publish .k{display:block;font-size:8.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.pf-publish p{font-size:11.5px;color:var(--dim);line-height:1.8;max-width:64ch}
+.pf-publish pre{margin:14px 0;padding:14px 16px;background:#080808;border:1px solid var(--hair-soft);
+  overflow-x:auto;font-size:11px;line-height:1.7;color:rgba(244,242,237,.9)}
+
+
+.hs-inline{background:transparent;border:1px solid var(--hair);color:var(--white);cursor:pointer;
+  padding:8px 14px;margin-top:10px;font-family:var(--sans);font-size:9px;letter-spacing:.26em;text-transform:uppercase}
+.hs-inline:hover{border-color:var(--silver)}
