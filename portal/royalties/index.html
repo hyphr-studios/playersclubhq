@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Royalties — Model Portal — PLAYER'S CLUB™</title>
+<meta name="description" content="The PLAYER'S CLUB™ Vault royalty system. 60/40, quarterly, one photo or video is one content unit.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="apple-mobile-web-app-title" content="PLAYER'S CLUB">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/club.css">
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Primary">
+  <a class="nav__mark" href="../../">
+    <img src="../../assets/img/wordmark-white.png" alt="PLAYER'S CLUB™" decoding="async">
+    <span class="nav__pub">by VMG</span>
+  </a>
+  <div class="nav__links">
+    <a href="../">Portal</a>
+    <a href="../faq/">FAQ</a>
+    <a href="../../casting/">Casting</a>
+  </div>
+  <button class="nav__burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+</nav>
+<div class="menu">
+  <a href="../"><small>01</small> Portal</a>
+  <a href="./"><small>02</small> Royalties</a>
+  <a href="../faq/"><small>03</small> FAQ</a>
+  <a href="../../casting/"><small>04</small> Casting</a>
+</div>
+
+<main id="main">
+<header class="pf-head">
+  <span class="eyebrow eyebrow--gold rv in">Vault Royalty System · v1.0</span>
+  <h1 class="rv in">How You Get Paid</h1>
+  <p class="lede rv in rv-d1">Paid for what you shot, not for who follows you.</p>
+</header>
+
+<section class="pf-strip">
+  <div><span class="k">The Split</span><span class="v">60 / 40</span><span class="s">House / Model pool</span></div>
+  <div><span class="k">A Content Unit</span><span class="v">1 = 1</span><span class="s">One photo or one video</span></div>
+  <div><span class="k">Payouts</span><span class="v">Quarterly</span><span class="s">Four times a year</span></div>
+  <div><span class="k">Threshold</span><span class="v">$100</span><span class="s">Below it, rolls over</span></div>
+</section>
+
+<!-- THE MATH -->
+<section class="pf-sect">
+  <div class="pf-sect__head rv">
+    <h2>The Math</h2>
+    <span class="idx">Every quarter, exactly this</span>
+  </div>
+  <ol class="pf-steps rv">
+    <li>The model pool is <strong style="color:var(--white)">40%</strong> of gross Vault revenue for the quarter.</li>
+    <li>Count every Vault-approved content unit from every model.</li>
+    <li>Unit value = the pool divided by that total.</li>
+    <li>Your payout = unit value × your approved units.</li>
+  </ol>
+  <p class="pf-note rv">
+    That's the whole system. No popularity weighting, no discretionary bonuses, no favourites.
+    Two models with the same number of approved units are paid the same amount — the maths can't tell them apart.
+  </p>
+</section>
+
+<!-- CALCULATOR -->
+<section class="pf-sect" style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head rv">
+    <h2>Run the Numbers</h2>
+    <span class="idx">Change anything · It recalculates</span>
+  </div>
+
+  <div class="pf-calc rv">
+    <label><span>Quarterly Vault Revenue</span><input type="number" id="cRev" value="12000" min="0" step="100" inputmode="numeric"></label>
+    <label><span>Total Approved Units</span><input type="number" id="cTot" value="24" min="1" step="1" inputmode="numeric"></label>
+    <label><span>Your Approved Units</span><input type="number" id="cMine" value="6" min="0" step="1" inputmode="numeric"></label>
+  </div>
+  <div class="pf-out rv">
+    <div><span class="k">House (60%)</span><span class="v" id="oHouse">—</span></div>
+    <div><span class="k">Model Pool (40%)</span><span class="v" id="oPool">—</span></div>
+    <div><span class="k">Value Per Unit</span><span class="v" id="oUnit">—</span></div>
+    <div><span class="k">Your Payout</span><span class="v chrome-text" id="oYou">—</span></div>
+  </div>
+  <p class="pf-note rv" id="oNote"></p>
+</section>
+
+<!-- WORKED EXAMPLE -->
+<section class="pf-sect" style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head rv">
+    <h2>A Worked Quarter</h2>
+    <span class="idx">$12,000 · 24 units · $200 a unit</span>
+  </div>
+  <div class="pf-wrap rv">
+    <table class="pf-table">
+      <thead><tr><th>Model</th><th>Approved Units</th><th>Share of Pool</th><th>Payout</th></tr></thead>
+      <tbody>
+        <tr><td>Model A</td><td>6</td><td>25.0%</td><td>$1,200.00</td></tr>
+        <tr><td>Model B</td><td>5</td><td>20.8%</td><td>$1,000.00</td></tr>
+        <tr><td>Model C</td><td>4</td><td>16.7%</td><td>$800.00</td></tr>
+        <tr><td>Model D</td><td>3</td><td>12.5%</td><td>$600.00</td></tr>
+        <tr><td>Model E</td><td>2</td><td>8.3%</td><td>$400.00</td></tr>
+        <tr><td>Model F</td><td>1</td><td>4.2%</td><td>$200.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="pf-note rv">Illustration only. Real totals depend on the quarter's revenue and how much approved content exists.</p>
+</section>
+
+<!-- THE CALENDAR -->
+<section class="pf-sect" style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head rv">
+    <h2>The Calendar</h2>
+    <span class="idx">When money moves</span>
+  </div>
+  <div class="pf-grid rv">
+    <div class="pf-card"><span class="k">Q1</span><h3>Jan — Mar</h3><p>Paid in April.</p></div>
+    <div class="pf-card"><span class="k">Q2</span><h3>Apr — Jun</h3><p>Paid in July.</p></div>
+    <div class="pf-card"><span class="k">Q3</span><h3>Jul — Sep</h3><p>Paid in October.</p></div>
+    <div class="pf-card"><span class="k">Q4</span><h3>Oct — Dec</h3><p>Paid in January.</p></div>
+  </div>
+</section>
+
+<!-- GUARDRAILS -->
+<section class="pf-sect" style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head rv">
+    <h2>The Guardrails</h2>
+    <span class="idx">Non-negotiable</span>
+  </div>
+  <div class="pf-grid rv">
+    <div class="pf-card">
+      <span class="k">Approval</span><h3>Only approved content counts</h3>
+      <p>A frame counts once the studio approves it for the Vault. That protects you as much as the brand — nothing goes in that shouldn't.</p>
+    </div>
+    <div class="pf-card">
+      <span class="k">Threshold</span><h3>$100 minimum</h3>
+      <p>Under a hundred, your balance rolls forward automatically. Nothing is lost — it just isn't worth a transfer yet.</p>
+    </div>
+    <div class="pf-card">
+      <span class="k">Changes</span><h3>Forward only</h3>
+      <p>If the system ever changes, it applies to future quarters. Nothing is ever recalculated backwards.</p>
+    </div>
+    <div class="pf-card">
+      <span class="k">Never</span><h3>No follower maths</h3>
+      <p>Likes, followers and reach do not enter the formula anywhere. Contribution is the only input.</p>
+    </div>
+  </div>
+  <p class="pf-note rv">
+    Balances and statements are kept by the studio. Your portal shows your current units and accrued balance —
+    for a full statement, <a href="mailto:info@playersclubhq.com?subject=Statement%20Request" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px">request one</a> and name the quarter.
+  </p>
+</section>
+</main>
+
+<footer class="foot">
+  <img class="foot__mark" src="../../assets/img/wordmark-white.png" alt="PLAYER'S CLUB™" decoding="async" loading="lazy">
+  <small>© <span data-year>2026</span> · Royalty system v1.0 · Internal use only</small>
+  <img class="foot__vmg" src="../../assets/img/vmg-logo.png" alt="VMG — Vaughn Management Group" decoding="async" loading="lazy">
+</footer>
+
+<script src="../../assets/js/club.js"></script>
+<script>
+(function () {
+  var rev = document.getElementById("cRev"),
+      tot = document.getElementById("cTot"),
+      mine = document.getElementById("cMine");
+  var money = function (n) {
+    return "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+  function run() {
+    var R = Math.max(0, +rev.value || 0);
+    var T = Math.max(1, +tot.value || 1);
+    var M = Math.min(Math.max(0, +mine.value || 0), T);
+    var pool = R * 0.4, unit = pool / T, you = unit * M;
+    document.getElementById("oHouse").textContent = money(R * 0.6);
+    document.getElementById("oPool").textContent  = money(pool);
+    document.getElementById("oUnit").textContent  = money(unit);
+    document.getElementById("oYou").textContent   = money(you);
+    document.getElementById("oNote").innerHTML = you < 100
+      ? "At " + money(you) + " you'd be under the $100 threshold, so it would roll into the next quarter rather than pay out."
+      : "That clears the $100 threshold and would be paid in the payout month for that quarter.";
+  }
+  [rev, tot, mine].forEach(function (el) { el.addEventListener("input", run); });
+  run();
+})();
+</script>
+</body>
+</html>

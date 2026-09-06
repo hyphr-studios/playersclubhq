@@ -1,0 +1,22 @@
+{
+  "name": "Cherri",
+  "handle": "@cherri.armiko",
+  "since": "Aug 2025",
+  "status": "Featured Model No. 2",
+  "units": 4,
+  "poolShare": 18.2,
+  "balance": 0.0,
+  "threshold": 100,
+  "quarter": "Q3 2026",
+  "payoutDate": "October 2026",
+  "note": "The Vault is open at no charge while the library is built, so no revenue has been booked yet. Your units are banked and count from the first paid quarter.",
+  "lines": [
+    {
+      "set": "Cherri — B-Sides",
+      "kind": "photo",
+      "units": 4,
+      "issue": "SWIM 001"
+    }
+  ],
+  "statements": []
+}

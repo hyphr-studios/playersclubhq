@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model Portal — PLAYER'S CLUB™</title>
+<meta name="description" content="PLAYER'S CLUB™ Model Portal. Members only.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" type="image/png" href="../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="apple-mobile-web-app-title" content="PLAYER'S CLUB">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/club.css">
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- GATE -->
+<div class="pf-gate" id="pfGate">
+  <img src="../assets/img/acemark-white.png" alt="">
+  <h1 class="serif">Model Portal</h1>
+  <p>Approved Models Only</p>
+  <form autocomplete="off" id="pfForm">
+    <input type="text" name="key" id="pfKey" placeholder="Access Key" aria-label="Access key"
+           autocapitalize="characters" autocorrect="off" spellcheck="false" required>
+    <button type="submit">Enter</button>
+  </form>
+  <span class="hint" id="pfHint">Your key came with your call sheet.<br>Lost it — or never got one? Message the studio.</span>
+  <a href="../casting/" class="hint" style="text-decoration:underline;text-underline-offset:4px">Not cast yet? See open calls →</a>
+  <a href="../" class="hint" style="text-decoration:underline;text-underline-offset:4px">← Back to the lobby</a>
+</div>
+
+<div id="pfInner" hidden>
+
+<nav class="nav" aria-label="Primary">
+  <a class="nav__mark" href="../">
+    <img src="../assets/img/wordmark-white.png" alt="PLAYER'S CLUB™" decoding="async">
+    <span class="nav__pub">by VMG</span>
+  </a>
+  <div class="nav__links">
+    <a href="../issues/">Issues</a>
+    <a href="../casting/">Casting</a>
+    <a href="./" aria-current="page">Portal</a>
+  </div>
+  <button class="nav__burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+</nav>
+<div class="menu">
+  <a href="../issues/"><small>01</small> Issues</a>
+  <a href="../casting/"><small>02</small> Casting</a>
+  <a href="./"><small>03</small> Portal</a>
+  <a href="royalties/"><small>04</small> Royalties</a>
+  <a href="faq/"><small>05</small> FAQ</a>
+</div>
+
+<main id="main">
+<header class="pf-head">
+  <span class="eyebrow eyebrow--gold" id="pfStatus">—</span>
+  <h1 id="pfName">—</h1>
+  <div class="pf-head__row">
+    <span class="eyebrow" id="pfSince">—</span>
+    <a class="btn" href="#" id="pfOut">Sign Out</a>
+  </div>
+</header>
+
+<!-- THE NUMBERS -->
+<section class="pf-strip">
+  <div>
+    <span class="k">Content Units</span>
+    <span class="v" id="pfUnits">—</span>
+    <span class="s">Approved in the Vault</span>
+  </div>
+  <div>
+    <span class="k">Your Share of the Pool</span>
+    <span class="v" id="pfShare">—</span>
+    <span class="s">Of all approved content</span>
+  </div>
+  <div>
+    <span class="k">Accrued Balance</span>
+    <span class="v" id="pfBal">—</span>
+    <span class="s" id="pfThresh">—</span>
+    <span class="pf-bar"><i id="pfBarFill" style="width:0"></i></span>
+  </div>
+  <div>
+    <span class="k">Next Payout</span>
+    <span class="v" id="pfNext">—</span>
+    <span class="s" id="pfQuarter">—</span>
+  </div>
+</section>
+
+<section class="pf-sect pf-sect--tight">
+  <p class="pf-note" id="pfNote"></p>
+</section>
+
+<!-- WHAT'S BANKED -->
+<section class="pf-sect">
+  <div class="pf-sect__head">
+    <h2>Your Content</h2>
+    <span class="idx">What counts toward your share</span>
+  </div>
+  <div class="pf-wrap">
+    <table class="pf-table">
+      <thead><tr><th>Set</th><th>Issue</th><th>Type</th><th>Units</th></tr></thead>
+      <tbody id="pfLines"></tbody>
+    </table>
+  </div>
+  <p class="pf-note">Only <strong>Vault-approved</strong> content is counted. One photo is one unit, one video is one unit. Nothing is weighted by followers or likes.</p>
+</section>
+
+<!-- UPDATES -->
+<section class="pf-sect" style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head">
+    <h2>Studio Updates</h2>
+    <span class="idx">From HQ</span>
+  </div>
+  <div id="pfUpdates"></div>
+</section>
+
+<!-- CASTINGS -->
+<section class="pf-sect" style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head">
+    <h2>Casting Board</h2>
+    <span class="idx">Open before it's public</span>
+  </div>
+  <div id="pfCastings"></div>
+</section>
+
+<!-- LOCKER -->
+<section class="pf-sect" style="border-top:1px solid var(--hair)">
+  <div class="pf-sect__head">
+    <h2>The Locker</h2>
+    <span class="idx">References · Keep it discreet</span>
+  </div>
+  <div class="pf-grid">
+    <a class="pf-card" href="royalties/">
+      <span class="k">Royalties</span>
+      <h3>How you get paid</h3>
+      <p>The 60/40 split, content units, the quarterly calendar, and the exact math — with a calculator.</p>
+    </a>
+    <a class="pf-card" href="faq/">
+      <span class="k">Protocol</span>
+      <h3>Model FAQ</h3>
+      <p>Galleries, posting rules, castings, the Vault, and what's expected on set.</p>
+    </a>
+    <a class="pf-card" href="../casting/">
+      <span class="k">Castings</span>
+      <h3>Open calls</h3>
+      <p>What's shooting next and how to put your name in.</p>
+    </a>
+    <a class="pf-card" id="pfMsg" href="mailto:info@playersclubhq.com">
+      <span class="k">Support</span>
+      <h3>Message the studio</h3>
+      <p>Access trouble, scheduling, a statement request, or anything that needs a person.</p>
+    </a>
+  </div>
+  <p class="pf-note">Everything inside this portal is confidential — castings, concepts, and unreleased work. Don't screenshot it, don't forward it. If someone asks: <strong>wait for the drop.</strong></p>
+</section>
+</main>
+
+<footer class="foot">
+  <img class="foot__mark" src="../assets/img/wordmark-white.png" alt="PLAYER'S CLUB™" decoding="async" loading="lazy">
+  <small>© <span data-year>2026</span> · Model Portal · Internal use only</small>
+  <img class="foot__vmg" src="../assets/img/vmg-logo.png" alt="VMG — Vaughn Management Group" decoding="async" loading="lazy">
+</footer>
+</div>
+
+<script src="../assets/js/club.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* session flag, guarded the same way as the rest of the site */
+  var store = (function () {
+    var mem = {}, ss = null, native = false;
+    try { ss = window.sessionStorage; ss.setItem("__t","1"); ss.removeItem("__t"); native = true; } catch (e) {}
+    return {
+      get: function (k) {
+        if (native) { try { var v = ss.getItem(k); if (v !== null) return v; } catch (e) {} }
+        try { var m = document.cookie.match("(?:^|; )" + k + "=([^;]*)"); if (m) return decodeURIComponent(m[1]); } catch (e) {}
+        return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null;
+      },
+      set: function (k, v) {
+        mem[k] = v;
+        if (native) { try { ss.setItem(k, v); return; } catch (e) {} }
+        try { document.cookie = k + "=" + encodeURIComponent(v) + "; path=/; SameSite=Lax"; } catch (e) {}
+      },
+      clear: function (k) {
+        delete mem[k];
+        if (native) { try { ss.removeItem(k); } catch (e) {} }
+        try { document.cookie = k + "=; path=/; Max-Age=0; SameSite=Lax"; } catch (e) {}
+      }
+    };
+  })();
+
+  var gate  = document.getElementById("pfGate");
+  var inner = document.getElementById("pfInner");
+  var hint  = document.getElementById("pfHint");
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c];
+    });
+  };
+  var money = function (n) {
+    return "$" + Number(n || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  /* the key never leaves the browser: it is hashed, and the hash names the file */
+  function keyToFile(key) {
+    var norm = key.trim().toUpperCase();
+    if (!window.crypto || !window.crypto.subtle) return Promise.reject("nocrypto");
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(norm)).then(function (buf) {
+      var hex = Array.prototype.map.call(new Uint8Array(buf), function (b) {
+        return b.toString(16).padStart(2, "0");
+      }).join("");
+      return "ledger/" + hex.slice(0, 16) + ".json";
+    });
+  }
+
+  function deny(msg) {
+    gate.classList.remove("deny"); void gate.offsetWidth; gate.classList.add("deny");
+    document.getElementById("pfKey").value = "";
+    if (msg && hint) hint.innerHTML = esc(msg);
+  }
+
+  function open(data, key) {
+    store.set("pc-portal", key);
+    gate.style.transition = "opacity .7s ease, visibility .7s";
+    gate.style.opacity = "0"; gate.style.visibility = "hidden";
+    inner.removeAttribute("hidden");
+    document.body.style.overflow = "";
+    render(data);
+  }
+
+  function render(d) {
+    document.getElementById("pfName").textContent = d.name || "Model";
+    document.getElementById("pfStatus").textContent = d.status || "Model";
+    document.getElementById("pfSince").textContent =
+      (d.handle ? d.handle + " · " : "") + "With the Club since " + (d.since || "—");
+    document.getElementById("pfUnits").textContent = d.units != null ? d.units : "—";
+    document.getElementById("pfShare").textContent = d.poolShare != null ? d.poolShare + "%" : "—";
+    document.getElementById("pfBal").textContent = money(d.balance);
+    document.getElementById("pfNext").textContent = d.payoutDate || "—";
+    document.getElementById("pfQuarter").textContent = "Covering " + (d.quarter || "—");
+
+    var t = d.threshold || 100, b = d.balance || 0;
+    document.getElementById("pfThresh").textContent =
+      b >= t ? "Above the " + money(t) + " threshold" : money(t - b) + " to the payout threshold";
+    document.getElementById("pfBarFill").style.width = Math.min(100, (b / t) * 100) + "%";
+    document.getElementById("pfNote").innerHTML = d.note ? esc(d.note) : "";
+
+    document.getElementById("pfLines").innerHTML = (d.lines || []).map(function (l) {
+      return "<tr><td>" + esc(l.set) + "</td><td>" + esc(l.issue) + "</td><td>" +
+             esc(l.kind === "video" ? "Video" : "Photo") + "</td><td>" + esc(l.units) + "</td></tr>";
+    }).join("") || '<tr><td colspan="4" style="color:var(--faint)">Nothing banked yet.</td></tr>';
+
+    var msg = document.getElementById("pfMsg");
+    if (msg) {
+      msg.href = "mailto:info@playersclubhq.com?subject=" +
+        encodeURIComponent("Portal — " + (d.name || "Model"));
+    }
+  }
+
+  /* studio updates + casting board */
+  function feed() {
+    fetch("../content/updates.json").then(function (r) { return r.json(); }).then(function (data) {
+      document.getElementById("pfUpdates").innerHTML = (data.updates || []).map(function (u) {
+        var dt = new Date(u.date + "T12:00:00");
+        var when = isNaN(dt) ? u.date : dt.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+        return '<div class="pf-row"><span class="pf-row__no">' + esc(when) + "</span><span>" +
+               '<span class="pf-row__t">' + esc(u.title) + "</span>" +
+               '<span class="pf-row__s">' + esc(u.body) + "</span></span>" +
+               '<span class="pf-row__side"><span class="pf-tag">' + esc(u.tag) + "</span></span></div>";
+      }).join("");
+    }).catch(function () {});
+
+    fetch("../content/castings.json").then(function (r) { return r.json(); }).then(function (data) {
+      var cls = { open: "pf-tag--open", soon: "pf-tag--soon", shut: "pf-tag--shut" };
+      document.getElementById("pfCastings").innerHTML = (data.calls || []).map(function (c) {
+        var inner =
+          '<span class="pf-row__no">' + esc(c.no) + "</span><span>" +
+          '<span class="pf-row__t">' + esc(c.title) + "</span>" +
+          '<span class="pf-row__s">' + esc(c.sub) + "</span>" +
+          '<span class="pf-row__s" style="color:var(--faint)">' + esc(c.meta) + " · " + esc(c.looks) + "</span></span>" +
+          '<span class="pf-row__side"><span class="pf-tag ' + (cls[c.state] || "") + '">' + esc(c.tag) + "</span>" +
+          (c.apply ? '<span class="btn">Apply <span class="arr">→</span></span>' : "") + "</span>";
+        return c.href
+          ? '<a class="pf-row" href="' + esc(c.href) + '">' + inner + "</a>"
+          : '<div class="pf-row">' + inner + "</div>";
+      }).join("");
+    }).catch(function () {});
+  }
+
+  function tryKey(key, quiet) {
+    return keyToFile(key).then(function (file) {
+      return fetch(file, { cache: "no-store" }).then(function (r) {
+        if (!r.ok) throw new Error("nokey");
+        return r.json();
+      });
+    }).then(function (data) {
+      open(data, key); feed();
+    }).catch(function (e) {
+      if (e === "nocrypto") { deny("This browser can't open the portal. Try Safari or Chrome."); return; }
+      if (!quiet) deny("That key isn't recognised. Check the call sheet, or message the studio.");
+      else { store.clear("pc-portal"); document.body.style.overflow = "hidden"; }
+    });
+  }
+
+  var saved = store.get("pc-portal");
+  if (saved) { tryKey(saved, true); } else { document.body.style.overflow = "hidden"; }
+
+  document.getElementById("pfForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var v = document.getElementById("pfKey").value;
+    if (v.trim()) tryKey(v, false);
+  });
+
+  document.getElementById("pfOut").addEventListener("click", function (e) {
+    e.preventDefault();
+    store.clear("pc-portal");
+    location.reload();
+  });
+})();
+</script>
+</body>
+</html>

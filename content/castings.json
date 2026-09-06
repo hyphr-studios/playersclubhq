@@ -1,0 +1,36 @@
+{
+  "calls": [
+    {
+      "no": "002",
+      "title": "NO.BOYS.ALLOWED™",
+      "sub": "The Slumber Party Tape — all-girls cast. Late-night hotel, VHS look, game night, pink everything. Bring your own energy and one look you'd fight someone over.",
+      "state": "open",
+      "tag": "Open Call",
+      "meta": "Las Vegas · Overnight · TFP + Vault royalty",
+      "looks": "8–10 spots",
+      "href": "../issues/no-boys-allowed/",
+      "apply": true
+    },
+    {
+      "no": "003",
+      "title": "Untitled — Winter",
+      "sub": "Cold set, warm room. Details locked closer to the date.",
+      "state": "soon",
+      "tag": "Upcoming",
+      "meta": "Location TBC · Invite-led",
+      "looks": "By invitation",
+      "apply": false
+    },
+    {
+      "no": "001",
+      "title": "SWIM — Poolside Luxe",
+      "sub": "Wrapped August 2025. Published as Issue No. 001.",
+      "state": "shut",
+      "tag": "Closed",
+      "meta": "Blue Diamond, Las Vegas · 5 cast",
+      "looks": "Wrapped",
+      "href": "../issues/swim-001/",
+      "apply": false
+    }
+  ]
+}

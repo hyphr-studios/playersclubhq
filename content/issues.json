@@ -13,12 +13,13 @@
     },
     {
       "num": "002",
-      "season": "Untitled",
-      "title": "In Production",
-      "sub": "The Club doesn't announce. It arrives.",
-      "state": "Embargoed",
-      "wash": "art-noir",
-      "open": false
+      "season": "The Second Edition",
+      "title": "NO.BOYS.ALLOWED™",
+      "sub": "The Slumber Party Tape",
+      "state": "Sneak Peek",
+      "wash": "art-red",
+      "open": true,
+      "href": "no-boys-allowed/"
     }
   ]
 }

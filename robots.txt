@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /vault/
 Disallow: /vault/after-dark/
+Disallow: /portal/
 
 Sitemap: https://playersclubhq.com/sitemap.xml
