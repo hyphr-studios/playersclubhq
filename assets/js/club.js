@@ -372,6 +372,7 @@
     /* the blurred fill stays; only the still frame and the play badge go */
     art.querySelectorAll(".vmain,.cinema__play").forEach(function (n) { n.remove(); });
     art.appendChild(v);
+    el.classList.add("is-playing");
   });
 
   /* ambient loops: desktop plays them in view, phones wait for a tap.

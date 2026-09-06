@@ -54,7 +54,7 @@ drop full-res originals (1600–2400px long edge, JPG) over them any time.
 afterdark ad-01/02). Cards + the fullscreen viewer read these; add a frame by
 dropping the next number and listing it in `content/vault.json` (`photos`).
 
-**Archive** — `assets/photos/archive/`: `swim-cs-01..04.jpg` (production record),
+**Archive** — `assets/photos/archive/`: `project-000/` (the PROJECT 000 invite + call sheet),
 `outtakes/out-01..04.jpg` (SWIM outtakes drawer).
 
 **Future issues**: copy the swim-001 pattern — `assets/photos/<issue-slug>/`

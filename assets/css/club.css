@@ -514,3 +514,37 @@ details.gal[open] summary .x{transform:rotate(45deg)}
    phone's full 3x. At a 350px card the difference is not visible, and it keeps
    each card near 120KB instead of 190KB — the Vault is browsed on phones.
    The 1200px candidate stays in srcset so larger, denser displays can upgrade. */
+
+
+/* ── film cards, once playing ── */
+/* the duration badge is a promise about a poster; when the film is running the
+   player states the time itself, so the badge just collides with the controls */
+.vset--film:has(video) .vset__tag,.vset--film.is-playing .vset__tag,
+.vset--film:has(video) .vset__no,.vset--film.is-playing .vset__no{opacity:0;pointer-events:none;transition:opacity .3s}
+.vset--film:has(video) .vset__body,.vset--film.is-playing .vset__body{
+  background:linear-gradient(180deg,transparent,rgba(10,10,10,.9));
+  padding-bottom:46px;
+}
+/* a vertical film in a 16:9 box is a narrow sliver on a phone — give it height */
+@media (max-width:700px){
+  .vset--wide{aspect-ratio:4/3}
+}
+
+
+/* ── archived documents ── */
+/* paper in a black room: show the top of the page so the heading reads,
+   and keep it slightly cooled so it sits in the palette */
+.plate--doc{background:#F4F2ED}
+.plate--doc .plate__photo{
+  object-fit:cover;object-position:top center;
+  filter:grayscale(1) contrast(1.04) brightness(.97);
+}
+.plate--doc::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 55%,rgba(10,10,10,.82) 100%);
+}
+.plate--doc .cap{
+  position:absolute;bottom:14px;left:16px;z-index:2;
+  font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:rgba(244,242,237,.85);
+}
+.plate--doc:hover .plate__photo{filter:grayscale(.85) contrast(1.06) brightness(1)}
