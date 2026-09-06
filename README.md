@@ -263,3 +263,35 @@ model's ledger carries. Sealing new briefs:
 python3 tools/portal_keys.py open <ANY-MODEL-KEY>   # read the crewKey out
 # edit the briefs, then re-seal them with that crewKey
 ```
+
+
+## What counts as a content unit (and what doesn't)
+
+This trips people up, so plainly:
+
+- **Only Vault content earns.** One photo is one unit. One video is one unit.
+- **Magazine pages do not earn on their own.** The issue is free to read, so it
+  generates nothing to split. It is the shop window. The Vault is the shop.
+- So Karma's 10 units are her Vault sets: **Karma — Uncut** (8 photos) and
+  **Karma — Motion I & II** (2 videos). Her cover and her pages inside SWIM 001
+  are not in that number, because neither earns Vault revenue.
+
+### If you want the cover to count
+
+That is a policy choice and it is yours to make, not something to change
+quietly. Two honest ways:
+
+1. **Put the cover in the Vault.** If the cover frame and the issue selects go
+   into a Vault set, they become units like anything else. No rule changes.
+2. **Add a hero weighting.** The system already allows it, and the spec says
+   weighting changes apply *prospectively* only. Give the cover a fixed bonus,
+   say 5 units, and add it as a line:
+
+```json
+{ "set": "Cover — SWIM 001", "kind": "photo", "units": 5, "issue": "SWIM 001" }
+```
+
+Add it to `lines` in `tools/plain/<her file>.json`, bump `units`, recompute
+`poolShare` for everyone, then `seal`. **It changes what every model is paid**,
+because the pool is fixed and shares are relative. Tell the cast before, not
+after.
