@@ -60,7 +60,7 @@
 
 <main id="main">
 <header class="pf-card-head" id="pfCard" hidden>
-  <div class="pf-portrait"><img id="pfPortrait" alt="" decoding="async"></div>
+  <div class="pf-portrait" id="pfPortraitWrap"></div>
   <div class="pf-who">
     <span class="credit" id="pfCredit">—</span>
     <span class="pf-name" id="pfName2">—</span>
@@ -385,8 +385,9 @@
     if (d.portrait) {
       card.hidden = false;
       document.getElementById("pfPlainHead").hidden = true;
-      document.getElementById("pfPortrait").src = d.portrait;
-      document.getElementById("pfPortrait").alt = d.name || "";
+      var por = document.createElement("img");
+      por.src = d.portrait; por.alt = d.name || ""; por.decoding = "async";
+      document.getElementById("pfPortraitWrap").appendChild(por);
       document.getElementById("pfCredit").textContent = d.credit || d.status || "";
       document.getElementById("pfName2").textContent = d.name || "";
       document.getElementById("pfMeta").textContent =
